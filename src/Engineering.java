@@ -54,7 +54,7 @@ public class Engineering extends JFrame {
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
 //
-//        addAddressAction = new AddAddressAction();
+        addAddressAction = new AddAddressAction();
 //        addPhonesAction = new AddPhonesAction();
         // addEmail = new addEmail();
 
@@ -476,6 +476,50 @@ public class Engineering extends JFrame {
 //            });
 //        }
 //    }
+
+    private class AddAddressAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public AddAddressAction()
+        {
+            putValue( NAME, "AddAddress" );
+            putValue( SHORT_DESCRIPTION, "Add Address" );
+            putValue( LONG_DESCRIPTION,
+                    "Add another address" );
+            putValue( MNEMONIC_KEY, new Integer( 'A' ) );
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    // get currently active window
+                    NewJobFrame currentFrame =
+                            ( NewJobFrame ) desktop.getSelectedFrame();
+
+                    // obtain AddressBookEntry from window
+                    NewJobEntry job =
+                            currentFrame.getAddressBookEntry();
+
+//                    System.out.println(job.getBatchQty());
+
+//                    currentFrame.addAddresses();
+                    // create new internal window
+//                    NewJobFrame entryFrame =
+//                            createNewJobFrame();
+
+//            // set new AddressBookEntry in window
+//            entryFrame.setAddressBookEntry(
+//                    new AddressBookEntry() );
+
+                    // display window
+//                    desktop.add( entryFrame );
+//                    entryFrame.setVisible( true );
+                }
+            });
+        }
+    }
+
 //
 //    private class AddPhonesAction extends AbstractAction {
 //        public AddPhonesAction()

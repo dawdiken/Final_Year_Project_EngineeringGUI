@@ -31,6 +31,7 @@ public class NewJobEntry {
     // set customer name
     public void setCustomerName(String first )
     {
+        System.out.println("setCustName first = "+ first);
         customerName = first;
     }
 

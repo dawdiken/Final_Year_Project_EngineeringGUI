@@ -114,18 +114,22 @@ public class NewJobFrame extends JInternalFrame {
 //
 //    // store AddressBookEntry data from GUI and return
 //    // AddressBookEntry
-    public AddressBookEntry getAddressBookEntry()
+    public NewJobEntry getAddressBookEntry()
     {
-        job.setCustomerName( getField( FIRST_NAME ) );
-        job.setPartName( getField( CUSTOMER_NAME ) );
-        job.setPartSop( getField( ADDRESS1 ) );
-        job.setDepartment( getField( ADDRESS2 ) );
-        job.setBatchQty( getField( CITY ) );
-        job.setState( getField( STATE ) );
-        job.setZipcode( getField(EIRCODE) );
-        job.setPhoneNumber( getField( PHONE ) );
-//        job.setPhoneNumber( getField( PHONE_1 ) );
-        job.setEmailAddress( getField( EMAIL ) );
+        System.out.println("TEST11111");
+        job.setCustomerName( getOption( CUSTOMER_NAME ) );
+        System.out.println("test2222222222");
+        job.setPartName( getOption( CUSTOMER_PART ) );
+        System.out.println("test3333333333");
+        job.setPartSop( getOption( PART_SOP ) );
+        System.out.println("Test44444");
+        job.setDepartment( getOption( DEPARTMENT ) );
+        job.setBatchQty( getField( BATCH_QTY ) );
+//        job.setState( getField( STATE ) );
+//        job.setZipcode( getField(EIRCODE) );
+//        job.setPhoneNumber( getField( PHONE ) );
+////        job.setPhoneNumber( getField( PHONE_1 ) );
+//        job.setEmailAddress( getField( EMAIL ) );
 
         return job;
     }
@@ -148,7 +152,21 @@ public class NewJobFrame extends JInternalFrame {
 
         return field.getText();
     }
+    private String getOption( String fieldName )
+    {
 
+        System.out.printf("TESTTTTTT");
+        JComboBox field =
+                ( JComboBox ) fields.get( fieldName );
+        Object obj = field.getSelectedItem();
+        System.out.println("obj= " +obj);
+        String name = obj.toString();
+//        String name = field.getSelectedItem().toString();
+//        String text = mySpinner.getSelectedItem().toString();
+
+//        return field.getSelectedItem().toString();
+        return name;
+    }
     // utility method used by constructor to create one row in
     // GUI containing JLabel and JTextField
     private void createRow( String name )
