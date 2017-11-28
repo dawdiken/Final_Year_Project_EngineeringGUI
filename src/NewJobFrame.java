@@ -27,8 +27,8 @@ public class NewJobFrame extends JInternalFrame {
     // HashMap fields.
     private static final String
 //            FIRST_NAME = "First Name",
-            CUSTOMER_NAME = "Customer Name:",
-            CUSTOMER_PART = "Customer Part:",
+            CUSTOMER_NAME = "Customer Name",
+            CUSTOMER_PART = "Customer Part",
             PART_SOP = "Part SOP:",
             BATCH_QTY = "Batch QTY:",
             DEPARTMENT = "Department";
@@ -94,23 +94,23 @@ public class NewJobFrame extends JInternalFrame {
     }
 
 
-    // set AddressBookEntry then use its properties to
-    // place data in each JTextField
-//    public void setAddressBookEntry( AddressBookEntry entry )
-//    {
-//        job = entry;
-//
+//     set AddressBookEntry then use its properties to
+//     place data in each JTextField
+    public void setAddressBookEntry( NewJobEntry entry )
+    {
+        job = entry;
+
 //        setField( FIRST_NAME, job.getCustomerName() );
 //        setField( CUSTOMER_NAME, job.getPartName() );
-//        setField( ADDRESS1, job.getPartSop() );
-//        setField( ADDRESS2, job.getDepartment() );
-//        setField( CITY, job.getBatchQty() );
-//        setField( STATE, job.getState() );
-//        setField( EIRCODE, job.getZipcode() );
+        setOption( CUSTOMER_NAME, job.getCustomerName() );
+        setOption( CUSTOMER_PART, job.getPartName() );
+        setOption( PART_SOP, job.getPartSop() );
+        setOption( DEPARTMENT, job.getDepartment() );
+        setField( BATCH_QTY, job.getBatchQty() );
 //        setField( PHONE, job.getPhoneNumber() );
 ////        setField( PHONE_1, job.getPhoneNumber() );
 //        setField( EMAIL, job.getEmailAddress() );
-//    }
+    }
 //
 //    // store AddressBookEntry data from GUI and return
 //    // AddressBookEntry
@@ -144,6 +144,22 @@ public class NewJobFrame extends JInternalFrame {
         field.setText( value );
     }
 
+    private void setOption( String fieldName, String value )
+    {
+
+        System.out.printf("TESTTTTTT");
+        JComboBox field =
+                ( JComboBox ) fields.get( fieldName );
+        Object obj = field.getSelectedItem();
+        System.out.println("obj= " +obj);
+        String name = obj.toString();
+//        String name = field.getSelectedItem().toString();
+//        String text = mySpinner.getSelectedItem().toString();
+
+//        return field.getSelectedItem().toString();
+        field.setSelectedItem( value );
+    }
+
     // get text in JTextField by specifying field's name
     private String getField( String fieldName )
     {
@@ -164,8 +180,8 @@ public class NewJobFrame extends JInternalFrame {
 //        String name = field.getSelectedItem().toString();
 //        String text = mySpinner.getSelectedItem().toString();
 
-//        return field.getSelectedItem().toString();
-        return name;
+        return field.getSelectedItem().toString();
+//        return name;
     }
     // utility method used by constructor to create one row in
     // GUI containing JLabel and JTextField

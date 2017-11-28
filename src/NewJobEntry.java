@@ -22,11 +22,11 @@ public class NewJobEntry {
     {
     }
 
-//    // set person's id
-//    public NewJobEntry( int id )
-//    {
-//        personID = id;
-//    }
+    // set person's id
+    public NewJobEntry( int id )
+    {
+
+    }
 
     // set customer name
     public void setCustomerName(String first )

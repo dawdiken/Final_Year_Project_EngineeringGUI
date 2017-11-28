@@ -46,7 +46,7 @@ public class Engineering extends JFrame {
         // Set up actions for common operations. Private inner
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
-//        saveAction = new SaveAction();
+        saveAction = new SaveAction();
 //        saveAction.setEnabled( false );    // disabled by default
 ////        deleteAction = new DeleteAction();
 //        deleteAction.setEnabled( false );  // disabled by default
@@ -223,6 +223,10 @@ public class Engineering extends JFrame {
             NewJobFrame entryFrame =
                     createNewJobFrame();
 
+            entryFrame.setAddressBookEntry(
+                    new NewJobEntry() );
+
+
 //            // set new AddressBookEntry in window
 //            entryFrame.setAddressBookEntry(
 //                    new AddressBookEntry() );
@@ -234,74 +238,37 @@ public class Engineering extends JFrame {
 
     }  // end inner class NewAction
 
-    // inner class defines an action that can save new or
-    // updated entry
-//    private class SaveAction extends AbstractAction {
-//
-//        // set up action's name, icon, descriptions and mnemonic
-//        public SaveAction()
-//        {
-//            putValue( NAME, "Save" );
-//            putValue( SHORT_DESCRIPTION, "Save" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Save an address book entry" );
-//            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
-//        }
-//
-//        // save new entry or update existing entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            // get currently active window
-//            NewJobFrame currentFrame =
-//                    ( NewJobFrame ) desktop.getSelectedFrame();
-//
-////            // obtain AddressBookEntry from window
-////            AddressBookEntry person =
-////                    currentFrame.getAddressBookEntry();
-////
-////            if(isValid(person.getZipcode())) {
-////                // insert person in address book
-////                try {
-////
-////                    // Get personID. If 0, this is a new entry;
-////                    // otherwise an update must be performed.
-////                    int personID = person.getPersonID();
-////
-////                    // determine string for message dialogs
-////                    String operation =
-////                            (personID == 0) ? "Insertion" : "Update";
-////
-////                    // insert or update entry
-////                    if (personID == 0){
-////                        System.out.printf("NEw Person");
-////                        System.out.println(database.newPerson(person));}
-////                    else
-////                        System.out.println(database.savePerson(person));
-////
-////                    // display success message
-////                    JOptionPane.showMessageDialog(desktop,
-////                            operation + " successful");
-////                }  // end try
-////
-////                // detect database errors
-////                catch (Exception exception) {
-////                    JOptionPane.showMessageDialog(desktop, exception,
-////                            "DataAccessException",
-////                            JOptionPane.ERROR_MESSAGE);
-////                    exception.printStackTrace();
-////                }
-////
-////                // close current window and dispose of resources
-////                currentFrame.dispose();
-////            } else {
-////                JOptionPane.showMessageDialog(desktop, "Eircode is wrong format\nMust be 2 part code containing 7 characters\nExample: A12 B345",
-////                        "Wrong format",
-////                        JOptionPane.ERROR_MESSAGE);
-////            }
-//
-//        }  // end method actionPerformed
-//
-//    }  // end inner class SaveAction
+//     inner class defines an action that can save new or
+//     updated entry
+    private class SaveAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public SaveAction()
+        {
+            putValue( NAME, "Save" );
+            putValue( SHORT_DESCRIPTION, "Save" );
+            putValue( LONG_DESCRIPTION,
+                    "Save an address book entry" );
+            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
+        }
+
+        // save new entry or update existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+            // get currently active window
+            NewJobFrame currentFrame =
+                    ( NewJobFrame ) desktop.getSelectedFrame();
+
+            // obtain AddressBookEntry from window
+            NewJobEntry person =
+                    currentFrame.getAddressBookEntry();
+            System.out.printf(person.getBatchQty());
+
+                // close current window and dispose of resources
+                currentFrame.dispose();
+        }  // end method actionPerformed
+
+    }  // end inner class SaveAction
 //
 //    // inner class defines action that deletes entry
 //    private class DeleteAction extends AbstractAction {
