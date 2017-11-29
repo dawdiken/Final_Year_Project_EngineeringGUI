@@ -43,6 +43,7 @@ public class Engineering extends JFrame {
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
+
         // Set up actions for common operations. Private inner
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
@@ -60,13 +61,17 @@ public class Engineering extends JFrame {
 
         // add actions to tool bar
         toolBar.add( newAction );
+        toolBar.add( new JToolBar.Separator() );
         toolBar.add( saveAction );
+        toolBar.add( new JToolBar.Separator() );
         toolBar.add( deleteAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( searchAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( addAddressAction );
+        toolBar.add( new JToolBar.Separator() );
         toolBar.add( addPhonesAction );
+        toolBar.add( new JToolBar.Separator() );
         toolBar.add( savePhone );
 
         // add actions to File menu
@@ -207,10 +212,8 @@ public class Engineering extends JFrame {
         // set up action's name, icon, descriptions and mnemonic
         public NewAction()
         {
-            putValue( NAME, "New" );
-            //putValue( SMALL_ICON, new ImageIcon(
-            //      getClass().getResource( "images/New24.png" ) ) );
-            putValue( SHORT_DESCRIPTION, "New" );
+            putValue( NAME, "New Job" );
+            putValue( SHORT_DESCRIPTION, "New Job" );
             putValue( LONG_DESCRIPTION,
                     "Add a new address book entry" );
             putValue( MNEMONIC_KEY, new Integer( 'N' ) );

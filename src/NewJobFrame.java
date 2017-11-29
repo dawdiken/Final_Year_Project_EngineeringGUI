@@ -26,7 +26,7 @@ public class NewJobFrame extends JInternalFrame {
     // These are placed on JLabels and used as keys in
     // HashMap fields.
     private static final String
-//            FIRST_NAME = "First Name",
+            JOB_NUMBER = "Job numer",
             CUSTOMER_NAME = "Customer Name",
             CUSTOMER_PART = "Customer Part",
             PART_SOP = "Part SOP:",
@@ -72,10 +72,12 @@ public class NewJobFrame extends JInternalFrame {
 //        rightPanel_2.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
 
 //        createRow( FIRST_NAME , 1);
+
         createOption(CUSTOMER_NAME, 1);
         createOption( CUSTOMER_PART, 2);
         createOption( PART_SOP, 3);
         createOption( DEPARTMENT , 4);
+        createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
 
 //        createRow( EIRCODE , 1);
@@ -102,6 +104,7 @@ public class NewJobFrame extends JInternalFrame {
 
 //        setField( FIRST_NAME, job.getCustomerName() );
 //        setField( CUSTOMER_NAME, job.getPartName() );
+        setField( JOB_NUMBER, job.getJobNumber() );
         setOption( CUSTOMER_NAME, job.getCustomerName() );
         setOption( CUSTOMER_PART, job.getPartName() );
         setOption( PART_SOP, job.getPartSop() );
@@ -124,6 +127,7 @@ public class NewJobFrame extends JInternalFrame {
         job.setPartSop( getOption( PART_SOP ) );
         System.out.println("Test44444");
         job.setDepartment( getOption( DEPARTMENT ) );
+        job.setJobNumber( getField( JOB_NUMBER ) );
         job.setBatchQty( getField( BATCH_QTY ) );
 //        job.setState( getField( STATE ) );
 //        job.setZipcode( getField(EIRCODE) );

@@ -4,6 +4,16 @@ public class NewJobEntry {
     private String partSop = "";
     private String department = "";
     private String batchQty = "";
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+    }
+
+    private String jobNumber = "";
 //    private String state = "";
 //    private String zipcode = "";
 //    private String phoneNumber = "";
