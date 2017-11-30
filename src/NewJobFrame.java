@@ -55,7 +55,7 @@ public class NewJobFrame extends JInternalFrame {
     // construct GUI
     public NewJobFrame()
     {
-        super( "New Job", true, true );
+        super( "New Job customer name here!!", true, true );
 
         fields = new HashMap();
 

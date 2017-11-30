@@ -48,9 +48,9 @@ public class Engineering extends JFrame {
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
         saveAction = new SaveAction();
-//        saveAction.setEnabled( false );    // disabled by default
-////        deleteAction = new DeleteAction();
-//        deleteAction.setEnabled( false );  // disabled by default
+        saveAction.setEnabled( false );    // disabled by default
+        deleteAction = new DeleteAction();
+        deleteAction.setEnabled( false );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -224,7 +224,7 @@ public class Engineering extends JFrame {
         {
 
 
-            String[] date= {"Customer 1", "Customer 2", "Customer 3", "Customer 4",
+            String[] custList= {"Customer 1", "Customer 2", "Customer 3", "Customer 4",
                     "Customer 5", "Customer 6" };
             JFrame frame = new JFrame("Input Dialog Example 3");
             String customerName = (String) JOptionPane.showInputDialog(frame,
@@ -232,25 +232,33 @@ public class Engineering extends JFrame {
                     "Customer",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
-                    date,
-                    date[0]);
+                    custList,
+                    custList[0]);
 
             // favoritePizza will be null if the user clicks Cancel
             System.out.printf("customerName is %s.\n", customerName);            // create new internal window
-            NewJobFrame entryFrame =
-                    createNewJobFrame();
 
+            if (customerName == "Customer 1"){
+                NewJobFrame entryFrame =
+                        createNewJobFrame();
+                entryFrame.setAddressBookEntry(
+                        new NewJobEntry() );
+
+
+            // set new AddressBookEntry in window
             entryFrame.setAddressBookEntry(
                     new NewJobEntry() );
 
+                // display window
+                desktop.add( entryFrame );
+                entryFrame.setVisible( true );
+            }
+            else {
+                System.out.printf("No customers here");
+            }
 
-//            // set new AddressBookEntry in window
-//            entryFrame.setAddressBookEntry(
-//                    new AddressBookEntry() );
 
-            // display window
-            desktop.add( entryFrame );
-            entryFrame.setVisible( true );
+
         }
 
     }  // end inner class NewAction
@@ -279,7 +287,8 @@ public class Engineering extends JFrame {
             // obtain AddressBookEntry from window
             NewJobEntry person =
                     currentFrame.getAddressBookEntry();
-            System.out.printf(person.getBatchQty());
+//            System.out.printf(person.getBatchQty());
+            System.out.println("Batch qty = " + person.getBatchQty());
 
                 // close current window and dispose of resources
                 currentFrame.dispose();
@@ -288,64 +297,64 @@ public class Engineering extends JFrame {
     }  // end inner class SaveAction
 //
 //    // inner class defines action that deletes entry
-//    private class DeleteAction extends AbstractAction {
+    private class DeleteAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public DeleteAction()
+        {
+            putValue( NAME, "Delete" );
+            //          putValue( SMALL_ICON, new ImageIcon(
+//                    getClass().getResource( "images/Delete24.png" ) ) );
+            putValue( SHORT_DESCRIPTION, "Delete" );
+            putValue( LONG_DESCRIPTION,
+                    "Delete an address book entry" );
+            putValue( MNEMONIC_KEY, new Integer( 'D' ) );
+        }
+
+        // delete entry
+        public void actionPerformed( ActionEvent e )
+        {
+            // get currently active window
+            NewJobFrame currentFrame =
+                    ( NewJobFrame ) desktop.getSelectedFrame();
+
+//            // get AddressBookEntry from window
+//            AddressBookEntry person =
+//                    currentFrame.getAddressBookEntry();
+
+            // If personID is 0, this is new entry that has not
+            // been inserted. Therefore, delete is not necessary.
+            // Display message and return.
+//            if ( person.getPersonID() == 0 ) {
+//                JOptionPane.showMessageDialog( desktop,
+//                        "New entries must be saved before they can be " +
+//                                "deleted. \nTo cancel a new entry, simply " +
+//                                "close the window containing the entry" );
+//                return;
+//            }
 //
-//        // set up action's name, icon, descriptions and mnemonic
-//        public DeleteAction()
-//        {
-//            putValue( NAME, "Delete" );
-//            //          putValue( SMALL_ICON, new ImageIcon(
-////                    getClass().getResource( "images/Delete24.png" ) ) );
-//            putValue( SHORT_DESCRIPTION, "Delete" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Delete an address book entry" );
-//            putValue( MNEMONIC_KEY, new Integer( 'D' ) );
-//        }
+//            // delete person
+//            try {
+//                database.deletePerson( person );
 //
-//        // delete entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            // get currently active window
-//            NewJobFrame currentFrame =
-//                    ( NewJobFrame ) desktop.getSelectedFrame();
+//                // display message indicating success
+//                JOptionPane.showMessageDialog( desktop,
+//                        "Deletion successful" );
+//            }
 //
-////            // get AddressBookEntry from window
-////            AddressBookEntry person =
-////                    currentFrame.getAddressBookEntry();
-//
-//            // If personID is 0, this is new entry that has not
-//            // been inserted. Therefore, delete is not necessary.
-//            // Display message and return.
-////            if ( person.getPersonID() == 0 ) {
-////                JOptionPane.showMessageDialog( desktop,
-////                        "New entries must be saved before they can be " +
-////                                "deleted. \nTo cancel a new entry, simply " +
-////                                "close the window containing the entry" );
-////                return;
-////            }
-////
-////            // delete person
-////            try {
-////                database.deletePerson( person );
-////
-////                // display message indicating success
-////                JOptionPane.showMessageDialog( desktop,
-////                        "Deletion successful" );
-////            }
-////
-////            // detect problems deleting person
-////            catch ( DataAccessException exception ) {
-////                JOptionPane.showMessageDialog( desktop, exception,
-////                        "Deletion failed", JOptionPane.ERROR_MESSAGE );
-////                exception.printStackTrace();
-////            }
-//
-//            // close current window and dispose of resources
-//            currentFrame.dispose();
-//
-//        }  // end method actionPerformed
-//
-//    }  // end inner class DeleteAction
+//            // detect problems deleting person
+//            catch ( DataAccessException exception ) {
+//                JOptionPane.showMessageDialog( desktop, exception,
+//                        "Deletion failed", JOptionPane.ERROR_MESSAGE );
+//                exception.printStackTrace();
+//            }
+
+            // close current window and dispose of resources
+            currentFrame.dispose();
+
+        }  // end method actionPerformed
+
+    }  // end inner class DeleteAction
 //
 //    // inner class defines action that locates entry
 //    private class SearchAction extends AbstractAction {
