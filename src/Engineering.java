@@ -155,6 +155,33 @@ public class Engineering extends JFrame {
         return frame;
     }  // end method createAddressBookEntryFrame
 
+    private MedtronicJobFrame createMedtronicJobFrame() {
+        MedtronicJobFrame frame = new MedtronicJobFrame();
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        frame.addInternalFrameListener(
+                new InternalFrameAdapter() {
+
+                    // internal frame becomes active frame on desktop
+                    public void internalFrameActivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( true );
+                        deleteAction.setEnabled( true );
+                    }
+
+                    // internal frame becomes inactive frame on desktop
+                    public void internalFrameDeactivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( false );
+                        deleteAction.setEnabled( false );
+                    }
+                }  // end InternalFrameAdapter anonymous inner class
+        ); // end call to addInternalFrameListener
+
+        return frame;
+    }  // end method createAddressBookEntryFrame
+
     // create a new AddressBookEntryFrame and register listener
 //    private PhoneNumEntryFrame createPhoneNumEntryFrame() {
 //        PhoneNumEntryFrame frame = new PhoneNumEntryFrame();
@@ -253,8 +280,23 @@ public class Engineering extends JFrame {
                 desktop.add( entryFrame );
                 entryFrame.setVisible( true );
             }
-            else {
-                System.out.printf("No customers here");
+            else if ( customerName == "Customer 2"){
+                MedtronicJobFrame entryFrame =
+                        createMedtronicJobFrame();
+                entryFrame.setAddressBookEntry(
+                        new NewJobEntry() );
+
+
+                // set new AddressBookEntry in window
+                entryFrame.setAddressBookEntry(
+                        new NewJobEntry() );
+
+                // display window
+                desktop.add( entryFrame );
+                entryFrame.setVisible( true );
+            }
+            else{
+                System.out.println("no customer here");
             }
 
 
