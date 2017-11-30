@@ -39,7 +39,7 @@ public class Engineering extends JFrame {
 //        }
 
         // database connection successful, create GUI
-        JToolBar toolBar = new JToolBar();
+        JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
@@ -60,7 +60,7 @@ public class Engineering extends JFrame {
         // addEmail = new addEmail();
 
         // add actions to tool bar
-        toolBar.add( newAction );
+        toolBar.add( newAction);
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( saveAction );
         toolBar.add( new JToolBar.Separator() );
@@ -95,7 +95,7 @@ public class Engineering extends JFrame {
 
         // get the content pane to set up GUI
         Container c = getContentPane();
-        c.add( toolBar, BorderLayout.NORTH );
+        c.add( toolBar, BorderLayout.EAST );
         c.add( desktop, BorderLayout.CENTER );
 
         // register for windowClosing event in case user
@@ -222,7 +222,21 @@ public class Engineering extends JFrame {
         // display window in which user can input entry
         public void actionPerformed( ActionEvent e )
         {
-            // create new internal window
+
+
+            String[] date= {"Customer 1", "Customer 2", "Customer 3", "Customer 4",
+                    "Customer 5", "Customer 6" };
+            JFrame frame = new JFrame("Input Dialog Example 3");
+            String customerName = (String) JOptionPane.showInputDialog(frame,
+                    "Please select a customer?",
+                    "Customer",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    date,
+                    date[0]);
+
+            // favoritePizza will be null if the user clicks Cancel
+            System.out.printf("customerName is %s.\n", customerName);            // create new internal window
             NewJobFrame entryFrame =
                     createNewJobFrame();
 
