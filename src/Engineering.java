@@ -531,8 +531,8 @@ public class Engineering extends JFrame {
                             "Log in succesfull.  Hello " + userName);
 
                     newAction.setEnabled(true);
-                    saveAction.setEnabled( true );
-                    deleteAction.setEnabled( true );
+//                    saveAction.setEnabled( true );
+//                    deleteAction.setEnabled( true );
                     addAddressAction.setEnabled(true);
                     LoginAction.setEnabled(false);  // disabled by default
 
