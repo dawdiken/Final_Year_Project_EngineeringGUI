@@ -5,6 +5,9 @@ public class NewJobEntry {
     private String department = "";
     private String batchQty = "";
 
+    private String userName = "";
+    private String Password = "";
+
     public String getJobNumber() {
         return jobNumber;
     }
@@ -87,6 +90,7 @@ public class NewJobEntry {
         return department;
     }
 
+
     // set batchQty
     public void setBatchQty(String personCity )
     {
@@ -99,6 +103,21 @@ public class NewJobEntry {
         return batchQty;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
 //    // set state in which person lives
 //    public void setState( String personState )
 //    {

@@ -17,7 +17,7 @@ public class Engineering extends JFrame {
     private JDesktopPane desktop;
 
     // reference to database access object
-//    private AddressBookDataAccess database;
+    private AddressBookDataAccess database;
 
     // references to Actions
     Action newAction, saveAction, deleteAction,LoginAction,
@@ -27,16 +27,16 @@ public class Engineering extends JFrame {
     public Engineering() {
         super( "Engineering Portal" );
 
-        // create database connection
-//        try {
-//            database = new CloudscapeDataAccess();
-//        }
-//
-//        // detect problems with database connection
-//        catch ( Exception exception ) {
-//            exception.printStackTrace();
-//            System.exit( 1 );
-//        }
+//         create database connection
+        try {
+            database = new CloudscapeDataAccess();
+        }
+
+        // detect problems with database connection
+        catch ( Exception exception ) {
+            exception.printStackTrace();
+            System.exit( 1 );
+        }
 
         // database connection successful, create GUI
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
@@ -54,12 +54,13 @@ public class Engineering extends JFrame {
         deleteAction = new DeleteAction();
         deleteAction.setEnabled( false );  // disabled by default
         LoginAction = new LoginAction();
-        deleteAction.setEnabled( true );  // disabled by default
+        LoginAction.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
 //
         addAddressAction = new AddAddressAction();
+        addAddressAction.setEnabled( false );  // disabled by default
 //        addPhonesAction = new AddPhonesAction();
         // addEmail = new addEmail();
 
@@ -78,7 +79,7 @@ public class Engineering extends JFrame {
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( savePhone );
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( new LoginAction() );
+        toolBar.add( LoginAction );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -499,6 +500,9 @@ public class Engineering extends JFrame {
                 System.out.println("x value: " + xField.getText());
                 System.out.println("y value: " + yField.getText());
             }
+            String userName = xField.getText().toString();
+            String password = yField.getText().toString();
+            System.out.println(password);
 
 //            String lastName =
 //                    JOptionPane.showInputDialog( desktop, myPanel,
@@ -516,14 +520,23 @@ public class Engineering extends JFrame {
 
                 // Execute search. If found, AddressBookEntry
                 // is returned containing data.
-//                ArrayList<AddressBookEntry> person = database.findPerson(
-//                        lastName );
+                ArrayList<NewJobEntry> person = database.findPerson(
+                        password );
 
+                 System.out.printf("Person" + person);
+                if ( person != null ) {
+                    // create window to display AddressBookEntry
+                    System.out.printf("Person" + person);
+                    JOptionPane.showMessageDialog( desktop,
+                            "Log in succesfull.  Hello " + userName);
 
-//                if ( person != null ) {
-//                    // create window to display AddressBookEntry
-//                    System.out.printf("Person" + person);
-//                    // set AddressBookEntry to display
+                    newAction.setEnabled(true);
+                    saveAction.setEnabled( true );
+                    deleteAction.setEnabled( true );
+                    addAddressAction.setEnabled(true);
+                    LoginAction.setEnabled(false);  // disabled by default
+
+                    // set AddressBookEntry to display
 //                    for (int i = 0; i < person.size(); i++) {
 //                        AddressBookEntryFrame entryFrame =
 //                                createAddressBookEntryFrame();
@@ -531,14 +544,14 @@ public class Engineering extends JFrame {
 //                        desktop.add(entryFrame);
 //                        entryFrame.setVisible(true);
 //                    }
-//                    // display window
-//                }
-//                else
-//                    JOptionPane.showMessageDialog( desktop,
-//                            "Entry with last name \"" + lastName +
-//                                    "\" not found in address book" );
-//
-//            }  // end "if ( lastName == null )"
+                    // display window
+                }
+                else
+                    JOptionPane.showMessageDialog( desktop,
+                            "User:\n" + userName +
+                                    "\" not found!" );
+
+             // end "if ( lastName == null )"
 
         }  // end method actionPerformed
 
