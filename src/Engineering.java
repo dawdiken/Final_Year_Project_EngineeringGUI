@@ -20,7 +20,7 @@ public class Engineering extends JFrame {
 //    private AddressBookDataAccess database;
 
     // references to Actions
-    Action newAction, saveAction, deleteAction,
+    Action newAction, saveAction, deleteAction,LoginAction,
             searchAction, exitAction, addAddressAction, addPhonesAction, savePhone;
 
     // set up database connection and GUI
@@ -47,10 +47,14 @@ public class Engineering extends JFrame {
         // Set up actions for common operations. Private inner
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
+        newAction.setEnabled( false );    // disabled by default
         saveAction = new SaveAction();
+
         saveAction.setEnabled( false );    // disabled by default
         deleteAction = new DeleteAction();
         deleteAction.setEnabled( false );  // disabled by default
+        LoginAction = new LoginAction();
+        deleteAction.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -73,6 +77,8 @@ public class Engineering extends JFrame {
         toolBar.add( addPhonesAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( savePhone );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( new LoginAction() );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -119,6 +125,7 @@ public class Engineering extends JFrame {
                 dimension.height );
 
         setVisible( true );
+
     }  // end Engineering constructor
 
     // close database connection and terminate program
@@ -220,6 +227,7 @@ public class Engineering extends JFrame {
             // start application
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+//                    new LoginFrame();
                     new Engineering();
                 }
             });
@@ -345,8 +353,6 @@ public class Engineering extends JFrame {
         public DeleteAction()
         {
             putValue( NAME, "Delete" );
-            //          putValue( SMALL_ICON, new ImageIcon(
-//                    getClass().getResource( "images/Delete24.png" ) ) );
             putValue( SHORT_DESCRIPTION, "Delete" );
             putValue( LONG_DESCRIPTION,
                     "Delete an address book entry" );
@@ -460,6 +466,83 @@ public class Engineering extends JFrame {
 //        }  // end method actionPerformed
 //
 //    }  // end inner class SearchAction
+
+    // inner class defines action that locates entry
+    private class LoginAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public LoginAction()
+        {
+            putValue( NAME, "Log In" );
+            //          putValue( SMALL_ICON, new ImageIcon(
+//                    getClass().getResource( "images/Find24.png" ) ) );
+            putValue( SHORT_DESCRIPTION, "Log In" );
+            putValue( LONG_DESCRIPTION,
+                    "Log In" );
+            putValue( MNEMONIC_KEY, new Integer( 'r' ) );
+        }
+
+        // locate existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+            JTextField xField = new JTextField(10);
+            JPasswordField yField = new JPasswordField(10);
+            JPanel myPanel = new JPanel();
+            myPanel.add(new JLabel("Username:"));
+            myPanel.add(xField);
+            myPanel.add(Box.createHorizontalStrut(10)); // a spacer
+            myPanel.add(new JLabel("Password:"));
+            myPanel.add(yField);
+            int lastName = JOptionPane.showConfirmDialog(null, myPanel,
+                    "Please Log In", JOptionPane.OK_CANCEL_OPTION);
+            if (lastName == JOptionPane.OK_OPTION) {
+                System.out.println("x value: " + xField.getText());
+                System.out.println("y value: " + yField.getText());
+            }
+
+//            String lastName =
+//                    JOptionPane.showInputDialog( desktop, myPanel,
+//                            "Enter last name" );
+
+
+//            String lastName =
+//                    JOptionPane.showInputDialog( desktop,
+//                            "Enter last name" );
+//            loggedIn =   new LoginFrame();
+
+            // if last name was input, search for it; otherwise,
+            // do nothing
+
+
+                // Execute search. If found, AddressBookEntry
+                // is returned containing data.
+//                ArrayList<AddressBookEntry> person = database.findPerson(
+//                        lastName );
+
+
+//                if ( person != null ) {
+//                    // create window to display AddressBookEntry
+//                    System.out.printf("Person" + person);
+//                    // set AddressBookEntry to display
+//                    for (int i = 0; i < person.size(); i++) {
+//                        AddressBookEntryFrame entryFrame =
+//                                createAddressBookEntryFrame();
+//                        entryFrame.setAddressBookEntry(person.get(i));
+//                        desktop.add(entryFrame);
+//                        entryFrame.setVisible(true);
+//                    }
+//                    // display window
+//                }
+//                else
+//                    JOptionPane.showMessageDialog( desktop,
+//                            "Entry with last name \"" + lastName +
+//                                    "\" not found in address book" );
+//
+//            }  // end "if ( lastName == null )"
+
+        }  // end method actionPerformed
+
+    }  // end inner class SearchAction
 //
 //    // inner class defines action that closes connection to
 //    // database and terminates program
