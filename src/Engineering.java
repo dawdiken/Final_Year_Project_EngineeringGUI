@@ -520,7 +520,7 @@ public class Engineering extends JFrame {
 
                 // Execute search. If found, AddressBookEntry
                 // is returned containing data.
-                ArrayList<NewJobEntry> person = database.findPerson(
+                ArrayList<NewJobEntry> person = database.findPerson( userName,
                         password );
 
                  System.out.printf("Person" + person);

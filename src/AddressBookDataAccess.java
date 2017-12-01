@@ -6,7 +6,7 @@ public interface AddressBookDataAccess {
 
     // Locate specified person by last name. Return
     // AddressBookEntry containing information.
-    public ArrayList<NewJobEntry>  findPerson(String lastName );
+    public ArrayList<NewJobEntry>  findPerson(String userName , String password );
 
     // Update information for specified person.
     // Return boolean indicating success or failure.

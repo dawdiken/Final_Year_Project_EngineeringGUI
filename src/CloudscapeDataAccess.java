@@ -31,6 +31,9 @@ public class CloudscapeDataAccess
     private PreparedStatement sqlDeleteAddress;
     private PreparedStatement sqlDeletePhone;
     private PreparedStatement sqlDeleteEmail;
+    private PreparedStatement sqlSingleFindPersonID;
+    private PreparedStatement sqlFindPersonID;
+    private PreparedStatement sqlFindName;
 
     // set up PreparedStatements to access database
     public CloudscapeDataAccess() throws Exception
@@ -43,17 +46,13 @@ public class CloudscapeDataAccess
 //            "SELECT Password" +
 //                    "FROM users" +
 //                    "WHERE Password = ?");
-
+        sqlSingleFindPersonID = connection.prepareStatement("SELECT userName FROM users WHERE userName = ? AND pass = ?");
+        sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
+        sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
         sqlFind = connection.prepareStatement(
-                "SELECT names.personID, firstName, lastName, " +
-                        "addressID, address1, address2, city, state, " +
-                        "zipcode, phoneID, phoneNumber, emailID, " +
-                        "emailAddress " +
-                        "FROM names, addresses, phoneNumbers, emailAddresses " +
-                        "WHERE lastName = ?  AND " +
-                        "names.personID = addresses.personID AND " +
-                        "names.personID = phoneNumbers.personID AND " +
-                        "names.personID = emailAddresses.personID" );
+                "SELECT users.userID, userName, pass" +
+                        "FROM users" +
+                        "WHERE pass = ?");
 
         // Obtain personID for last person inserted in database.
         // [This is a Cloudscape-specific database operation.]
@@ -155,12 +154,19 @@ public class CloudscapeDataAccess
 
     // Locate specified person. Method returns AddressBookEntry
     // containing information.
-    public ArrayList<NewJobEntry> findPerson( String lastName )
+    public ArrayList<NewJobEntry> findPerson( String username, String password )
     {
         try {
             // set query parameter and execute query
-            sqlFind.setString( 1, lastName);
-            ResultSet resultSet = sqlFind.executeQuery();
+//            sqlFind.setString( 1, lastName);
+//            ResultSet resultSet = sqlFind.executeQuery();
+
+            //Working for just password field
+//            sqlFindName.setString(1,password);
+//            ResultSet resultSet = sqlFindName.executeQuery();
+            sqlSingleFindPersonID.setString(1, username);
+            sqlSingleFindPersonID.setString(2, password);
+            ResultSet resultSet = sqlSingleFindPersonID.executeQuery();
 
             // if no records found, return immediately
             if ( !resultSet.next() )
