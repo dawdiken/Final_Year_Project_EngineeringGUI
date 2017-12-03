@@ -49,10 +49,10 @@ public class CloudscapeDataAccess
         sqlSingleFindPersonID = connection.prepareStatement("SELECT userName FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
-        sqlFind = connection.prepareStatement(
-                "SELECT users.userID, userName, pass" +
-                        "FROM users" +
-                        "WHERE pass = ?");
+//        sqlFind = connection.prepareStatement(
+//                "SELECT users.userID, userName, pass" +
+//                        "FROM users" +
+//                        "WHERE pass = ?");
 
         // Obtain personID for last person inserted in database.
         // [This is a Cloudscape-specific database operation.]
@@ -138,13 +138,15 @@ public class CloudscapeDataAccess
         String driver = "com.mysql.jdbc.Driver";
 
         // URL to connect to books database
-        String url = "jdbc:mysql://localhost:3306/address?autoReconnect=true&useSSL=false";
+        String url = "jdbc:mysql://localhost:3306/addressbook?autoReconnect=true&useSSL=false";
+//        String url = "jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false";
 
         // load database driver class
         Class.forName( driver );
 
         // connect to database
         connection = DriverManager.getConnection( url, "root", "root" );
+//        connection = DriverManager.getConnection( url, "root", "test12" );
 
         // Require manual commit for transactions. This enables
         // the program to rollback transactions that do not

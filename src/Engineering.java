@@ -20,7 +20,7 @@ public class Engineering extends JFrame {
     private AddressBookDataAccess database;
 
     // references to Actions
-    Action newAction, saveAction, deleteAction,LoginAction,
+    Action newAction, saveAction, deleteAction, LoginAction, LogOutAction,
             searchAction, exitAction, addAddressAction, addPhonesAction, savePhone;
 
     // set up database connection and GUI
@@ -55,6 +55,8 @@ public class Engineering extends JFrame {
         deleteAction.setEnabled( false );  // disabled by default
         LoginAction = new LoginAction();
         LoginAction.setEnabled( true );  // disabled by default
+        LogOutAction = new LogOutAction();
+        LogOutAction.setEnabled( false );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -80,6 +82,8 @@ public class Engineering extends JFrame {
         toolBar.add( savePhone );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LoginAction );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( LogOutAction );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -529,12 +533,13 @@ public class Engineering extends JFrame {
                     System.out.printf("Person" + person);
                     JOptionPane.showMessageDialog( desktop,
                             "Log in succesfull.  Hello " + userName);
-
+                    LoginAction.setEnabled(false);  // disabled by default
                     newAction.setEnabled(true);
 //                    saveAction.setEnabled( true );
 //                    deleteAction.setEnabled( true );
                     addAddressAction.setEnabled(true);
-                    LoginAction.setEnabled(false);  // disabled by default
+                    LogOutAction.setEnabled(true);  // disabled by default
+
 
                     // set AddressBookEntry to display
 //                    for (int i = 0; i < person.size(); i++) {
@@ -552,6 +557,36 @@ public class Engineering extends JFrame {
                                     "\" not found!" );
 
              // end "if ( lastName == null )"
+
+        }  // end method actionPerformed
+
+    }  // end inner class SearchAction
+
+    private class LogOutAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public LogOutAction()
+        {
+            putValue( NAME, "Log Out" );
+            //          putValue( SMALL_ICON, new ImageIcon(
+//                    getClass().getResource( "images/Find24.png" ) ) );
+            putValue( SHORT_DESCRIPTION, "Log Out" );
+            putValue( LONG_DESCRIPTION,
+                    "Log Out" );
+            putValue( MNEMONIC_KEY, new Integer( 'O' ) );
+        }
+
+        // perform log out action
+        public void actionPerformed( ActionEvent e )
+        {
+            JOptionPane.showMessageDialog( desktop,
+                        "User: Logged out!" );
+            newAction.setEnabled(false);
+            saveAction.setEnabled( false );
+            deleteAction.setEnabled( false );
+            addAddressAction.setEnabled(false);
+            LogOutAction.setEnabled(false);  // disabled by default
+            LoginAction.setEnabled(true);  // disabled by default
 
         }  // end method actionPerformed
 
