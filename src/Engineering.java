@@ -20,7 +20,7 @@ public class Engineering extends JFrame {
     private AddressBookDataAccess database;
 
     // references to Actions
-    Action newAction, saveAction, deleteAction, LoginAction, LogOutAction,
+    Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
             searchAction, exitAction, addAddressAction, addPhonesAction, savePhone;
 
     // set up database connection and GUI
@@ -57,6 +57,9 @@ public class Engineering extends JFrame {
         LoginAction.setEnabled( true );  // disabled by default
         LogOutAction = new LogOutAction();
         LogOutAction.setEnabled( false );  // disabled by default
+
+        AddUserAction = new AddUserAction();
+        AddUserAction.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -84,6 +87,8 @@ public class Engineering extends JFrame {
         toolBar.add( LoginAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LogOutAction );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( AddUserAction );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -169,6 +174,34 @@ public class Engineering extends JFrame {
 
     private MedtronicJobFrame createMedtronicJobFrame() {
         MedtronicJobFrame frame = new MedtronicJobFrame();
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        frame.addInternalFrameListener(
+                new InternalFrameAdapter() {
+
+                    // internal frame becomes active frame on desktop
+                    public void internalFrameActivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( true );
+                        deleteAction.setEnabled( true );
+                    }
+
+                    // internal frame becomes inactive frame on desktop
+                    public void internalFrameDeactivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( false );
+                        deleteAction.setEnabled( false );
+                    }
+                }  // end InternalFrameAdapter anonymous inner class
+        ); // end call to addInternalFrameListener
+
+        return frame;
+    }  // end method createAddressBookEntryFrame
+
+    // create a new AddressBookEntryFrame and register listener
+    private UserEntryFrame createUserEntryFrame() {
+        UserEntryFrame frame = new UserEntryFrame();
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         frame.addInternalFrameListener(
                 new InternalFrameAdapter() {
@@ -591,6 +624,99 @@ public class Engineering extends JFrame {
         }  // end method actionPerformed
 
     }  // end inner class SearchAction
+
+    private class AddUserAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public AddUserAction()
+        {
+            putValue( NAME, "Add User" );
+            putValue( SHORT_DESCRIPTION, "Add User" );
+            putValue( LONG_DESCRIPTION,
+                    "Add new Engineering User" );
+            putValue( MNEMONIC_KEY, new Integer( 'A' ) );
+        }
+
+        // save new entry or update existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+
+
+
+            JTextField xField = new JTextField(10);
+            xField.setText("Administrator");
+            JPasswordField yField = new JPasswordField(10);
+            JPanel myPanel = new JPanel();
+            myPanel.add(new JLabel("Admin Accounnt Name:"));
+            myPanel.add(xField);
+            myPanel.add(xField);
+
+            myPanel.add(Box.createHorizontalStrut(10)); // a spacer
+            myPanel.add(new JLabel("Password:"));
+            myPanel.add(yField);
+            int lastName = JOptionPane.showConfirmDialog(null, myPanel,
+                    "Please Log In", JOptionPane.OK_CANCEL_OPTION);
+            if (lastName == JOptionPane.OK_OPTION) {
+                System.out.println("x value: " + xField.getText());
+                System.out.println("y value: " + yField.getText());
+            }
+            String userName = xField.getText().toString();
+            String password = yField.getText().toString();
+            System.out.println(password);
+
+//            String lastName =
+//                    JOptionPane.showInputDialog( desktop, myPanel,
+//                            "Enter last name" );
+
+
+//            String lastName =
+//                    JOptionPane.showInputDialog( desktop,
+//                            "Enter last name" );
+//            loggedIn =   new LoginFrame();
+
+            // if last name was input, search for it; otherwise,
+            // do nothing
+
+
+            // Execute search. If found, AddressBookEntry
+            // is returned containing data.
+            ArrayList<NewJobEntry> person = database.findPerson( userName,
+                    password );
+
+            System.out.printf("Person" + person);
+            if ( person != null ) {
+                // create window to display AddressBookEntry
+                System.out.printf("Person" + person);
+                JOptionPane.showMessageDialog( desktop,
+                        "Log in succesfull.  Hello " + userName);
+//                LoginAction.setEnabled(false);  // disabled by default
+//                newAction.setEnabled(true);
+////                    saveAction.setEnabled( true );
+////                    deleteAction.setEnabled( true );
+//                addAddressAction.setEnabled(true);
+//                LogOutAction.setEnabled(true);  // disabled by default
+                UserEntryFrame entryFrame =
+                        createUserEntryFrame();
+                entryFrame.setAddressBookEntry(
+                        new NewJobEntry() );
+
+
+                // set new AddressBookEntry in window
+                entryFrame.setAddressBookEntry(
+                        new NewJobEntry() );
+
+                // display window
+                desktop.add( entryFrame );
+                entryFrame.setVisible( true );
+            }
+            else
+                JOptionPane.showMessageDialog( desktop,
+                        "User:\n" + userName +
+                                "\" not found!" );
+
+        }
+
+    }  // end inner class AddNewUserAction
 //
 //    // inner class defines action that closes connection to
 //    // database and terminates program

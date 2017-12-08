@@ -8,13 +8,7 @@ public class NewJobEntry {
     private String userName = "";
     private String Password = "";
 
-    public String getJobNumber() {
-        return jobNumber;
-    }
 
-    public void setJobNumber(String jobNumber) {
-        this.jobNumber = jobNumber;
-    }
 
     private String jobNumber = "";
 //    private String state = "";
@@ -117,6 +111,14 @@ public class NewJobEntry {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
     }
 //    // set state in which person lives
 //    public void setState( String personState )

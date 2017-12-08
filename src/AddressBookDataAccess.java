@@ -8,6 +8,9 @@ public interface AddressBookDataAccess {
     // AddressBookEntry containing information.
     public ArrayList<NewJobEntry>  findPerson(String userName , String password );
 
+        public boolean newUser( NewJobEntry person )
+            throws DataAccessException;
+
     // Update information for specified person.
     // Return boolean indicating success or failure.
 //    public boolean savePerson(

@@ -20,6 +20,8 @@ public class CloudscapeDataAccess
     private PreparedStatement sqlInsertPhone;
     private PreparedStatement sqlInsertEmail;
 
+    private PreparedStatement sqlInsertUser;
+
     // references to prepared statements for updating entry
     private PreparedStatement sqlUpdateName;
     private PreparedStatement sqlUpdateAddress;
@@ -41,12 +43,18 @@ public class CloudscapeDataAccess
         // connect to addressbook database
         connect();
 
+        // Insert userName and password in table user of Engineering Database.
+        // For referential integrity, this must be performed
+        sqlInsertUser = connection.prepareStatement(
+                "INSERT INTO users ( userName, pass ) " +
+                        "VALUES ( ? , ? )" );
+
         // locate person
 //        sqlFind = connection.prepareStatement(
 //            "SELECT Password" +
 //                    "FROM users" +
 //                    "WHERE Password = ?");
-        sqlSingleFindPersonID = connection.prepareStatement("SELECT userName FROM users WHERE userName = ? AND pass = ?");
+        sqlSingleFindPersonID = connection.prepareStatement("SELECT userName, pass FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
 //        sqlFind = connection.prepareStatement(
@@ -67,6 +75,10 @@ public class CloudscapeDataAccess
         // sqlInsertEmail.
         sqlInsertName = connection.prepareStatement(
                 "INSERT INTO names ( firstName, lastName ) " +
+                        "VALUES ( ? , ? )" );
+
+        sqlInsertUser = connection.prepareStatement(
+                "INSERT INTO users ( userName, pass ) " +
                         "VALUES ( ? , ? )" );
 
         // insert address in table addresses
@@ -138,15 +150,15 @@ public class CloudscapeDataAccess
         String driver = "com.mysql.jdbc.Driver";
 
         // URL to connect to books database
-        String url = "jdbc:mysql://localhost:3306/addressbook?autoReconnect=true&useSSL=false";
-//        String url = "jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false";
+//        String url = "jdbc:mysql://localhost:3306/addressbook?autoReconnect=true&useSSL=false";
+        String url = "jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false";
 
         // load database driver class
         Class.forName( driver );
 
         // connect to database
-        connection = DriverManager.getConnection( url, "root", "root" );
-//        connection = DriverManager.getConnection( url, "root", "test12" );
+//        connection = DriverManager.getConnection( url, "root", "root" );
+        connection = DriverManager.getConnection( url, "root", "test12" );
 
         // Require manual commit for transactions. This enables
         // the program to rollback transactions that do not
@@ -154,11 +166,55 @@ public class CloudscapeDataAccess
         connection.setAutoCommit( false );
     }
 
-    // Locate specified person. Method returns AddressBookEntry
+
+        // Insert new User. Method returns boolean indicating
+    // success or failure.
+    public boolean newPerson( NewJobEntry person )
+            throws DataAccessException
+    {
+        // insert person in database
+        try {
+            int result;
+
+            // insert first and last name in names table
+//            sqlInsertUser.setString( 1, person.getFirstName() );
+//            sqlInsertUser.setString( 2, person.getLastName() );
+            result = sqlInsertUser.executeUpdate();
+
+            // if insert fails, rollback and discontinue
+            if ( result == 0 ) {
+                connection.rollback(); // rollback insert
+                return false;          // insert unsuccessful
+            }
+
+            connection.commit();   // commit insert
+            return true;           // insert successful
+            }
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return false;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                exception.printStackTrace();
+                throw new DataAccessException( exception );
+            }
+        }
+    }  // end method newUser
+
+    // Locate specified User. Method returns AddressBookEntry
     // containing information.
     public ArrayList<NewJobEntry> findPerson( String username, String password )
     {
         try {
+
+            System.out.println("hererererererer");
             // set query parameter and execute query
 //            sqlFind.setString( 1, lastName);
 //            ResultSet resultSet = sqlFind.executeQuery();
@@ -171,16 +227,24 @@ public class CloudscapeDataAccess
             ResultSet resultSet = sqlSingleFindPersonID.executeQuery();
 
             // if no records found, return immediately
-            if ( !resultSet.next() )
+            if ( !resultSet.next() ){
+                System.out.println("nulll");
                 return null;
 
-            ArrayList<NewJobEntry> arraylist = new ArrayList<>();
+            }
 
-            while (resultSet.next()) {
+            System.out.println("hererererererer 3");
+            ArrayList<NewJobEntry> arraylist = new ArrayList<>();
+            System.out.println(resultSet.getString("userName"));
+            System.out.println(resultSet.getString("pass"));
+
+
+                System.out.println("hererererererer 4");
                 NewJobEntry person = new NewJobEntry();
                 // set AddressBookEntry properties
-                person.setPassword(resultSet.getString(1));
-                System.out.println(person.getPassword());
+                person.setUserName(resultSet.getString("userName"));
+//                System.out.println(person.getPassword());
+                System.out.println("person == " + person.getUserName());
 //                person.setFirstName(resultSet.getString(2));
 //                person.setLastName(resultSet.getString(3));
 //
@@ -198,7 +262,7 @@ public class CloudscapeDataAccess
 //                person.setEmailAddress(resultSet.getString(13));
 
                 arraylist.add(person);
-            }
+
             return arraylist;
         }
 
@@ -207,6 +271,49 @@ public class CloudscapeDataAccess
             return null;
         }
     }  // end method findPerson
+
+    // Insert new entry. Method returns boolean indicating
+    // success or failure.
+    public boolean newUser( NewJobEntry person )
+            throws DataAccessException
+    {
+        // insert person in database
+        try {
+            int result;
+
+            // insert first and last name in names table
+            sqlInsertUser.setString( 1, person.getUserName() );
+            sqlInsertUser.setString( 2, person.getPassword() );
+            result = sqlInsertUser.executeUpdate();
+
+            // if insert fails, rollback and discontinue
+            if ( result == 0 ) {
+                connection.rollback(); // rollback insert
+                return false;          // insert unsuccessful
+            }
+
+
+
+                connection.commit();   // commit insert
+                return true;           // insert successful
+        }  // end try
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return false;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                exception.printStackTrace();
+                throw new DataAccessException( exception );
+            }
+        }
+    }  // end method newPerson
 
     // Update an entry. Method returns boolean indicating
     // success or failure.
@@ -469,6 +576,8 @@ public class CloudscapeDataAccess
             sqlDeletePhone.close();
             sqlDeleteEmail.close();
             connection.close();
+
+            sqlInsertUser.close();
         }  // end try
 
         // detect problems closing statements and connection
