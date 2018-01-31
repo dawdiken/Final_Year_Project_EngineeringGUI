@@ -49,10 +49,7 @@ public class FileDrop
 {
     private transient javax.swing.border.Border normalBorder;
     private transient java.awt.dnd.DropTargetListener dropListener;
-
-
-    /** Discover if the running JVM is modern enough to have drag and drop. */
-    private static Boolean supportsDnD;
+    
 
     // Default border color
     private static java.awt.Color defaultBorderColor = new java.awt.Color( 0f, 0f, 1f, 0.25f );
@@ -261,8 +258,7 @@ public class FileDrop
             final Listener listener)
     {
 
-        if( supportsDnD() )
-        {   // Make a drop listener
+           // Make a drop listener
             dropListener = new java.awt.dnd.DropTargetListener()
             {   public void dragEnter( java.awt.dnd.DropTargetDragEvent evt )
             {       log( out, "FileDrop: dragEnter event." );
@@ -410,29 +406,11 @@ public class FileDrop
 
             // Make the component (and possibly children) drop targets
             makeDropTarget( out, c, recursive );
-        }   // end if: supports dnd
-        else
-        {   log( out, "FileDrop: Drag and drop is not supported with this JVM" );
-        }   // end else: does not support DnD
+
     }   // end constructor
 
 
-    private static boolean supportsDnD()
-    {   // Static Boolean
-        if( supportsDnD == null )
-        {
-            boolean support = false;
-            try
-            {   Class arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants" );
-                support = true;
-            }   // end try
-            catch( Exception e )
-            {   support = false;
-            }   // end catch
-            supportsDnD = new Boolean( support );
-        }   // end if: first time through
-        return supportsDnD.booleanValue();
-    }   // end supportsDnD
+
 
 
     // BEGIN 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
@@ -553,47 +531,8 @@ public class FileDrop
 
 
 
-    /**
-     * Removes the drag-and-drop hooks from the component and optionally
-     * from the all children. You should call this if you add and remove
-     * components after you've set up the drag-and-drop.
-     * This will recursively unregister all components contained within
-     * <var>c</var> if <var>c</var> is a {@link java.awt.Container}.
-     *
-     * @param c The component to unregister as a drop target
-     * @since 1.0
-     */
-    public static boolean remove( java.awt.Component c)
-    {   return remove( null, c, true );
-    }   // end remove
 
 
-
-    /**
-     * Removes the drag-and-drop hooks from the component and optionally
-     * from the all children. You should call this if you add and remove
-     * components after you've set up the drag-and-drop.
-     *
-     * @param out Optional {@link java.io.PrintStream} for logging drag and drop messages
-     * @param c The component to unregister
-     * @param recursive Recursively unregister components within a container
-     * @since 1.0
-     */
-    public static boolean remove( java.io.PrintStream out, java.awt.Component c, boolean recursive )
-    {   // Make sure we support dnd.
-        if( supportsDnD() )
-        {   log( out, "FileDrop: Removing drag-and-drop hooks." );
-            c.setDropTarget( null );
-            if( recursive && ( c instanceof java.awt.Container ) )
-            {   java.awt.Component[] comps = ((java.awt.Container)c).getComponents();
-                for( int i = 0; i < comps.length; i++ )
-                    remove( out, comps[i], recursive );
-                return true;
-            }   // end if: recursive
-            else return false;
-        }   // end if: supports DnD
-        else return false;
-    }   // end remove
 
 
 
