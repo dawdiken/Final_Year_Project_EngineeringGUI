@@ -12,12 +12,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.*;
 
-public class Work extends JFrame{
+public class DisplayPdf extends JFrame{
     JButton button, button1 ;
     JLabel label;
     JTextField jtf;
 
-    public Work(){
+    public DisplayPdf(){
         super("retrieve image from database in java");
 
         button = new JButton("Retrieve");
@@ -36,12 +36,12 @@ public class Work extends JFrame{
         add(button1);
         add(label);
         add(jtf);
-        String pathtofile = "";
+//        String pathtofile = "";
 
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                WindowsPlatformAppPDF(pathtofile);
+//                WindowsPlatformAppPDF(pathtofile);
             }
         });
 
@@ -55,7 +55,10 @@ public class Work extends JFrame{
                     Statement st = con.createStatement();
 //                    ResultSet rs = st.executeQuery("select * from myimages where ID = '"+jtf.getText()+"'");
                     ResultSet rs = st.executeQuery("select photo from person where person_id = 15");
-                    final String pathtofile = pdfsaveme(rs);
+
+                    String pathtofile = pdfsaveme(rs);
+                    System.out.println("after func call " +  pathtofile);
+                    WindowsPlatformAppPDF(pathtofile);
 
                     System.out.println("pathtofile" + pathtofile);
                     System.out.println(rs);
@@ -123,19 +126,17 @@ public class Work extends JFrame{
     public void WindowsPlatformAppPDF(String pathto) {
 
             try {
+//                C:\Users\G00070718\Desktop\project_gui\Final_Year_Project_EngineeringGUI\test.pdf
 
-                if ((new File("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\MMLab3_davidkenny_C.PDF")).exists()) {
 
+                String command = "rundll32 url.dll,FileProtocolHandler " + pathto + ".pdf";
+                System.out.println(command);
                     Process p = Runtime
                             .getRuntime()
-                            .exec("rundll32 url.dll,FileProtocolHandler C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\MMLab3_davidkenny_C.PDF");
+//                            .exec(command);
+                            .exec(command);
                     p.waitFor();
 
-                } else {
-
-                    System.out.println("File is not exists");
-
-                }
 
                 System.out.println("Done");
 
@@ -147,7 +148,7 @@ public class Work extends JFrame{
 
 
     public static void main(String[] args){
-        new Work();
+        new DisplayPdf();
     }
 }
 
