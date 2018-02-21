@@ -225,14 +225,20 @@ public class NewJobFrame extends JInternalFrame {
             {
                 for( int i = 0; i < files.length; i++ )
                 {
+                    String path = "";
                     try
                     {
+                        field.setText("");
                         field.append( files[i].getCanonicalPath() + "\n" );
+                        path = files[i].getCanonicalPath();
                     }   // end try
                     catch( java.io.IOException e ) {
                         System.out.println("drag drop failed/n" + e);
                     }
 
+                    System.out.println("this is meant to tpath" + path);
+                    ViewFileDropped v1 = new ViewFileDropped();
+                    v1.ViewFileDropped(path);
                 }   // end for: through each dropped file
             }   // end filesDropped
         }); // end FileDrop.Listener
