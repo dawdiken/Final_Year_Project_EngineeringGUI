@@ -31,7 +31,8 @@ public class NewJobFrame extends JInternalFrame {
             CUSTOMER_PART = "Customer Part",
             PART_SOP = "Part SOP:",
             BATCH_QTY = "Batch QTY:",
-            DEPARTMENT = "Department";
+            DEPARTMENT = "Department",
+            DRAG_DROP = "Drag and Drop:";
 //            EIRCODE = "Eircode",
 //            ADDRESS1_1 = "Address 1(2)",
 //            ADDRESS2_1 = "Address 2(2)",
@@ -79,6 +80,7 @@ public class NewJobFrame extends JInternalFrame {
         createOption( DEPARTMENT , 4);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
+        createDragDrop( DRAG_DROP );
 
 //        createRow( EIRCODE , 1);
 //        createRow( PHONE , 1);
@@ -202,6 +204,40 @@ public class NewJobFrame extends JInternalFrame {
         fields.put( name, field );
     }
 
+    private void createDragDrop( String name )
+    {
+        JLabel label = new JLabel( name, SwingConstants.RIGHT );
+        label.setBorder(
+                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+        leftPanel.add( label );
+
+        JTextArea field = new JTextArea(  );
+        fields.put( name, field );
+        field.setBorder(
+                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
+
+        middlePanel.add( field );
+
+
+        new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
+        {
+            public void filesDropped( java.io.File[] files )
+            {
+                for( int i = 0; i < files.length; i++ )
+                {
+                    try
+                    {
+                        field.append( files[i].getCanonicalPath() + "\n" );
+                    }   // end try
+                    catch( java.io.IOException e ) {
+                        System.out.println("drag drop failed/n" + e);
+                    }
+
+                }   // end for: through each dropped file
+            }   // end filesDropped
+        }); // end FileDrop.Listener
+    }
+
     private void createOption( String name, int option )
     {
         switch (option){
@@ -226,8 +262,6 @@ public class NewJobFrame extends JInternalFrame {
                 btn.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
                 rightPanel.add(btn);
 
-    //        frame.setVisible(true); // added code
-    //        rightPanel.add( jcomp1 );
 
                 fields.put( name, cb );
                 break;
