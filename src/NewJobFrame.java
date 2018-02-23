@@ -112,6 +112,7 @@ public class NewJobFrame extends JInternalFrame {
         setOption( PART_SOP, job.getPartSop() );
         setOption( DEPARTMENT, job.getDepartment() );
         setField( BATCH_QTY, job.getBatchQty() );
+        //setField( DRAG_DROP, job.getBatchQty() );
 //        setField( PHONE, job.getPhoneNumber() );
 ////        setField( PHONE_1, job.getPhoneNumber() );
 //        setField( EMAIL, job.getEmailAddress() );
@@ -121,16 +122,17 @@ public class NewJobFrame extends JInternalFrame {
 //    // AddressBookEntry
     public NewJobEntry getAddressBookEntry()
     {
-        System.out.println("TEST11111");
+        //System.out.println("TEST11111");
         job.setCustomerName( getOption( CUSTOMER_NAME ) );
-        System.out.println("test2222222222");
+        //System.out.println("test2222222222");
         job.setPartName( getOption( CUSTOMER_PART ) );
-        System.out.println("test3333333333");
+        //System.out.println("test3333333333");
         job.setPartSop( getOption( PART_SOP ) );
-        System.out.println("Test44444");
+       // System.out.println("Test44444");
         job.setDepartment( getOption( DEPARTMENT ) );
         job.setJobNumber( getField( JOB_NUMBER ) );
         job.setBatchQty( getField( BATCH_QTY ) );
+        job.setDropPath( getDropped( DRAG_DROP ) );
 //        job.setState( getField( STATE ) );
 //        job.setZipcode( getField(EIRCODE) );
 //        job.setPhoneNumber( getField( PHONE ) );
@@ -171,6 +173,14 @@ public class NewJobFrame extends JInternalFrame {
     {
         JTextField field =
                 ( JTextField ) fields.get( fieldName );
+
+        return field.getText();
+    }
+
+    private String getDropped( String fieldName )
+    {
+        JTextArea field =
+                ( JTextArea ) fields.get( fieldName );
 
         return field.getText();
     }
@@ -233,10 +243,9 @@ public class NewJobFrame extends JInternalFrame {
                         path = files[i].getCanonicalPath();
                     }   // end try
                     catch( java.io.IOException e ) {
-                        System.out.println("drag drop failed/n" + e);
+                        System.out.println("Drop failed/n" + e);
                     }
 
-                    System.out.println("this is meant to tpath" + path);
                     ViewFileDropped v1 = new ViewFileDropped();
                     v1.ViewFileDropped(path);
                 }   // end for: through each dropped file

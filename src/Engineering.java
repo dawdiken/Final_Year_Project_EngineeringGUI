@@ -365,6 +365,8 @@ public class Engineering extends JFrame {
             putValue( MNEMONIC_KEY, new Integer( 'S' ) );
         }
 
+
+
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
@@ -377,7 +379,19 @@ public class Engineering extends JFrame {
                     currentFrame.getAddressBookEntry();
 //            System.out.printf(person.getBatchQty());
             System.out.println("Batch qty = " + person.getBatchQty());
+            System.out.println("drop path = " + person.getDropPath());
+            System.out.println("drop path = " + person.toString());
 
+            try {
+                database.savePerson(person);
+            }
+
+            // detect problems deleting person
+            catch ( DataAccessException exception ) {
+                JOptionPane.showMessageDialog( desktop, exception,
+                        "Deletion failed", JOptionPane.ERROR_MESSAGE );
+                exception.printStackTrace();
+            }
                 // close current window and dispose of resources
                 currentFrame.dispose();
         }  // end method actionPerformed

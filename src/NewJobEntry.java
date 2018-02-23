@@ -1,16 +1,23 @@
 public class NewJobEntry {
-    private String customerName = "";
-    private String partName = "";
-    private String partSop = "";
-    private String department = "";
-    private String batchQty = "";
 
+    private Integer jobId;
+    private String jobNumber = "";
+    private String active = "";
+    private String customerName = "";
+    private String department = "";
+    private String partName = "";
+    private Integer batchNumber;
+    private Integer batchQty;
+    private Integer machineID;
+    private Integer qtyMade;
+    private Integer qtyScrap;
+    private String dropPath = "";
+
+    private String partSop = "";
     private String userName = "";
     private String Password = "";
 
 
-
-    private String jobNumber = "";
 //    private String state = "";
 //    private String zipcode = "";
 //    private String phoneNumber = "";
@@ -86,15 +93,71 @@ public class NewJobEntry {
 
 
     // set batchQty
-    public void setBatchQty(String personCity )
+    public void setBatchQty(Integer personCity )
     {
         batchQty = personCity;
     }
 
     // get batchQty
-    public String getBatchQty()
+    public Integer getBatchQty()
     {
         return batchQty;
+    }
+
+    public String getDropPath() {
+        return dropPath;
+    }
+
+    public void setDropPath(String dropPath) {
+        this.dropPath = dropPath;
+    }
+
+    public Integer getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
+    }
+
+    public Integer getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(Integer batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
+    public Integer getMachineID() {
+        return machineID;
+    }
+
+    public void setMachineID(Integer machineID) {
+        this.machineID = machineID;
+    }
+
+    public Integer getQtyMade() {
+        return qtyMade;
+    }
+
+    public void setQtyMade(Integer qtyMade) {
+        this.qtyMade = qtyMade;
+    }
+
+    public Integer getQtyScrap() {
+        return qtyScrap;
+    }
+
+    public void setQtyScrap(Integer qtyScrap) {
+        this.qtyScrap = qtyScrap;
     }
 
     public String getUserName() {
