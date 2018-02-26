@@ -7,7 +7,7 @@ public class NewJobEntry {
     private String department = "";
     private String partName = "";
     private Integer batchNumber;
-    private Integer batchQty;
+    private String batchQty = "";
     private Integer machineID;
     private Integer qtyMade;
     private Integer qtyScrap;
@@ -36,7 +36,7 @@ public class NewJobEntry {
     {
     }
 
-    // set person's id
+
     public NewJobEntry( int id )
     {
 
@@ -93,13 +93,13 @@ public class NewJobEntry {
 
 
     // set batchQty
-    public void setBatchQty(Integer personCity )
+    public void setBatchQty(String personCity )
     {
         batchQty = personCity;
     }
 
     // get batchQty
-    public Integer getBatchQty()
+    public String getBatchQty()
     {
         return batchQty;
     }

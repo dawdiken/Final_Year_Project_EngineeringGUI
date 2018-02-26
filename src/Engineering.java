@@ -145,8 +145,8 @@ public class Engineering extends JFrame {
 //    }
 
     // create a new AddressBookEntryFrame and register listener
-    private NewJobFrame createNewJobFrame() {
-        NewJobFrame frame = new NewJobFrame();
+    private NewJobFrame createNewJobFrame(int id, String custName) {
+        NewJobFrame frame = new NewJobFrame(id, custName);
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         frame.addInternalFrameListener(
                 new InternalFrameAdapter() {
@@ -297,8 +297,8 @@ public class Engineering extends JFrame {
         {
 
 
-            String[] custList= {"Customer 1", "Customer 2", "Customer 3", "Customer 4",
-                    "Customer 5", "Customer 6" };
+            String[] custList= {"Boston Scientific", "Medtronic", "Stryker", "GMIT",
+                    "Creganna", "DePuy" };
             JFrame frame = new JFrame("Input Dialog Example 3");
             String customerName = (String) JOptionPane.showInputDialog(frame,
                     "Please select a customer?",
@@ -311,31 +311,33 @@ public class Engineering extends JFrame {
             // favoritePizza will be null if the user clicks Cancel
             System.out.printf("customerName is %s.\n", customerName);            // create new internal window
 
-            if (customerName == "Customer 1"){
+            if (customerName == "Boston Scientific"){
+                int id = 1;
                 NewJobFrame entryFrame =
-                        createNewJobFrame();
-                entryFrame.setAddressBookEntry(
-                        new NewJobEntry() );
+                        createNewJobFrame(id, customerName);
+//                entryFrame.setAddressBookEntry(
+//                        new NewJobEntry() );
 
 
             // set new AddressBookEntry in window
             entryFrame.setAddressBookEntry(
-                    new NewJobEntry() );
+                    new NewJobEntry(id) );
 
                 // display window
                 desktop.add( entryFrame );
                 entryFrame.setVisible( true );
             }
-            else if ( customerName == "Customer 2"){
-                MedtronicJobFrame entryFrame =
-                        createMedtronicJobFrame();
-                entryFrame.setAddressBookEntry(
-                        new NewJobEntry() );
+            else if (customerName == "Medtronic"){
+                int id = 2;
+                NewJobFrame entryFrame =
+                        createNewJobFrame(id, customerName);
+//                entryFrame.setAddressBookEntry(
+//                        new NewJobEntry() );
 
 
                 // set new AddressBookEntry in window
                 entryFrame.setAddressBookEntry(
-                        new NewJobEntry() );
+                        new NewJobEntry(id) );
 
                 // display window
                 desktop.add( entryFrame );

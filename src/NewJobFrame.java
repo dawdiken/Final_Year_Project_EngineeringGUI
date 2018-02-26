@@ -33,20 +33,7 @@ public class NewJobFrame extends JInternalFrame {
             BATCH_QTY = "Batch QTY:",
             DEPARTMENT = "Department",
             DRAG_DROP = "Drag and Drop:";
-//            EIRCODE = "Eircode",
-//            ADDRESS1_1 = "Address 1(2)",
-//            ADDRESS2_1 = "Address 2(2)",
-//            CITY_1 = "City(2)",
-//            STATE_1 = "State(2)",
-//            EIRCODE_1 = "Eircode(2)",
-//            ADDRESS1_2 = "Address 1(3)",
-//            ADDRESS2_2 = "Address 2(3)",
-//            CITY_2 = "City(3)",
-//            STATE_2 = "State(3)",
-//            EIRCODE_2 = "Eircode(3)",
-//            PHONE = "Phone", EMAIL = "Email",
-//            PHONE_1 = "Phone(2)", EMAIL_1 = "Email(2)",
-//            PHONE_2 = "Phone(3)", EMAIL_2 = "Email(3)";
+
 
 
     private int rowCount = 12;
@@ -54,9 +41,9 @@ public class NewJobFrame extends JInternalFrame {
     private Container container;
 
     // construct GUI
-    public NewJobFrame()
+    public NewJobFrame(int id, String custName)
     {
-        super( "New Job customer name here!!", true, true );
+        super( custName, true, true );
 
         fields = new HashMap();
 
@@ -74,10 +61,10 @@ public class NewJobFrame extends JInternalFrame {
 
 //        createRow( FIRST_NAME , 1);
 
-        createOption(CUSTOMER_NAME, 1);
-        createOption( CUSTOMER_PART, 2);
-        createOption( PART_SOP, 3);
-        createOption( DEPARTMENT , 4);
+        createOption(CUSTOMER_NAME, 1, custName);
+        createOption( CUSTOMER_PART, 2, null);
+        createOption( PART_SOP, 3, null);
+        createOption( DEPARTMENT , 4, null);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
         createDragDrop( DRAG_DROP );
@@ -122,22 +109,19 @@ public class NewJobFrame extends JInternalFrame {
 //    // AddressBookEntry
     public NewJobEntry getAddressBookEntry()
     {
-        //System.out.println("TEST11111");
-        job.setCustomerName( getOption( CUSTOMER_NAME ) );
-        //System.out.println("test2222222222");
-        job.setPartName( getOption( CUSTOMER_PART ) );
-        //System.out.println("test3333333333");
-        job.setPartSop( getOption( PART_SOP ) );
-       // System.out.println("Test44444");
-        job.setDepartment( getOption( DEPARTMENT ) );
+        job.setJobId(10);
         job.setJobNumber( getField( JOB_NUMBER ) );
+        job.setActive("false");
+
+        job.setCustomerName( getOption( CUSTOMER_NAME ) );
+        job.setDepartment( getOption( DEPARTMENT ) );
+        job.setPartName( getOption( CUSTOMER_PART ) );
+        job.setBatchNumber(1234);
         job.setBatchQty( getField( BATCH_QTY ) );
+        job.setMachineID(1);
+        job.setQtyMade(0);
+        job.setQtyScrap(0);
         job.setDropPath( getDropped( DRAG_DROP ) );
-//        job.setState( getField( STATE ) );
-//        job.setZipcode( getField(EIRCODE) );
-//        job.setPhoneNumber( getField( PHONE ) );
-////        job.setPhoneNumber( getField( PHONE_1 ) );
-//        job.setEmailAddress( getField( EMAIL ) );
 
         return job;
     }
@@ -186,8 +170,6 @@ public class NewJobFrame extends JInternalFrame {
     }
     private String getOption( String fieldName )
     {
-
-        System.out.printf("TESTTTTTT");
         JComboBox field =
                 ( JComboBox ) fields.get( fieldName );
         Object obj = field.getSelectedItem();
@@ -253,12 +235,11 @@ public class NewJobFrame extends JInternalFrame {
         }); // end FileDrop.Listener
     }
 
-    private void createOption( String name, int option )
+    private void createOption( String name, int option, String custName )
     {
         switch (option){
             case 1:
-                String[] choices = { "Customer 1", "Customer 2", "Customer 3", "Customer 4",
-                        "Customer 5", "Customer 6" };
+                String[] choices = { custName };
                 final JComboBox<String> cb = new JComboBox<String>(choices);
 
                 cb.setMaximumSize(cb.getPreferredSize()); // added code
