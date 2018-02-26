@@ -1,9 +1,16 @@
 // Java core packages
+import com.sun.jndi.toolkit.url.Uri;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CloudscapeDataAccess
-        implements AddressBookDataAccess {
+public class CloudscapeDataAccess implements AddressBookDataAccess {
 
     // reference to database connection
     private Connection connection;
@@ -36,6 +43,9 @@ public class CloudscapeDataAccess
     private PreparedStatement sqlSingleFindPersonID;
     private PreparedStatement sqlFindPersonID;
     private PreparedStatement sqlFindName;
+    private PreparedStatement sqlInsertJob;
+    private PreparedStatement sqlInsertBlob;
+    private PreparedStatement sqlTest;
 
     // set up PreparedStatements to access database
     public CloudscapeDataAccess() throws Exception
@@ -49,6 +59,14 @@ public class CloudscapeDataAccess
                 "INSERT INTO users ( userName, pass ) " +
                         "VALUES ( ? , ? )" );
 
+        sqlInsertJob = connection.prepareStatement(
+                "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap, job_doc ) " +
+                        "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? )" );
+
+        sqlInsertBlob =  connection.prepareStatement(
+                "INSERT INTO workon_copy ( job_doc ) " +
+                        "VALUES (? )" );
+
         // locate person
 //        sqlFind = connection.prepareStatement(
 //            "SELECT Password" +
@@ -57,6 +75,7 @@ public class CloudscapeDataAccess
         sqlSingleFindPersonID = connection.prepareStatement("SELECT userName, pass FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
+        sqlTest = connection.prepareStatement("SELECT * FROM workon_copy");
 //        sqlFind = connection.prepareStatement(
 //                "SELECT users.userID, userName, pass" +
 //                        "FROM users" +
@@ -67,7 +86,7 @@ public class CloudscapeDataAccess
         //sqlPersonID = connection.prepareStatement(
         //      "VALUES ConnectionInfo.lastAutoincrementValue( " +
         //            "'APP', 'NAMES', 'PERSONID')" );
-        sqlPersonID = connection.prepareStatement("SELECT MAX(personID) FROM names");
+        sqlPersonID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
 
         // Insert first and last names in table names.
         // For referential integrity, this must be performed
@@ -317,81 +336,85 @@ public class CloudscapeDataAccess
 
     // Update an entry. Method returns boolean indicating
     // success or failure.
-//    public boolean savePerson( AddressBookEntry person )
-//            throws DataAccessException
-//    {
-//        // update person in database
-//        try {
-//            int result;
-//
-//            // update names table
-//            sqlUpdateName.setString( 1, person.getFirstName() );
-//            sqlUpdateName.setString( 2, person.getLastName() );
-//            sqlUpdateName.setInt( 3, person.getPersonID() );
-//            result = sqlUpdateName.executeUpdate();
-//
-//            // if update fails, rollback and discontinue
-//            if ( result == 0 ) {
-//                connection.rollback(); // rollback update
-//                return false;          // update unsuccessful
-//            }
-//
-//            // update addresses table
-//            sqlUpdateAddress.setString( 1, person.getAddress1() );
-//            sqlUpdateAddress.setString( 2, person.getAddress2() );
-//            sqlUpdateAddress.setString( 3, person.getCity() );
-//            sqlUpdateAddress.setString( 4, person.getState() );
-//            sqlUpdateAddress.setString( 5, person.getZipcode() );
-//            sqlUpdateAddress.setInt( 6, person.getAddressID() );
-//            result = sqlUpdateAddress.executeUpdate();
-//
-//            // if update fails, rollback and discontinue
-//            if ( result == 0 ) {
-//                connection.rollback(); // rollback update
-//                return false;          // update unsuccessful
-//            }
-//
-//            // update phoneNumbers table
-//            sqlUpdatePhone.setString( 1, person.getPhoneNumber() );
-//            sqlUpdatePhone.setInt( 2, person.getPhoneID() );
-//            result = sqlUpdatePhone.executeUpdate();
-//
-//            // if update fails, rollback and discontinue
-//            if ( result == 0 ) {
-//                connection.rollback(); // rollback update
-//                return false;          // update unsuccessful
-//            }
-//
-//            // update emailAddresses table
-//            sqlUpdateEmail.setString( 1, person.getEmailAddress() );
-//            sqlUpdateEmail.setInt( 2, person.getEmailID() );
-//            result = sqlUpdateEmail.executeUpdate();
-//
-//            // if update fails, rollback and discontinue
-//            if ( result == 0 ) {
-//                connection.rollback(); // rollback update
-//                return false;          // update unsuccessful
-//            }
-//
-//            connection.commit();   // commit update
-//            return true;           // update successful
-//        }  // end try
-//
-//        // detect problems updating database
-//        catch ( SQLException sqlException ) {
-//
-//            // rollback transaction
-//            try {
-//                connection.rollback(); // rollback update
-//                return false;          // update unsuccessful
-//            }
-//
-//            // handle exception rolling back transaction
-//            catch ( SQLException exception ) {
-//                throw new DataAccessException( exception );
-//            }
-//        }
-//    }  // end method savePerson
+    public boolean savePerson( NewJobEntry person )
+            throws DataAccessException
+    {
+        // update person in database
+        try {
+            int result;
+
+            String filePath = person.getDropPath();
+            System.out.println(filePath);
+            //File file = new File(person.getDropPath());
+            //String path = file.getAbsolutePath();
+
+           // System.out.println("file path here "+ path);
+
+
+            String filePath1 = "C:\\Users\\G00070718\\Desktop\\testdocs\\test.pdf";
+
+
+            String replaceString= filePath.replace("\\","\\\\").trim();
+
+
+
+            System.out.println("resplasaiehtwoeuhf;wh" + replaceString);
+
+
+
+            InputStream inputStream = new FileInputStream(new File(replaceString));
+
+
+           // sqlInsertBlob.setBlob( 1, inputStream );
+            // update addresses table
+            //sqlInsertJob.setInt( 1, person.getJobId() );
+            sqlInsertJob.setString( 1, person.getJobNumber() );
+            sqlInsertJob.setString( 2, person.getActive() );
+            sqlInsertJob.setString( 3, person.getCustomerName() );
+            sqlInsertJob.setString( 4, person.getDepartment() );
+            sqlInsertJob.setString( 5, person.getPartName() );
+            sqlInsertJob.setInt( 6, person.getBatchNumber() );
+            sqlInsertJob.setString( 7, person.getBatchQty() );
+            sqlInsertJob.setInt( 8, person.getMachineID() );
+            sqlInsertJob.setInt( 9, person.getQtyMade() );
+            sqlInsertJob.setInt( 10, person.getQtyScrap() );
+            sqlInsertJob.setBlob( 11, inputStream );
+            result = sqlInsertJob.executeUpdate();
+
+            // if update fails, rollback and discontinue
+            if ( result == 0 ) {
+                connection.rollback(); // rollback update
+                System.out.println("failed here 1");
+                return false;          // update unsuccessful
+            }
+
+            connection.commit();   // commit update
+            return true;           // update successful
+        }  // end try
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            System.out.println("failed here 2");
+            System.out.println(sqlException);
+            // rollback transaction
+            try {
+                connection.rollback(); // rollback update
+                return false;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                System.out.println("failed here 5");
+
+                throw new DataAccessException( exception );
+            }
+        }catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+
+    }  // end method savePerson
 //
 //    // Insert new entry. Method returns boolean indicating
 //    // success or failure.
@@ -561,7 +584,8 @@ public class CloudscapeDataAccess
     {
         // close database connection
         try {
-            sqlFind.close();
+            //connection.close();
+            //sqlFind.close();
             sqlPersonID.close();
             sqlInsertName.close();
             sqlInsertAddress.close();
@@ -575,6 +599,7 @@ public class CloudscapeDataAccess
             sqlDeleteAddress.close();
             sqlDeletePhone.close();
             sqlDeleteEmail.close();
+            sqlInsertJob.close();
             connection.close();
 
             sqlInsertUser.close();
@@ -582,6 +607,7 @@ public class CloudscapeDataAccess
 
         // detect problems closing statements and connection
         catch ( SQLException sqlException ) {
+            System.out.println("here now");
             sqlException.printStackTrace();
         }
     }  // end method close

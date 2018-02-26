@@ -121,7 +121,7 @@ public class Engineering extends JFrame {
                 new WindowAdapter() {
                     public void windowClosing( WindowEvent event )
                     {
-//                        shutDown();
+                        shutDown();
                     }
                 }
         );
@@ -139,10 +139,10 @@ public class Engineering extends JFrame {
     }  // end Engineering constructor
 
     // close database connection and terminate program
-//    private void shutDown() {
-//        database.close();   // close database connection
-//        System.exit( 0 );   // terminate program
-//    }
+    private void shutDown() {
+        database.close();   // close database connection
+        System.exit( 0 );   // terminate program
+    }
 
     // create a new AddressBookEntryFrame and register listener
     private NewJobFrame createNewJobFrame(int id, String custName) {
@@ -172,32 +172,7 @@ public class Engineering extends JFrame {
         return frame;
     }  // end method createAddressBookEntryFrame
 
-    private MedtronicJobFrame createMedtronicJobFrame() {
-        MedtronicJobFrame frame = new MedtronicJobFrame();
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        frame.addInternalFrameListener(
-                new InternalFrameAdapter() {
 
-                    // internal frame becomes active frame on desktop
-                    public void internalFrameActivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( true );
-                        deleteAction.setEnabled( true );
-                    }
-
-                    // internal frame becomes inactive frame on desktop
-                    public void internalFrameDeactivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( false );
-                        deleteAction.setEnabled( false );
-                    }
-                }  // end InternalFrameAdapter anonymous inner class
-        ); // end call to addInternalFrameListener
-
-        return frame;
-    }  // end method createAddressBookEntryFrame
 
     // create a new AddressBookEntryFrame and register listener
     private UserEntryFrame createUserEntryFrame() {
@@ -211,7 +186,7 @@ public class Engineering extends JFrame {
                             InternalFrameEvent event )
                     {
                         saveAction.setEnabled( true );
-                        deleteAction.setEnabled( true );
+                        //deleteAction.setEnabled( true );
                     }
 
                     // internal frame becomes inactive frame on desktop
@@ -219,7 +194,7 @@ public class Engineering extends JFrame {
                             InternalFrameEvent event )
                     {
                         saveAction.setEnabled( false );
-                        deleteAction.setEnabled( false );
+                        //deleteAction.setEnabled( false );
                     }
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
@@ -382,7 +357,6 @@ public class Engineering extends JFrame {
 //            System.out.printf(person.getBatchQty());
             System.out.println("Batch qty = " + person.getBatchQty());
             System.out.println("drop path = " + person.getDropPath());
-            System.out.println("drop path = " + person.toString());
 
             try {
                 database.savePerson(person);
@@ -734,26 +708,26 @@ public class Engineering extends JFrame {
 
     }  // end inner class AddNewUserAction
 //
-//    // inner class defines action that closes connection to
-//    // database and terminates program
-//    private class ExitAction extends AbstractAction {
-//
-//        // set up action's name, descriptions and mnemonic
-//        public ExitAction()
-//        {
-//            putValue( NAME, "Exit" );
-//            putValue( SHORT_DESCRIPTION, "Exit" );
-//            putValue( LONG_DESCRIPTION, "Terminate the program" );
-//            putValue( MNEMONIC_KEY, new Integer( 'x' ) );
-//        }
-//
-//        // terminate program
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            shutDown();  // close database connection and terminate
-//        }
-//
-//    }  // end inner class ExitAction
+//     inner class defines action that closes connection to
+//     database and terminates program
+    private class ExitAction extends AbstractAction {
+
+        // set up action's name, descriptions and mnemonic
+        public ExitAction()
+        {
+            putValue( NAME, "Exit" );
+            putValue( SHORT_DESCRIPTION, "Exit" );
+            putValue( LONG_DESCRIPTION, "Terminate the program" );
+            putValue( MNEMONIC_KEY, new Integer( 'x' ) );
+        }
+
+        // terminate program
+        public void actionPerformed( ActionEvent e )
+        {
+            shutDown();  // close database connection and terminate
+        }
+
+    }  // end inner class ExitAction
 //
 //    private class AddAddressAction extends AbstractAction {
 //

@@ -12,7 +12,7 @@ public class insertPhoto {
             String url = "jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false";
             String user = "root";
             String password = "test12";
-            String filePath = "C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\https___www.vhi.ie_pdf_claims_healthstepsgold.pdf";
+            String filePath = "C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\legodude.pdf";
 //            String filePath = "workIcon.png";
 
             try {

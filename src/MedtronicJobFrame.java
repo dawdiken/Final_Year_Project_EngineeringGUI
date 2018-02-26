@@ -109,7 +109,7 @@ public class MedtronicJobFrame extends JInternalFrame {
         setOption( CUSTOMER_PART, job.getPartName() );
         setOption( PART_SOP, job.getPartSop() );
         setOption( DEPARTMENT, job.getDepartment() );
-        setField( BATCH_QTY, job.getBatchQty() );
+        //setField( BATCH_QTY, job.getBatchQty() );
 //        setField( PHONE, job.getPhoneNumber() );
 ////        setField( PHONE_1, job.getPhoneNumber() );
 //        setField( EMAIL, job.getEmailAddress() );
@@ -128,7 +128,7 @@ public class MedtronicJobFrame extends JInternalFrame {
         System.out.println("Test44444");
         job.setDepartment( getOption( DEPARTMENT ) );
         job.setJobNumber( getField( JOB_NUMBER ) );
-        job.setBatchQty( getField( BATCH_QTY ) );
+        //job.setBatchQty( getField( BATCH_QTY ) );
 //        job.setState( getField( STATE ) );
 //        job.setZipcode( getField(EIRCODE) );
 //        job.setPhoneNumber( getField( PHONE ) );

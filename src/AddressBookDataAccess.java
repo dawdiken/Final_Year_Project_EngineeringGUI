@@ -13,8 +13,8 @@ public interface AddressBookDataAccess {
 
     // Update information for specified person.
     // Return boolean indicating success or failure.
-//    public boolean savePerson(
-//            AddressBookEntry person ) throws DataAccessException;
+    public boolean savePerson(
+            NewJobEntry person ) throws DataAccessException;
 //
 //    // Insert a new person. Return boolean indicating
 //    // success or failure.

@@ -1,3 +1,4 @@
+import java.io.IOException;
 
 /**
  * A simple example showing how to use {@link FileDrop}
@@ -17,12 +18,18 @@ public class RunFileDrop {
                 java.awt.BorderLayout.CENTER );
 
         new FileDrop( System.out, text, /*dragBorder,*/ new FileDrop.Listener()
-        {   public void filesDropped( java.io.File[] files )
-        {   for( int i = 0; i < files.length; i++ )
-        {   try
-        {   text.append( files[i].getCanonicalPath() + "\n" );
+        {
+            public void filesDropped( java.io.File[] files )
+        {
+            for( int i = 0; i < files.length; i++ )
+        {
+            try
+        {
+            text.append( files[i].getCanonicalPath() + "\n" );
         }   // end try
-        catch( java.io.IOException e ) {}
+        catch( java.io.IOException e ) {
+            System.out.println("drag drop failed/n" + e);
+        }
         }   // end for: through each dropped file
         }   // end filesDropped
         }); // end FileDrop.Listener
