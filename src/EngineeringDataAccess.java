@@ -2,7 +2,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 
-public interface AddressBookDataAccess {
+public interface EngineeringDataAccess {
 
     // Locate specified person by last name. Return
     // AddressBookEntry containing information.
@@ -28,4 +28,4 @@ public interface AddressBookDataAccess {
 
     // close data source connection
     public void close();
-}  // end interface AddressBookDataAccess
+}  // end interface EngineeringDataAccess

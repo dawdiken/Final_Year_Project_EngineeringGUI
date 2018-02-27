@@ -1,5 +1,4 @@
 // Java core packages
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,7 @@ public class UserEntryFrame extends JInternalFrame {
     private HashMap fields;
 
     // reference to database access object
-    private AddressBookDataAccess database;
+    private EngineeringDataAccess database;
 
 
 
@@ -57,7 +56,7 @@ public class UserEntryFrame extends JInternalFrame {
 
         // create database connection
         try {
-            database = new CloudscapeDataAccess();
+            database = new DataBaseAccess();
         }
 
         // detect problems with database connection

@@ -1,7 +1,6 @@
 
 
 // Java core packages
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +16,7 @@ public class Engineering extends JFrame {
     private JDesktopPane desktop;
 
     // reference to database access object
-    private AddressBookDataAccess database;
+    private EngineeringDataAccess database;
 
     // references to Actions
     Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
@@ -29,7 +28,7 @@ public class Engineering extends JFrame {
 
 //         create database connection
         try {
-            database = new CloudscapeDataAccess();
+            database = new DataBaseAccess();
         }
 
         // detect problems with database connection

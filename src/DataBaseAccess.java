@@ -1,16 +1,13 @@
 // Java core packages
-import com.sun.jndi.toolkit.url.Uri;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CloudscapeDataAccess implements AddressBookDataAccess {
+public class DataBaseAccess implements EngineeringDataAccess {
 
     // reference to database connection
     private Connection connection;
@@ -48,7 +45,7 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
     private PreparedStatement sqlTest;
 
     // set up PreparedStatements to access database
-    public CloudscapeDataAccess() throws Exception
+    public DataBaseAccess() throws Exception
     {
         // connect to addressbook database
         connect();
@@ -156,7 +153,7 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
         // delete email address from table emailAddresses
         sqlDeleteEmail = connection.prepareStatement(
                 "DELETE FROM emailAddresses WHERE personID = ?" );
-    }  // end CloudscapeDataAccess constructor
+    }  // end DataBaseAccess constructor
 
     // Obtain a connection to addressbook database. Method may
     // may throw ClassNotFoundException or SQLException. If so,
@@ -613,9 +610,9 @@ public class CloudscapeDataAccess implements AddressBookDataAccess {
     }  // end method close
 
     // Method to clean up database connection. Provided in case
-    // CloudscapeDataAccess object is garbage collected.
+    // DataBaseAccess object is garbage collected.
     protected void finalize()
     {
         close();
     }
-}  // end class CloudscapeDataAccess
+}  // end class DataBaseAccess
