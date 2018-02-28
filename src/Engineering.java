@@ -115,9 +115,10 @@ public class Engineering extends JFrame {
         c.add( toolBar, BorderLayout.EAST );
         c.add( desktop, BorderLayout.CENTER );
 
+        //set a nice default colour for all Joption panes throughout the program
         UIManager UI=new UIManager();
-        UI.put("OptionPane.background",new ColorUIResource(255,204,0));
-        UI.put("Panel.background",new ColorUIResource(255,204,0));
+        UI.put("OptionPane.background",new ColorUIResource(255,240,153));
+        UI.put("Panel.background",new ColorUIResource(255,240,153));
 
         // register for windowClosing event in case user
         // does not select Exit from File menu to terminate
@@ -307,13 +308,14 @@ public class Engineering extends JFrame {
             for (int i = 0; i < customerNames.size() ; i++) {
                 result = customerNames.toArray(new String[]{});
             }
+            final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
 
             JFrame frame = new JFrame("Input Dialog Example 3");
             String customerName = (String) JOptionPane.showInputDialog(frame,
                     "Please select a customer?",
                     "Customer",
                     JOptionPane.QUESTION_MESSAGE,
-                    null,
+                    icon,
                     result,
                     result[0]);
 
