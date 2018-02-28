@@ -46,7 +46,7 @@ public class Engineering extends JFrame {
         // Set up actions for common operations. Private inner
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
-        newAction.setEnabled( false );    // disabled by default
+        newAction.setEnabled( true );    // disabled by default
         saveAction = new SaveAction();
 
         saveAction.setEnabled( false );    // disabled by default
@@ -143,7 +143,7 @@ public class Engineering extends JFrame {
         System.exit( 0 );   // terminate program
     }
 
-    // create a new AddressBookEntryFrame and register listener
+    // create a new NewJobEntryFrame and register listener
     private NewJobFrame createNewJobFrame(int id, String custName) {
         NewJobFrame frame = new NewJobFrame(id, custName);
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
@@ -173,7 +173,7 @@ public class Engineering extends JFrame {
 
 
 
-    // create a new AddressBookEntryFrame and register listener
+    // create a new UserEntryFrame and register listener
     private UserEntryFrame createUserEntryFrame() {
         UserEntryFrame frame = new UserEntryFrame();
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
@@ -270,22 +270,34 @@ public class Engineering extends JFrame {
         public void actionPerformed( ActionEvent e )
         {
 
+           ArrayList<String> customerNames = database.findCustomer();
+            String[] result = {};
+            //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
+            for (int i = 0; i < customerNames.size() ; i++) {
+                System.out.println("customer names here");
+                //System.out.println(customerNames.get(i).getCustomerName());
+                result = customerNames.toArray(new String[]{});
+            }
 
-            String[] custList= {"Boston Scientific", "Medtronic", "Stryker", "GMIT",
-                    "Creganna", "DePuy" };
+
+
+
+//            String[] custList= {"Boston Scientific", "Medtronic", "Stryker", "GMIT",
+//                    "Creganna", "DePuy" };
+
             JFrame frame = new JFrame("Input Dialog Example 3");
             String customerName = (String) JOptionPane.showInputDialog(frame,
                     "Please select a customer?",
                     "Customer",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
-                    custList,
-                    custList[0]);
+                    result,
+                    result[0]);
 
             // favoritePizza will be null if the user clicks Cancel
             System.out.printf("customerName is %s.\n", customerName);            // create new internal window
 
-            if (customerName == "Boston Scientific"){
+            if (customerName.equalsIgnoreCase("Boston Scientific")) {
                 int id = 1;
                 NewJobFrame entryFrame =
                         createNewJobFrame(id, customerName);
@@ -301,7 +313,7 @@ public class Engineering extends JFrame {
                 desktop.add( entryFrame );
                 entryFrame.setVisible( true );
             }
-            else if (customerName == "Medtronic"){
+            else if (customerName.equalsIgnoreCase("Medtronic")){
                 int id = 2;
                 NewJobFrame entryFrame =
                         createNewJobFrame(id, customerName);

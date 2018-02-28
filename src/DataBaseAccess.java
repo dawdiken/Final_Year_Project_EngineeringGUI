@@ -41,6 +41,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindPersonID;
     private PreparedStatement sqlFindName;
     private PreparedStatement sqlInsertJob;
+    private PreparedStatement sqlFindCustomer;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlTest;
 
@@ -72,7 +73,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlSingleFindPersonID = connection.prepareStatement("SELECT userName, pass FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
-        sqlTest = connection.prepareStatement("SELECT * FROM workon_copy");
+        sqlFindCustomer = connection.prepareStatement("SELECT cust_name FROM customer");
 //        sqlFind = connection.prepareStatement(
 //                "SELECT users.userID, userName, pass" +
 //                        "FROM users" +
@@ -229,8 +230,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
     public ArrayList<NewJobEntry> findPerson( String username, String password )
     {
         try {
-
-            System.out.println("hererererererer");
             // set query parameter and execute query
 //            sqlFind.setString( 1, lastName);
 //            ResultSet resultSet = sqlFind.executeQuery();
@@ -246,7 +245,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
             if ( !resultSet.next() ){
                 System.out.println("nulll");
                 return null;
-
             }
 
             System.out.println("hererererererer 3");
@@ -254,8 +252,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
             System.out.println(resultSet.getString("userName"));
             System.out.println(resultSet.getString("pass"));
 
-
-                System.out.println("hererererererer 4");
                 NewJobEntry person = new NewJobEntry();
                 // set AddressBookEntry properties
                 person.setUserName(resultSet.getString("userName"));
@@ -278,6 +274,52 @@ public class DataBaseAccess implements EngineeringDataAccess {
 //                person.setEmailAddress(resultSet.getString(13));
 
                 arraylist.add(person);
+
+            return arraylist;
+        }
+
+        // catch SQLException
+        catch ( SQLException sqlException ) {
+            return null;
+        }
+    }  // end method findPerson
+
+
+    // Locate specified User. Method returns AddressBookEntry
+    // containing information.
+    public ArrayList<String> findCustomer()
+    {
+        try {
+             ResultSet resultSet = sqlFindCustomer.executeQuery();
+
+            // if no records found, return immediately
+            if ( !resultSet.next()){
+                System.out.println("nulll");
+                return null;
+            }
+
+            System.out.println("hererererererer 3");
+            ArrayList<String> arraylist = new ArrayList<>();
+            System.out.println(resultSet.getString("cust_name"));
+
+            //NewJobEntry customer = new NewJobEntry();
+            // set AddressBookEntry properties
+//            for (int i = 0; i != resultSet.isLast() ; i++) {
+//                System.out.println("customer names here");
+//                System.out.println(customerNames.get(i));
+//            }
+            int i =0;
+            String names;
+            while(resultSet.next()){
+                //NewJobEntry customer = new NewJobEntry();
+                names =resultSet.getString("cust_name");
+                arraylist.add(names);
+                System.out.println("person == " + names);
+            }
+//            customer.setCustomerName(resultSet.getString("cust_name"));
+//            System.out.println("person == " + customer.getCustomerName().toString());
+//
+//            arraylist.add(customer);
 
             return arraylist;
         }
@@ -339,32 +381,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
         // update person in database
         try {
             int result;
+            String filePath = person.getDropPath().trim();
+            InputStream inputStream = new FileInputStream(new File(filePath));
 
-            String filePath = person.getDropPath();
-            System.out.println(filePath);
-            //File file = new File(person.getDropPath());
-            //String path = file.getAbsolutePath();
-
-           // System.out.println("file path here "+ path);
-
-
-            String filePath1 = "C:\\Users\\G00070718\\Desktop\\testdocs\\test.pdf";
-
-
-            String replaceString= filePath.replace("\\","\\\\").trim();
-
-
-
-            System.out.println("resplasaiehtwoeuhf;wh" + replaceString);
-
-
-
-            InputStream inputStream = new FileInputStream(new File(replaceString));
-
-
-           // sqlInsertBlob.setBlob( 1, inputStream );
-            // update addresses table
-            //sqlInsertJob.setInt( 1, person.getJobId() );
+            // update work table with new job
             sqlInsertJob.setString( 1, person.getJobNumber() );
             sqlInsertJob.setString( 2, person.getActive() );
             sqlInsertJob.setString( 3, person.getCustomerName() );
@@ -381,7 +401,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
             // if update fails, rollback and discontinue
             if ( result == 0 ) {
                 connection.rollback(); // rollback update
-                System.out.println("failed here 1");
                 return false;          // update unsuccessful
             }
 
@@ -391,7 +410,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
         // detect problems updating database
         catch ( SQLException sqlException ) {
-            System.out.println("failed here 2");
             System.out.println(sqlException);
             // rollback transaction
             try {
@@ -406,6 +424,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 throw new DataAccessException( exception );
             }
         }catch (IOException ex) {
+            System.out.println("failed here 6");
             ex.printStackTrace();
             return false;
         }

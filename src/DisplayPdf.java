@@ -54,7 +54,7 @@ public class DisplayPdf extends JFrame{
                     Connection con = DriverManager.getConnection("jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false","root","test12");
                     Statement st = con.createStatement();
 //                    ResultSet rs = st.executeQuery("select * from myimages where ID = '"+jtf.getText()+"'");
-                    ResultSet rs = st.executeQuery("select photo from person where person_id = 15");
+                    ResultSet rs = st.executeQuery("select photo, first_name from person where person_id = 20");
 
                     String pathtofile = pdfsaveme(rs);
                     System.out.println("after func call " +  pathtofile);
@@ -62,24 +62,24 @@ public class DisplayPdf extends JFrame{
 
                     System.out.println("pathtofile" + pathtofile);
                     System.out.println(rs);
-                    if(rs.next()){
-                        byte[] img = rs.getBytes("photo");
-
-
-
-                        //Resize The ImageIcon
-
-                        ImageIcon image = new ImageIcon(img);
-                        Image im = image.getImage();
-
-                        Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
-                        ImageIcon newImage = new ImageIcon(myImg);
-                        label.setIcon(newImage);
-                    }
-
-                    else{
-                        JOptionPane.showMessageDialog(null, "No Data");
-                    }
+//                    if(rs.next()){
+//                        byte[] img = rs.getBytes("photo");
+//
+//
+//
+//                        //Resize The ImageIcon
+//
+//                        ImageIcon image = new ImageIcon(img);
+//                        Image im = image.getImage();
+//
+//                        Image myImg = im.getScaledInstance(label.getWidth(), label.getHeight(),Image.SCALE_SMOOTH);
+//                        ImageIcon newImage = new ImageIcon(myImg);
+//                        label.setIcon(newImage);
+//                    }
+//
+//                    else{
+//                        JOptionPane.showMessageDialog(null, "No Data");
+//                    }
 
 
                 }catch(Exception ex){
@@ -104,8 +104,9 @@ public class DisplayPdf extends JFrame{
             int i = 0;
 
             while (rs.next()) {
+                System.out.println("check for name here" + rs.getString(2));
                 InputStream in = rs.getBinaryStream(1);
-                File out = new File("test");
+                File out = new File("C:\\Users\\G00070718\\Desktop\\testdocs\\test");
                 OutputStream f = new FileOutputStream(out+ ".pdf");
                 i++;
                 int c = 0;
@@ -126,14 +127,10 @@ public class DisplayPdf extends JFrame{
     public void WindowsPlatformAppPDF(String pathto) {
 
             try {
-//                C:\Users\G00070718\Desktop\project_gui\Final_Year_Project_EngineeringGUI\test.pdf
-
-
                 String command = "rundll32 url.dll,FileProtocolHandler " + pathto + ".pdf";
                 System.out.println(command);
                     Process p = Runtime
                             .getRuntime()
-//                            .exec(command);
                             .exec(command);
                     p.waitFor();
 
@@ -143,9 +140,7 @@ public class DisplayPdf extends JFrame{
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
         }
-
 
     public static void main(String[] args){
         new DisplayPdf();

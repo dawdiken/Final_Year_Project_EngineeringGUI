@@ -7,6 +7,7 @@ public interface EngineeringDataAccess {
     // Locate specified person by last name. Return
     // AddressBookEntry containing information.
     public ArrayList<NewJobEntry>  findPerson(String userName , String password );
+    public ArrayList<String> findCustomer();
 
         public boolean newUser( NewJobEntry person )
             throws DataAccessException;
