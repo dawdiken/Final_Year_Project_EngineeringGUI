@@ -293,14 +293,14 @@ public class DataBaseAccess implements EngineeringDataAccess {
              ResultSet resultSet = sqlFindCustomer.executeQuery();
 
             // if no records found, return immediately
-            if ( !resultSet.next()){
+            if ( !resultSet.isBeforeFirst()){
                 System.out.println("nulll");
                 return null;
             }
 
             System.out.println("hererererererer 3");
             ArrayList<String> arraylist = new ArrayList<>();
-            System.out.println(resultSet.getString("cust_name"));
+            //System.out.println(resultSet.getString("cust_name"));
 
             //NewJobEntry customer = new NewJobEntry();
             // set AddressBookEntry properties

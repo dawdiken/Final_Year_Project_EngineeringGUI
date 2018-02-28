@@ -9,6 +9,7 @@ import java.util.ArrayList;
 // Java extension packages
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.plaf.ColorUIResource;
 
 public class Engineering extends JFrame {
 
@@ -20,7 +21,7 @@ public class Engineering extends JFrame {
 
     // references to Actions
     Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
-            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone;
+            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction;
 
     // set up database connection and GUI
     public Engineering() {
@@ -30,7 +31,6 @@ public class Engineering extends JFrame {
         try {
             database = new DataBaseAccess();
         }
-
         // detect problems with database connection
         catch ( Exception exception ) {
             exception.printStackTrace();
@@ -48,7 +48,6 @@ public class Engineering extends JFrame {
         newAction = new NewAction();
         newAction.setEnabled( true );    // disabled by default
         saveAction = new SaveAction();
-
         saveAction.setEnabled( false );    // disabled by default
         deleteAction = new DeleteAction();
         deleteAction.setEnabled( false );  // disabled by default
@@ -56,7 +55,8 @@ public class Engineering extends JFrame {
         LoginAction.setEnabled( true );  // disabled by default
         LogOutAction = new LogOutAction();
         LogOutAction.setEnabled( false );  // disabled by default
-
+        newDocumentAction = new newDocumentAction();
+        newDocumentAction.setEnabled( true );    // disabled by default
         AddUserAction = new AddUserAction();
         AddUserAction.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
@@ -76,6 +76,8 @@ public class Engineering extends JFrame {
         toolBar.add( deleteAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( searchAction );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( newDocumentAction);
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( addAddressAction );
         toolBar.add( new JToolBar.Separator() );
@@ -112,6 +114,10 @@ public class Engineering extends JFrame {
         Container c = getContentPane();
         c.add( toolBar, BorderLayout.EAST );
         c.add( desktop, BorderLayout.CENTER );
+
+        UIManager UI=new UIManager();
+        UI.put("OptionPane.background",new ColorUIResource(255,204,0));
+        UI.put("Panel.background",new ColorUIResource(255,204,0));
 
         // register for windowClosing event in case user
         // does not select Exit from File menu to terminate
@@ -168,6 +174,31 @@ public class Engineering extends JFrame {
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
 
+        return frame;
+    }  // end method createAddressBookEntryFrame
+
+
+    // create a new NewJobEntryFrame and register listener
+    private addDocForm createAddDocFrame() {
+        addDocForm frame = new addDocForm();
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
+        frame.addInternalFrameListener(
+                new InternalFrameAdapter() {
+                    // internal frame becomes active frame on desktop
+                    public void internalFrameActivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( true );
+                    }
+
+                    // internal frame becomes inactive frame on desktop
+                    public void internalFrameDeactivated(
+                            InternalFrameEvent event )
+                    {
+                        saveAction.setEnabled( false );
+                    }
+                }  // end InternalFrameAdapter anonymous inner class
+        ); // end call to addInternalFrameListener
         return frame;
     }  // end method createAddressBookEntryFrame
 
@@ -274,16 +305,8 @@ public class Engineering extends JFrame {
             String[] result = {};
             //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
             for (int i = 0; i < customerNames.size() ; i++) {
-                System.out.println("customer names here");
-                //System.out.println(customerNames.get(i).getCustomerName());
                 result = customerNames.toArray(new String[]{});
             }
-
-
-
-
-//            String[] custList= {"Boston Scientific", "Medtronic", "Stryker", "GMIT",
-//                    "Creganna", "DePuy" };
 
             JFrame frame = new JFrame("Input Dialog Example 3");
             String customerName = (String) JOptionPane.showInputDialog(frame,
@@ -353,8 +376,6 @@ public class Engineering extends JFrame {
             putValue( MNEMONIC_KEY, new Integer( 'S' ) );
         }
 
-
-
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
@@ -372,11 +393,10 @@ public class Engineering extends JFrame {
             try {
                 database.savePerson(person);
             }
-
             // detect problems deleting person
             catch ( DataAccessException exception ) {
                 JOptionPane.showMessageDialog( desktop, exception,
-                        "Deletion failed", JOptionPane.ERROR_MESSAGE );
+                        "Save failed", JOptionPane.ERROR_MESSAGE );
                 exception.printStackTrace();
             }
                 // close current window and dispose of resources
@@ -384,7 +404,105 @@ public class Engineering extends JFrame {
         }  // end method actionPerformed
 
     }  // end inner class SaveAction
+
+
+    // Private inner class defines action that enables
+    // user to input new entry. User must "Save" entry
+    // after inputting data.
+    private class newDocumentAction extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public newDocumentAction()
+        {
+            putValue( NAME, "New Documents" );
+            putValue( SHORT_DESCRIPTION, "New Doc" );
+            putValue( LONG_DESCRIPTION,
+                    "Add a new document to the data base" );
+            putValue( MNEMONIC_KEY, new Integer( 'D' ) );
+        }
+
+        public void actionPerformed( ActionEvent e )
+        {
+            //addDocForm newDocEntry = new addDocForm();
+            addDocForm entryFrame =
+                    createAddDocFrame();
+//            JTextField xField = new JTextField(10);
+//            xField.setText("Administrator");
+//            JPasswordField yField = new JPasswordField(10);
+//            JPanel myPanel = new JPanel();
+//            myPanel.add(new JLabel("Admin Accounnt Name:"));
+//            myPanel.add(xField);
+//            myPanel.add(xField);
 //
+//            myPanel.add(Box.createHorizontalStrut(10)); // a spacer
+//            myPanel.add(new JLabel("Password:"));
+//            myPanel.add(yField);
+//            int lastName = JOptionPane.showConfirmDialog(null, myPanel,
+//                    "Please Log In", JOptionPane.OK_CANCEL_OPTION);
+//            if (lastName == JOptionPane.OK_OPTION) {
+//                System.out.println("x value: " + xField.getText());
+//                System.out.println("y value: " + yField.getText());
+//            }
+//            String userName = xField.getText().toString();
+//            String password = yField.getText().toString();
+//            System.out.println(password);
+//
+////            String lastName =
+////                    JOptionPane.showInputDialog( desktop, myPanel,
+////                            "Enter last name" );
+//
+//
+////            String lastName =
+////                    JOptionPane.showInputDialog( desktop,
+////                            "Enter last name" );
+////            loggedIn =   new LoginFrame();
+//
+//            // if last name was input, search for it; otherwise,
+//            // do nothing
+//
+//
+//            // Execute search. If found, AddressBookEntry
+//            // is returned containing data.
+//            ArrayList<NewJobEntry> person = database.findPerson( userName,
+//                    password );
+//
+//            System.out.printf("Person" + person);
+//            if ( person != null ) {
+//                // create window to display AddressBookEntry
+//                System.out.printf("Person" + person);
+//                JOptionPane.showMessageDialog( desktop,
+//                        "Log in succesfull.  Hello " + userName);
+////                LoginAction.setEnabled(false);  // disabled by default
+////                newAction.setEnabled(true);
+//////                    saveAction.setEnabled( true );
+//////                    deleteAction.setEnabled( true );
+////                addAddressAction.setEnabled(true);
+////                LogOutAction.setEnabled(true);  // disabled by default
+//                UserEntryFrame entryFrame =
+//                        createUserEntryFrame();
+//                entryFrame.setAddressBookEntry(
+//                        new NewJobEntry() );
+//
+//
+//                // set new AddressBookEntry in window
+//                entryFrame.setAddressBookEntry(
+//                        new NewJobEntry() );
+//
+//                // display window
+//                desktop.add( entryFrame );
+//                entryFrame.setVisible( true );
+//            }
+//            else
+//                JOptionPane.showMessageDialog( desktop,
+//                        "User:\n" + userName +
+//                                "\" not found!" );
+
+        }
+
+    }  // end inner class AddNewUserAction
+
+
+
 //    // inner class defines action that deletes entry
     private class DeleteAction extends AbstractAction {
 
@@ -641,9 +759,6 @@ public class Engineering extends JFrame {
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
-
-
-
             JTextField xField = new JTextField(10);
             xField.setText("Administrator");
             JPasswordField yField = new JPasswordField(10);
