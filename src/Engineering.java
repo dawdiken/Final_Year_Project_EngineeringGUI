@@ -115,10 +115,12 @@ public class Engineering extends JFrame {
         c.add( toolBar, BorderLayout.EAST );
         c.add( desktop, BorderLayout.CENTER );
 
-        //set a nice default colour for all Joption panes throughout the program
+        //set a nice default colour for all JOptionPane/ComboBox panes throughout the program
         UIManager UI=new UIManager();
         UI.put("OptionPane.background",new ColorUIResource(255,240,153));
         UI.put("Panel.background",new ColorUIResource(255,240,153));
+        UI.put("ComboBox.selectionBackground", new ColorUIResource(Color.green));
+        UI.put("ComboBox.selectionForeground", new ColorUIResource(Color.WHITE));
 
         // register for windowClosing event in case user
         // does not select Exit from File menu to terminate

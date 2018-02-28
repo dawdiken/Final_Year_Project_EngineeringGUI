@@ -1,48 +1,117 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class addDocForm  extends JInternalFrame {
+    private EngineeringDataAccess database;
+
     public addDocForm(){
 
 
-        String[] choices2 = { "Job 1", "Job 2", "Job 3", "Job 4",
-                "Job 5", "Job 6" };
-        final JComboBox<String> cb2 = new JComboBox<String>(choices2);
+        String[] choices = {"SOP", "Technical Drawing"};
+        final JComboBox<String> cb2 = new JComboBox<String>(choices);
+        JLabel label1 = new JLabel("Document type:");
 
         cb2.setMaximumSize(cb2.getPreferredSize()); // added code
         //cb2.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
         //cb.setVisible(true); // Not needed
         JPanel myPanel = new JPanel();
+        myPanel.add(label1);
         myPanel.add(cb2);
+        try {
+            database = new DataBaseAccess();
+        }
+        // detect problems with database connection
+        catch ( Exception exception ) {
+            exception.printStackTrace();
+            System.exit( 1 );
+        }
+        ArrayList<String> customerNames = database.findCustomer();
+        String[] result = {};
+        //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
+        for (int i = 0; i < customerNames.size() ; i++) {
+            result = customerNames.toArray(new String[]{});
+        }
 
-        JTextField xField = new JTextField(10);
-        xField.setText("Administrator");
-        JPasswordField yField = new JPasswordField(10);
-        //JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Doument Type:"));
-        myPanel.add(xField);
-        myPanel.add(xField);
 
-        myPanel.add(Box.createHorizontalStrut(10)); // a spacer
-        myPanel.add(new JLabel("Password:"));
-        myPanel.add(yField);
+        //String[] choices = {"SOP", "Technical Drawing"};
+        final JComboBox<String> cb3 = new JComboBox<String>(result);
+        JLabel label2 = new JLabel("Customer Name:");
+
+        cb3.setMaximumSize(cb3.getPreferredSize()); // added code
+        //cb2.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
+        //cb.setVisible(true); // Not needed
+        myPanel.add(label2);
+        myPanel.add(cb3);
+
+//        JTextField xField = new JTextField(10);
+//        xField.setText("Administrator");
+//        JPasswordField yField = new JPasswordField(10);
+//        //JPanel myPanel = new JPanel();
+//        myPanel.add(new JLabel("Doument Type:"));
+//        myPanel.add(xField);
+//        myPanel.add(xField);
+//
+//        myPanel.add(Box.createHorizontalStrut(10)); // a spacer
+//        myPanel.add(new JLabel("Password:"));
+//        myPanel.add(yField);
         //final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\workIcon.png");
+
+
+        JLabel label = new JLabel( "Drag and Drop:" );
+        label.setBorder(
+                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+        myPanel.add( label );
+
+        JTextArea field = new JTextArea( 5, 30 );
+        field.setBorder(
+                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
+
+        myPanel.add( field );
+
+
+        new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
+        {
+            public void filesDropped( java.io.File[] files )
+            {
+                for( int i = 0; i < files.length; i++ )
+                {
+                    String path = "";
+                    try
+                    {
+                        field.setText("");
+                        field.append( files[i].getCanonicalPath() + "\n" );
+                        path = files[i].getCanonicalPath();
+                    }   // end try
+                    catch( java.io.IOException e ) {
+                        System.out.println("Drop failed/n" + e);
+                    }
+
+                    ViewFileDropped v1 = new ViewFileDropped();
+                    v1.ViewFileDropped(path);
+                }   // end for: through each dropped file
+            }   // end filesDropped
+        }); // end FileDrop.Listener
+
+
+
+
+
+
         final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
-
-
-
-
         int lastName = JOptionPane.showConfirmDialog(null, myPanel,
                 "Drag And Drop New Documents", JOptionPane.OK_CANCEL_OPTION, 1, icon );
         if (lastName == JOptionPane.OK_OPTION) {
-            System.out.println("x value: " + xField.getText());
-            System.out.println("y value: " + yField.getText());
+//            System.out.println("x value: " + xField.getText());
+//            System.out.println("y value: " + yField.getText());
         }
-        String userName = xField.getText().toString();
-        String password = yField.getText().toString();
-        System.out.println(password);
+//        String userName = xField.getText().toString();
+//        String password = yField.getText().toString();
+//        System.out.println(password);
 
     }
+
+
 }
 
 
