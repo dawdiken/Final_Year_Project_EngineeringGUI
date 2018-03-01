@@ -119,7 +119,7 @@ public class FileDrop
             final Listener listener )
     {   this( out,  // Logging stream
             c,    // Drop target
-            javax.swing.BorderFactory.createMatteBorder( 5, 5, 5, 5, Color.red ),
+            javax.swing.BorderFactory.createMatteBorder( 2, 2, 2, 2, Color.red ),
             false, // Recursive
             listener );
     }   // end constructor

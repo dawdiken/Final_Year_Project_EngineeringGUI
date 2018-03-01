@@ -34,6 +34,7 @@ public class Engineering extends JFrame {
         // detect problems with database connection
         catch ( Exception exception ) {
             exception.printStackTrace();
+            System.out.println("datbase connection failed");
             System.exit( 1 );
         }
 

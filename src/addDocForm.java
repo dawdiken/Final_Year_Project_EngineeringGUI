@@ -65,7 +65,7 @@ public class addDocForm  extends JInternalFrame {
 
         JTextArea field = new JTextArea( 5, 30 );
         field.setBorder(
-                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
+                BorderFactory.createMatteBorder( 2, 2, 2, 2 , Color.black) );
 
         myPanel.add( field );
 
