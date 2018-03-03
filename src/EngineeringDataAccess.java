@@ -16,6 +16,8 @@ public interface EngineeringDataAccess {
     // Return boolean indicating success or failure.
     public boolean savePerson(
             NewJobEntry person ) throws DataAccessException;
+
+    public boolean newDocument( NewJobEntry person )throws DataAccessException;
 //
 //    // Insert a new person. Return boolean indicating
 //    // success or failure.

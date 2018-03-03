@@ -12,6 +12,7 @@ public class NewJobEntry {
     private Integer qtyMade;
     private Integer qtyScrap;
     private String dropPath = "";
+    private String techniaclDrawing = "";
 
     private String partSop = "";
     private String userName = "";
@@ -182,6 +183,14 @@ public class NewJobEntry {
 
     public void setJobNumber(String jobNumber) {
         this.jobNumber = jobNumber;
+    }
+
+    public String getTechniaclDrawing() {
+        return techniaclDrawing;
+    }
+
+    public void setTechniaclDrawing(String techniaclDrawing) {
+        this.techniaclDrawing = techniaclDrawing;
     }
 //    // set state in which person lives
 //    public void setState( String personState )

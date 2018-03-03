@@ -43,7 +43,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlInsertJob;
     private PreparedStatement sqlFindCustomer;
     private PreparedStatement sqlInsertBlob;
+    private PreparedStatement sqlInsertDrawing;
+    private PreparedStatement sqlFindCustomerID;
     private PreparedStatement sqlTest;
+
 
     // set up PreparedStatements to access database
     public DataBaseAccess() throws Exception
@@ -65,6 +68,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 "INSERT INTO workon_copy ( job_doc ) " +
                         "VALUES (? )" );
 
+        sqlInsertDrawing =  connection.prepareStatement(
+                "INSERT INTO technical_drawing ( customer_ID, drawingName, document_blob ) " +
+                        "VALUES (? , ?, ? )" );
+
         // locate person
 //        sqlFind = connection.prepareStatement(
 //            "SELECT Password" +
@@ -73,7 +80,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlSingleFindPersonID = connection.prepareStatement("SELECT userName, pass FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
-        sqlFindCustomer = connection.prepareStatement("SELECT cust_name FROM customer");
+        sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
+        sqlFindCustomerID = connection.prepareStatement("SELECT customer_ID FROM customer WHERE cust_name = ?");
 //        sqlFind = connection.prepareStatement(
 //                "SELECT users.userID, userName, pass" +
 //                        "FROM users" +
@@ -284,6 +292,69 @@ public class DataBaseAccess implements EngineeringDataAccess {
         }
     }  // end method findPerson
 
+    // Insert new entry. Method returns boolean indicating
+    // success or failure.
+    public boolean newDocument( NewJobEntry person )
+            throws DataAccessException
+    {
+        // insert person in database
+        try {
+            System.out.println("database" + person.getCustomerName());
+
+            sqlFindCustomerID.setString(1,person.getCustomerName());
+            ResultSet resultSet = sqlFindCustomerID.executeQuery();
+
+            // if no records found, return immediately
+            if ( !resultSet.isBeforeFirst()){
+                System.out.println("nulll");
+                return false;
+            }
+            Integer cust_ID = 0;
+            while(resultSet.next()) {
+                //System.out.println("result set" + resultSet.ge());
+                cust_ID = resultSet.getInt("customer_ID");
+                System.out.println("cust_ID == " + cust_ID);
+            }
+
+            int result;
+            String filePath = person.getDropPath().trim();
+            InputStream inputStream = new FileInputStream(new File(filePath));
+
+            // insert first and last name in names table
+            sqlInsertDrawing.setInt( 1, cust_ID );
+            sqlInsertDrawing.setString( 2, person.getTechniaclDrawing() );
+            sqlInsertDrawing.setBlob( 3, inputStream );
+            result = sqlInsertDrawing.executeUpdate();
+
+            // if insert fails, rollback and discontinue
+            if ( result == 0 ) {
+                connection.rollback(); // rollback insert
+                return false;          // insert unsuccessful
+            }
+            connection.commit();   // commit insert
+            return true;           // insert successful
+        }  // end try
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return false;          // update unsuccessful
+            }
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                exception.printStackTrace();
+                throw new DataAccessException( exception );
+            }
+        }catch (IOException ex) {
+            System.out.println("failed here 6");
+            ex.printStackTrace();
+            return false;
+        }
+    }  // end method newPerson
+
 
     // Locate specified User. Method returns AddressBookEntry
     // containing information.
@@ -349,9 +420,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 connection.rollback(); // rollback insert
                 return false;          // insert unsuccessful
             }
-
-
-
                 connection.commit();   // commit insert
                 return true;           // insert successful
         }  // end try

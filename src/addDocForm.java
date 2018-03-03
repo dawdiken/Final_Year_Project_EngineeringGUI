@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class addDocForm  extends JInternalFrame {
     private EngineeringDataAccess database;
+    //private NewJobEntry job;
 
     public addDocForm(){
-
+        NewJobEntry job = new NewJobEntry();
 
         String[] choices = {"SOP", "Technical Drawing"};
         final JComboBox<String> cb2 = new JComboBox<String>(choices);
@@ -26,16 +29,45 @@ public class addDocForm  extends JInternalFrame {
             exception.printStackTrace();
             System.exit( 1 );
         }
+//        Loader l = new Loader();
+//        SwingWorker work = l.createWorker();
+        //work.execute();
+//        try{
+//            ArrayList<String> customerNames2;
+//            String[] result2 = {};
+//
+//            System.out.println("this is work "+ work.get().toString());
+//        }
+//        catch( Exception ee){
+//            System.out.println(ee);
+//
+//
+//        }
+
+
         ArrayList<String> customerNames = database.findCustomer();
         String[] result = {};
+        String result2 = "";
+        String[] result3 = {};
         //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
         for (int i = 0; i < customerNames.size() ; i++) {
             result = customerNames.toArray(new String[]{});
         }
+        try{
+          // result2 = work.get().toString();
+        }
+        catch (Exception ee){
+            System.out.println(ee);
+        }
 
+        String[] ary = result2.split(",");
+
+        System.out.println("result 2" + result2);
+        System.out.println("result " + result.toString());
+        System.out.printf("ary = "+ ary);
 
         //String[] choices = {"SOP", "Technical Drawing"};
-        final JComboBox<String> cb3 = new JComboBox<String>(result);
+        JComboBox<String> cb3 = new JComboBox<String>(result);
         JLabel label2 = new JLabel("Customer Name:");
 
         cb3.setMaximumSize(cb3.getPreferredSize()); // added code
@@ -93,94 +125,26 @@ public class addDocForm  extends JInternalFrame {
             }   // end filesDropped
         }); // end FileDrop.Listener
 
-
-
-
-
-
         final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
         int lastName = JOptionPane.showConfirmDialog(null, myPanel,
                 "Drag And Drop New Documents", JOptionPane.OK_CANCEL_OPTION, 1, icon );
         if (lastName == JOptionPane.OK_OPTION) {
-//            System.out.println("x value: " + xField.getText());
-//            System.out.println("y value: " + yField.getText());
+            String value = cb3.getSelectedItem().toString().trim();
+
+            //Quick easy way to get the file name and type from the file path
+            File f = new File(field.getText().trim());
+            String fileName = f.getName();
+
+            //set values for the job object to be passed to database.newDocument function
+            job.setCustomerName(value);
+            job.setDropPath(field.getText());
+            job.setTechniaclDrawing(fileName);
+            try{
+                database.newDocument(job);
+            }
+            catch (DataAccessException ee){
+                System.out.println(ee);
+            }
         }
-//        String userName = xField.getText().toString();
-//        String password = yField.getText().toString();
-//        System.out.println(password);
-
     }
-
-
 }
-
-
-//    private void createOption( String name, int option, String custName )
-//    {
-//
-//
-//            String[] choices2 = { "Job 1", "Job 2", "Job 3", "Job 4",
-//                    "Job 5", "Job 6" };
-//            final JComboBox<String> cb2 = new JComboBox<String>(choices2);
-//
-//            cb2.setMaximumSize(cb2.getPreferredSize()); // added code
-//            cb2.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
-//            //cb.setVisible(true); // Not needed
-//            middlePanel.add(cb2);
-//
-//            JLabel label1 = new JLabel( name, SwingConstants.RIGHT );
-//            label1.setBorder(
-//                    BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-//            leftPanel.add( label1 );
-//
-//            JButton btn1 = new JButton("OK");
-//            btn1.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
-//            rightPanel.add(btn1);
-//
-//            //        frame.setVisible(true); // added code
-//            //        rightPanel.add( jcomp1 );
-//
-//            fields.put( name, cb2 );
-//    }
-//
-//
-//
-//
-//    private void createDragDrop( String name )
-//    {
-//        JLabel label = new JLabel( name, SwingConstants.RIGHT );
-//        label.setBorder(
-//                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-//        leftPanel.add( label );
-//
-//        JTextArea field = new JTextArea(  );
-//        fields.put( name, field );
-//        field.setBorder(
-//                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
-//
-//        middlePanel.add( field );
-//
-//
-//        new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
-//        {
-//            public void filesDropped( java.io.File[] files )
-//            {
-//                for( int i = 0; i < files.length; i++ )
-//                {
-//                    String path = "";
-//                    try
-//                    {
-//                        field.setText("");
-//                        field.append( files[i].getCanonicalPath() + "\n" );
-//                        path = files[i].getCanonicalPath();
-//                    }   // end try
-//                    catch( java.io.IOException e ) {
-//                        System.out.println("Drop failed/n" + e);
-//                    }
-//
-//                    ViewFileDropped v1 = new ViewFileDropped();
-//                    v1.ViewFileDropped(path);
-//                }   // end for: through each dropped file
-//            }   // end filesDropped
-//        }); // end FileDrop.Listener
-//    }
