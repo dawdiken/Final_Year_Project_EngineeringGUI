@@ -44,6 +44,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindCustomer;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlInsertDrawing;
+    private PreparedStatement sqlInsertSOP;
     private PreparedStatement sqlFindCustomerID;
     private PreparedStatement sqlTest;
 
@@ -71,6 +72,11 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlInsertDrawing =  connection.prepareStatement(
                 "INSERT INTO technical_drawing ( customer_ID, drawingName, document_blob ) " +
                         "VALUES (? , ?, ? )" );
+
+        sqlInsertSOP =  connection.prepareStatement(
+        "INSERT INTO sop_document ( customer_ID, sopName, document_blob ) " +
+                "VALUES (? , ?, ? )" );
+
 
         // locate person
 //        sqlFind = connection.prepareStatement(
@@ -294,7 +300,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     // Insert new entry. Method returns boolean indicating
     // success or failure.
-    public boolean newDocument( NewJobEntry person )
+    public boolean newTechDrawing(NewJobEntry person, int table )
             throws DataAccessException
     {
         // insert person in database
@@ -316,15 +322,29 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 System.out.println("cust_ID == " + cust_ID);
             }
 
-            int result;
+            int result = 0;
             String filePath = person.getDropPath().trim();
             InputStream inputStream = new FileInputStream(new File(filePath));
 
-            // insert first and last name in names table
-            sqlInsertDrawing.setInt( 1, cust_ID );
-            sqlInsertDrawing.setString( 2, person.getTechniaclDrawing() );
-            sqlInsertDrawing.setBlob( 3, inputStream );
-            result = sqlInsertDrawing.executeUpdate();
+            //use the table value of 1 or 2 to decide if its a
+            //sop or tech drawing and write to the correct table..
+            if (table == 1){
+                // insert first and last name in names table
+                sqlInsertDrawing.setInt( 1, cust_ID );
+                sqlInsertDrawing.setString( 2, person.getTechniaclDrawing() );
+                sqlInsertDrawing.setBlob( 3, inputStream );
+                result = sqlInsertDrawing.executeUpdate();
+            }
+            else if (table == 2){
+                // insert first and last name in names table
+                sqlInsertSOP.setInt( 1, cust_ID );
+                sqlInsertSOP.setString( 2, person.getPartSop() );
+                sqlInsertSOP.setBlob( 3, inputStream );
+                result = sqlInsertSOP.executeUpdate();
+            }
+
+
+
 
             // if insert fails, rollback and discontinue
             if ( result == 0 ) {

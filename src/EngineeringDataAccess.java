@@ -17,7 +17,7 @@ public interface EngineeringDataAccess {
     public boolean savePerson(
             NewJobEntry person ) throws DataAccessException;
 
-    public boolean newDocument( NewJobEntry person )throws DataAccessException;
+    public boolean newTechDrawing(NewJobEntry person, int table )throws DataAccessException;
 //
 //    // Insert a new person. Return boolean indicating
 //    // success or failure.

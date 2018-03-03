@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class addDocForm  extends JInternalFrame {
@@ -138,16 +137,24 @@ public class addDocForm  extends JInternalFrame {
             File f = new File(field.getText().trim());
             String fileName = f.getName();
 
-            //set values for the job object to be passed to database.newDocument function
-            job.setCustomerName(cust_name);
-            job.setDropPath(field.getText());
-            job.setTechniaclDrawing(fileName);
+            //set values for the job object to be passed to database.newTechDrawing function
+            int table = 0;
             try{
                 if(document_type == "Technical Drawing"){
-                    database.newDocument(job);
+                    //set values for the job object to be passed to database.newTechDrawing function
+                    table = 1;//flag to decide which table to write the document to (sop or technical drawing)
+                    job.setCustomerName(cust_name);
+                    job.setDropPath(field.getText());
+                    job.setTechniaclDrawing(fileName);
+                    database.newTechDrawing(job ,table );
                 }
                else if (document_type == "SOP"){
+                    table = 2;//flag to decide which table to write the document to (sop or technical drawing)
+                    job.setCustomerName(cust_name);
+                    job.setDropPath(field.getText());
+                    job.setPartSop(fileName);
                     System.out.println("sOPPPPP");
+                    database.newTechDrawing(job ,table );
                 }
             }
             catch (DataAccessException ee){
