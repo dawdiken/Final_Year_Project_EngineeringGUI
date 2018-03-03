@@ -126,21 +126,29 @@ public class addDocForm  extends JInternalFrame {
         }); // end FileDrop.Listener
 
         final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
-        int lastName = JOptionPane.showConfirmDialog(null, myPanel,
+        int jpane = JOptionPane.showConfirmDialog(null, myPanel,
                 "Drag And Drop New Documents", JOptionPane.OK_CANCEL_OPTION, 1, icon );
-        if (lastName == JOptionPane.OK_OPTION) {
-            String value = cb3.getSelectedItem().toString().trim();
+        if (jpane == JOptionPane.OK_OPTION) {
+            String cust_name = cb3.getSelectedItem().toString().trim();
+            String document_type = cb2.getSelectedItem().toString().trim();
+
+            System.out.println("documetnt TYPE!!!!"+ document_type);
 
             //Quick easy way to get the file name and type from the file path
             File f = new File(field.getText().trim());
             String fileName = f.getName();
 
             //set values for the job object to be passed to database.newDocument function
-            job.setCustomerName(value);
+            job.setCustomerName(cust_name);
             job.setDropPath(field.getText());
             job.setTechniaclDrawing(fileName);
             try{
-                database.newDocument(job);
+                if(document_type == "Technical Drawing"){
+                    database.newDocument(job);
+                }
+               else if (document_type == "SOP"){
+                    System.out.println("sOPPPPP");
+                }
             }
             catch (DataAccessException ee){
                 System.out.println(ee);
