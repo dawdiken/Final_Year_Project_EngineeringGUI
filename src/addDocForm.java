@@ -100,7 +100,6 @@ public class addDocForm  extends JInternalFrame {
 
         myPanel.add( field );
 
-
         new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
         {
             public void filesDropped( java.io.File[] files )
@@ -139,22 +138,19 @@ public class addDocForm  extends JInternalFrame {
 
             //set values for the job object to be passed to database.newTechDrawing function
             int table = 0;
+            job.setCustomerName(cust_name);
+            job.setDropPath(field.getText());
             try{
-                if(document_type == "Technical Drawing"){
+                if(document_type.equals("Technical Drawing")){
                     //set values for the job object to be passed to database.newTechDrawing function
                     table = 1;//flag to decide which table to write the document to (sop or technical drawing)
-                    job.setCustomerName(cust_name);
-                    job.setDropPath(field.getText());
                     job.setTechniaclDrawing(fileName);
-                    database.newTechDrawing(job ,table );
+                    database.newTechDrawing(job ,table);
                 }
-               else if (document_type == "SOP"){
+               else if (document_type.equals("SOP")){
                     table = 2;//flag to decide which table to write the document to (sop or technical drawing)
-                    job.setCustomerName(cust_name);
-                    job.setDropPath(field.getText());
                     job.setPartSop(fileName);
-                    System.out.println("sOPPPPP");
-                    database.newTechDrawing(job ,table );
+                    database.newTechDrawing(job ,table);
                 }
             }
             catch (DataAccessException ee){

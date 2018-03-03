@@ -343,9 +343,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 result = sqlInsertSOP.executeUpdate();
             }
 
-
-
-
             // if insert fails, rollback and discontinue
             if ( result == 0 ) {
                 connection.rollback(); // rollback insert
@@ -361,7 +358,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
             try {
                 sqlException.printStackTrace();
                 connection.rollback(); // rollback update
-                return false;          // update unsuccessful
+                System.out.println("failed here 5");
+                return false;
             }
             // handle exception rolling back transaction
             catch ( SQLException exception ) {
