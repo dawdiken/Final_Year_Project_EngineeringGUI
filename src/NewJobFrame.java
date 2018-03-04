@@ -6,6 +6,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class NewJobFrame extends JInternalFrame {
+    //database connection
+    private EngineeringDataAccess database;
 
     // HashMap to store JTextField references for quick access
     private HashMap fields;
@@ -237,6 +239,7 @@ public class NewJobFrame extends JInternalFrame {
 
     private void createOption( String name, int option, String custName )
     {
+        int choice = 0;
         switch (option){
             case 1:
                 String[] choices = { custName };
@@ -286,9 +289,31 @@ public class NewJobFrame extends JInternalFrame {
                     fields.put( name, cb2 );
                     break;
             case 3:
-                String[] choices3 = { "SOP 1", "SOP 2", "SOP 3", "SOP 4",
-                        "SOP 5", "SOP 6" };
-                final JComboBox<String> cb3 = new JComboBox<String>(choices3);
+                choice = 2;//flag to tell the swing worker which table to read from
+                Loader l = new Loader();
+                SwingWorker work = l.createWorker(choice);
+                work.execute();
+                String result2 = "";
+                try{
+                    ArrayList<String> customerNames2;
+
+                    System.out.println("this is work "+ work.get().toString());
+                }
+                catch( Exception ee){
+                    System.out.println(ee);
+
+                }
+                try{
+                    result2 = work.get().toString().replace("[", "").replace("]", "");
+                }
+                catch (Exception ee){
+                    System.out.println(ee);
+                }
+                String[] ary = result2.split(",");
+
+//                String[] choices3 = { "SOP 1", "SOP 2", "SOP 3", "SOP 4",
+//                        "SOP 5", "SOP 6" };
+                final JComboBox<String> cb3 = new JComboBox<String>(ary);
 
                 cb3.setMaximumSize(cb3.getPreferredSize()); // added code
                 cb3.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
@@ -333,5 +358,45 @@ public class NewJobFrame extends JInternalFrame {
                 fields.put( name, cb4);
                 break;
         }
+    }
+
+
+    private String[] findCustomers (){
+        try {
+            database = new DataBaseAccess();
+        }
+        // detect problems with database connection
+        catch ( Exception exception ) {
+            exception.printStackTrace();
+            System.exit( 1 );
+        }
+
+
+
+        ArrayList<String> customerNames = database.findCustomer();
+        String[] result = {};
+        String result2 = "";
+        String[] result3 = {};
+        //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
+        for (int i = 0; i < customerNames.size() ; i++) {
+            result = customerNames.toArray(new String[]{});
+        }
+        try{
+            // result2 = work.get().toString();
+        }
+        catch (Exception ee){
+            System.out.println(ee);
+        }
+
+        String[] ary = result2.split(",");
+
+        System.out.println("result 2" + result2);
+        System.out.println("result " + result.toString());
+        System.out.printf("ary = "+ ary);
+
+        //String[] choices = {"SOP", "Technical Drawing"};
+        JComboBox<String> cb3 = new JComboBox<String>(result);
+        JLabel label2 = new JLabel("Customer Name:");
+        return result;
     }
 }  // end class AddressBookEntryFrame

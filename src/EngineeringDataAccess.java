@@ -9,15 +9,13 @@ public interface EngineeringDataAccess {
     public ArrayList<NewJobEntry>  findPerson(String userName , String password );
     public ArrayList<String> findCustomer();
 
-        public boolean newUser( NewJobEntry person )
-            throws DataAccessException;
+    public boolean newUser( NewJobEntry person ) throws DataAccessException;
 
     // Update information for specified person.
     // Return boolean indicating success or failure.
-    public boolean savePerson(
-            NewJobEntry person ) throws DataAccessException;
+    public boolean savePerson(NewJobEntry person ) throws DataAccessException;
 
-    public boolean newTechDrawing(NewJobEntry person, int table )throws DataAccessException;
+    public boolean newDocument(NewJobEntry job, int table )throws DataAccessException;
 //
 //    // Insert a new person. Return boolean indicating
 //    // success or failure.

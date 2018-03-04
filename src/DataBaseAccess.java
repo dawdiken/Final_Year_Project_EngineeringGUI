@@ -300,14 +300,14 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     // Insert new entry. Method returns boolean indicating
     // success or failure.
-    public boolean newTechDrawing(NewJobEntry person, int table )
+    public boolean newDocument(NewJobEntry job, int table )
             throws DataAccessException
     {
-        // insert person in database
+        // insert doucument in database
         try {
-            System.out.println("database" + person.getCustomerName());
+            System.out.println("database" + job.getCustomerName());
 
-            sqlFindCustomerID.setString(1,person.getCustomerName());
+            sqlFindCustomerID.setString(1,job.getCustomerName());
             ResultSet resultSet = sqlFindCustomerID.executeQuery();
 
             // if no records found, return immediately
@@ -317,28 +317,26 @@ public class DataBaseAccess implements EngineeringDataAccess {
             }
             Integer cust_ID = 0;
             while(resultSet.next()) {
-                //System.out.println("result set" + resultSet.ge());
                 cust_ID = resultSet.getInt("customer_ID");
-                System.out.println("cust_ID == " + cust_ID);
             }
 
             int result = 0;
-            String filePath = person.getDropPath().trim();
+            String filePath = job.getDropPath().trim();
             InputStream inputStream = new FileInputStream(new File(filePath));
 
             //use the table value of 1 or 2 to decide if its a
             //sop or tech drawing and write to the correct table..
             if (table == 1){
-                // insert first and last name in names table
+                // insert into technical_drawing table
                 sqlInsertDrawing.setInt( 1, cust_ID );
-                sqlInsertDrawing.setString( 2, person.getTechniaclDrawing() );
+                sqlInsertDrawing.setString( 2, job.getTechniaclDrawing() );
                 sqlInsertDrawing.setBlob( 3, inputStream );
                 result = sqlInsertDrawing.executeUpdate();
             }
             else if (table == 2){
-                // insert first and last name in names table
+                // insert into SOP table
                 sqlInsertSOP.setInt( 1, cust_ID );
-                sqlInsertSOP.setString( 2, person.getPartSop() );
+                sqlInsertSOP.setString( 2, job.getPartSop() );
                 sqlInsertSOP.setBlob( 3, inputStream );
                 result = sqlInsertSOP.executeUpdate();
             }

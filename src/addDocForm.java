@@ -28,20 +28,21 @@ public class addDocForm  extends JInternalFrame {
             exception.printStackTrace();
             System.exit( 1 );
         }
-//        Loader l = new Loader();
-//        SwingWorker work = l.createWorker();
-        //work.execute();
-//        try{
-//            ArrayList<String> customerNames2;
-//            String[] result2 = {};
-//
-//            System.out.println("this is work "+ work.get().toString());
-//        }
-//        catch( Exception ee){
-//            System.out.println(ee);
-//
-//
-//        }
+        Loader l = new Loader();
+        int choice = 1;
+        SwingWorker work = l.createWorker(choice);
+        work.execute();
+        try{
+            ArrayList<String> customerNames2;
+
+
+            System.out.println("this is work "+ work.get().toString());
+        }
+        catch( Exception ee){
+            System.out.println(ee);
+
+
+        }
 
 
         ArrayList<String> customerNames = database.findCustomer();
@@ -53,7 +54,7 @@ public class addDocForm  extends JInternalFrame {
             result = customerNames.toArray(new String[]{});
         }
         try{
-          // result2 = work.get().toString();
+           result2 = work.get().toString().replace("[", "").replace("]", "");
         }
         catch (Exception ee){
             System.out.println(ee);
@@ -66,7 +67,7 @@ public class addDocForm  extends JInternalFrame {
         System.out.printf("ary = "+ ary);
 
         //String[] choices = {"SOP", "Technical Drawing"};
-        JComboBox<String> cb3 = new JComboBox<String>(result);
+        JComboBox<String> cb3 = new JComboBox<String>(ary);
         JLabel label2 = new JLabel("Customer Name:");
 
         cb3.setMaximumSize(cb3.getPreferredSize()); // added code
@@ -116,7 +117,6 @@ public class addDocForm  extends JInternalFrame {
                     catch( java.io.IOException e ) {
                         System.out.println("Drop failed/n" + e);
                     }
-
                     ViewFileDropped v1 = new ViewFileDropped();
                     v1.ViewFileDropped(path);
                 }   // end for: through each dropped file
@@ -136,21 +136,21 @@ public class addDocForm  extends JInternalFrame {
             File f = new File(field.getText().trim());
             String fileName = f.getName();
 
-            //set values for the job object to be passed to database.newTechDrawing function
+            //set values for the job object to be passed to database.newDocument function
             int table = 0;
             job.setCustomerName(cust_name);
             job.setDropPath(field.getText());
             try{
                 if(document_type.equals("Technical Drawing")){
-                    //set values for the job object to be passed to database.newTechDrawing function
+                    //set values for the job object to be passed to database.newDocument function
                     table = 1;//flag to decide which table to write the document to (sop or technical drawing)
                     job.setTechniaclDrawing(fileName);
-                    database.newTechDrawing(job ,table);
+                    database.newDocument(job ,table);
                 }
                else if (document_type.equals("SOP")){
                     table = 2;//flag to decide which table to write the document to (sop or technical drawing)
                     job.setPartSop(fileName);
-                    database.newTechDrawing(job ,table);
+                    database.newDocument(job ,table);
                 }
             }
             catch (DataAccessException ee){

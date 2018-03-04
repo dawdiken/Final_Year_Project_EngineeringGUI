@@ -7,16 +7,15 @@ public class Loader {
 
 
     /**
-     * Creates an Example SwingWorker
+     * Creates SwingWorker
      */
-    public SwingWorker createWorker() {
+    public SwingWorker createWorker(int choice) {
         return new SwingWorker<ArrayList<String>, ArrayList<String>>() {
 
             private EngineeringDataAccess database;
 
             @Override
             protected ArrayList<String> doInBackground() throws Exception {
-
 
                 try {
                     database = new DataBaseAccess();
@@ -26,12 +25,16 @@ public class Loader {
                     exception.printStackTrace();
                     System.exit(1);
                 }
-                ArrayList<String> customerNames = database.findCustomer();
-                String[] result = {};
-                //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
-                for (int i = 0; i < customerNames.size(); i++) {
-                    result = customerNames.toArray(new String[]{});
+                ArrayList<String> customerNames = new ArrayList<>();
+                if (choice == 1){
+                    customerNames = database.findCustomer();
                 }
+                else if (choice == 2){
+                    customerNames = database.findCustomer();
+                    System.out.println("here not customers");
+                }
+
+
 
                 return customerNames;
             }
