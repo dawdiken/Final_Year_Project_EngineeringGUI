@@ -28,12 +28,12 @@ public class NewJobFrame extends JInternalFrame {
     // These are placed on JLabels and used as keys in
     // HashMap fields.
     private static final String
-            JOB_NUMBER = "Job numer",
-            CUSTOMER_NAME = "Customer Name",
-            CUSTOMER_PART = "Customer Part",
+            JOB_NUMBER = "Job number:",
+            CUSTOMER_NAME = "Customer Name:",
+            CUSTOMER_PART = "Customer Part:",
             PART_SOP = "Part SOP:",
             BATCH_QTY = "Batch QTY:",
-            DEPARTMENT = "Department",
+            DEPARTMENT = "Department:",
             DRAG_DROP = "Drag and Drop:";
 
 
@@ -69,7 +69,7 @@ public class NewJobFrame extends JInternalFrame {
         createOption( DEPARTMENT , 4, null);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
-        createDragDrop( DRAG_DROP );
+        //createDragDrop( DRAG_DROP );
 
 //        createRow( EIRCODE , 1);
 //        createRow( PHONE , 1);
@@ -81,7 +81,7 @@ public class NewJobFrame extends JInternalFrame {
         container.add( rightPanel, BorderLayout.EAST );
 
 
-        setBounds( xOffset, yOffset, 300, height );
+        setBounds( xOffset, yOffset, 550, height );
         xOffset = ( xOffset + 30 ) % 300;
         yOffset = ( yOffset + 30 ) % 300;
     }
@@ -95,7 +95,7 @@ public class NewJobFrame extends JInternalFrame {
 
 //        setField( FIRST_NAME, job.getCustomerName() );
 //        setField( CUSTOMER_NAME, job.getPartName() );
-        setField( JOB_NUMBER, job.getJobNumber() );
+        //setField( JOB_NUMBER, job.getJobNumber() );
         setOption( CUSTOMER_NAME, job.getCustomerName() );
         setOption( CUSTOMER_PART, job.getPartName() );
         setOption( PART_SOP, job.getPartSop() );
@@ -111,7 +111,7 @@ public class NewJobFrame extends JInternalFrame {
 //    // AddressBookEntry
     public NewJobEntry getAddressBookEntry()
     {
-        job.setJobId(10);
+        //job.setJobId();
         job.setJobNumber( getField( JOB_NUMBER ) );
         job.setActive("false");
 
@@ -123,7 +123,7 @@ public class NewJobFrame extends JInternalFrame {
         job.setMachineID(1);
         job.setQtyMade(0);
         job.setQtyScrap(0);
-        job.setDropPath( getDropped( DRAG_DROP ) );
+        //job.setDropPath( getDropped( DRAG_DROP ) );
 
         return job;
     }
@@ -214,51 +214,53 @@ public class NewJobFrame extends JInternalFrame {
                 System.out.println(ee);
             }
             System.out.println("jobNum" + jobNum);
+            jobNum++;
             field.setText(jobNum.toString());
-            field.setText("why wont you work");
+
+            //field.setText("why wont you work");
         }
         middlePanel.add( field );
         fields.put( name, field );
     }
 
-    private void createDragDrop( String name )
-    {
-        JLabel label = new JLabel( name, SwingConstants.RIGHT );
-        label.setBorder(
-                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        leftPanel.add( label );
-
-        JTextArea field = new JTextArea(  );
-        fields.put( name, field );
-        field.setBorder(
-                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
-
-        middlePanel.add( field );
-
-
-        new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
-        {
-            public void filesDropped( java.io.File[] files )
-            {
-                for( int i = 0; i < files.length; i++ )
-                {
-                    String path = "";
-                    try
-                    {
-                        field.setText("");
-                        field.append( files[i].getCanonicalPath() + "\n" );
-                        path = files[i].getCanonicalPath();
-                    }   // end try
-                    catch( java.io.IOException e ) {
-                        System.out.println("Drop failed/n" + e);
-                    }
-
-                    ViewFileDropped v1 = new ViewFileDropped();
-                    v1.ViewFileDropped(path);
-                }   // end for: through each dropped file
-            }   // end filesDropped
-        }); // end FileDrop.Listener
-    }
+//    private void createDragDrop( String name )
+//    {
+//        JLabel label = new JLabel( name, SwingConstants.RIGHT );
+//        label.setBorder(
+//                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+//        leftPanel.add( label );
+//
+//        JTextArea field = new JTextArea(  );
+//        fields.put( name, field );
+//        field.setBorder(
+//                BorderFactory.createMatteBorder( 1, 1, 1, 1 , Color.black) );
+//
+//        middlePanel.add( field );
+//
+//
+//        new FileDrop( System.out, field, /*dragBorder,*/ new FileDrop.Listener()
+//        {
+//            public void filesDropped( java.io.File[] files )
+//            {
+//                for( int i = 0; i < files.length; i++ )
+//                {
+//                    String path = "";
+//                    try
+//                    {
+//                        field.setText("");
+//                        field.append( files[i].getCanonicalPath() + "\n" );
+//                        path = files[i].getCanonicalPath();
+//                    }   // end try
+//                    catch( java.io.IOException e ) {
+//                        System.out.println("Drop failed/n" + e);
+//                    }
+//
+//                    ViewFileDropped v1 = new ViewFileDropped();
+//                    v1.ViewFileDropped(path);
+//                }   // end for: through each dropped file
+//            }   // end filesDropped
+//        }); // end FileDrop.Listener
+//    }
 
     private void createOption( String name, int option, String custName )
     {

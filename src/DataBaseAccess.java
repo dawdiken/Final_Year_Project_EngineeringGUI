@@ -64,8 +64,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                         "VALUES ( ? , ? )" );
 
         sqlInsertJob = connection.prepareStatement(
-                "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap, job_doc ) " +
-                        "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? )" );
+                "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap) " +
+                        "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?, ? )" );
 
         sqlInsertBlob =  connection.prepareStatement(
                 "INSERT INTO workon_copy ( job_doc ) " +
@@ -556,8 +556,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
         // update person in database
         try {
             int result;
-            String filePath = person.getDropPath().trim();
-            InputStream inputStream = new FileInputStream(new File(filePath));
+            //String filePath = person.getDropPath().trim();
+            //InputStream inputStream = new FileInputStream(new File(filePath));
 
             // update work table with new job
             sqlInsertJob.setString( 1, person.getJobNumber() );
@@ -570,7 +570,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
             sqlInsertJob.setInt( 8, person.getMachineID() );
             sqlInsertJob.setInt( 9, person.getQtyMade() );
             sqlInsertJob.setInt( 10, person.getQtyScrap() );
-            sqlInsertJob.setBlob( 11, inputStream );
+            //sqlInsertJob.setBlob( 11, inputStream );
             result = sqlInsertJob.executeUpdate();
 
             // if update fails, rollback and discontinue
@@ -593,15 +593,16 @@ public class DataBaseAccess implements EngineeringDataAccess {
             }
 
             // handle exception rolling back transaction
-            catch ( SQLException exception ) {
+            catch (SQLException exception) {
                 System.out.println("failed here 5");
 
-                throw new DataAccessException( exception );
+                throw new DataAccessException(exception);
             }
-        }catch (IOException ex) {
-            System.out.println("failed here 6");
-            ex.printStackTrace();
-            return false;
+//        }catch (IOException ex) {
+//            System.out.println("failed here 6");
+//            ex.printStackTrace();
+//            return false;
+//        }
         }
 
 
