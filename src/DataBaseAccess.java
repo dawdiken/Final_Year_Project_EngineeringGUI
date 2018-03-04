@@ -43,6 +43,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlInsertJob;
     private PreparedStatement sqlFindCustomer;
     private PreparedStatement sqlFindSop;
+    private PreparedStatement sqlFindTechDrawing;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlInsertDrawing;
     private PreparedStatement sqlInsertSOP;
@@ -91,6 +92,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
         sqlFindCustomerID = connection.prepareStatement("SELECT customer_ID FROM customer WHERE cust_name = ?");
         sqlFindSop = connection.prepareStatement("SELECT sopName FROM sop_document WHERE customer_ID = ?");
+        sqlFindTechDrawing = connection.prepareStatement("SELECT drawingName FROM technical_drawing WHERE customer_ID = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
 
 
@@ -508,6 +510,43 @@ public class DataBaseAccess implements EngineeringDataAccess {
         }
     }  // end method findSop
 
+    // Locate specified Sop's for the correct customer only.
+    public ArrayList<String> findTechDrawing(String custName )
+    {
+        try {
+            sqlFindCustomerID.setString(1,custName);
+            ResultSet resultSet2 = sqlFindCustomerID.executeQuery();
+
+            // if no customer matching the ID is found, return immediately
+            if ( !resultSet2.isBeforeFirst()){
+                return null;
+            }
+            Integer cust_ID = 0;
+            while(resultSet2.next()) {
+                cust_ID = resultSet2.getInt("customer_ID");
+            }
+
+            sqlFindTechDrawing.setInt(1,cust_ID);
+            ResultSet resultSet = sqlFindTechDrawing.executeQuery();
+
+            // if no Sop's found, return immediately
+            if ( !resultSet.isBeforeFirst()){
+                return null;
+            }
+            ArrayList<String> sopList = new ArrayList<>();
+            String names;
+            while(resultSet.next()){
+                names =resultSet.getString("drawingName");
+                sopList.add(names);
+            }
+            return sopList;
+        }
+        // catch SQLException
+        catch ( SQLException sqlException ) {
+            return null;
+        }
+    }  // end method findSop
+
     // Insert new entry. Method returns boolean indicating
     // success or failure.
     public boolean newUser( NewJobEntry person )
@@ -550,7 +589,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     // Update an entry. Method returns boolean indicating
     // success or failure.
-    public boolean savePerson( NewJobEntry person )
+    public boolean saveJob(NewJobEntry person )
             throws DataAccessException
     {
         // update person in database
@@ -606,7 +645,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         }
 
 
-    }  // end method savePerson
+    }  // end method saveJob
 //
 //    // Insert new entry. Method returns boolean indicating
 //    // success or failure.

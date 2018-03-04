@@ -32,6 +32,7 @@ public class NewJobFrame extends JInternalFrame {
             CUSTOMER_NAME = "Customer Name:",
             CUSTOMER_PART = "Customer Part:",
             PART_SOP = "Part SOP:",
+            TECH_DRAWING = "Technical Drawing:",
             BATCH_QTY = "Batch QTY:",
             DEPARTMENT = "Department:",
             DRAG_DROP = "Drag and Drop:";
@@ -66,6 +67,7 @@ public class NewJobFrame extends JInternalFrame {
         createOption(CUSTOMER_NAME, 1, custName);
         createOption( CUSTOMER_PART, 2, null);
         createOption( PART_SOP, 3, custName);
+        createOption( TECH_DRAWING, 3, custName);
         createOption( DEPARTMENT , 4, null);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
@@ -314,7 +316,13 @@ public class NewJobFrame extends JInternalFrame {
                     fields.put( name, cb2 );
                     break;
             case 3:
-                choice = 2;//flag to tell the swing worker which table to read from
+                if (name.equals(PART_SOP)){
+                    choice = 2;//flag to tell the swing worker which table to read from
+                }
+                else if (name.equals(TECH_DRAWING)){
+                    choice = 3;//flag to tell the swing worker which table to read from
+                }
+
                 Loader l = new Loader();
                 System.out.println("passed in" + custName.toString());
                 SwingWorker work = l.createWorker(choice, custName);

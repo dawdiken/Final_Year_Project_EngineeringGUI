@@ -396,7 +396,7 @@ public class Engineering extends JFrame {
             System.out.println("drop path = " + person.getDropPath());
 
             try {
-                database.savePerson(person);
+                database.saveJob(person);
             }
             // detect problems deleting person
             catch ( DataAccessException exception ) {

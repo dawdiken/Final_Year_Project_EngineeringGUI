@@ -36,6 +36,11 @@ public class Loader {
                     customerNames = database.findSop(custName);
                     System.out.println("here not customers");
                 }
+                else if (choice == 3){
+                    System.out.println("tech drawing call" + custName);
+                    customerNames = database.findTechDrawing(custName);
+                    System.out.println("tech ");
+                }
 
 
 
