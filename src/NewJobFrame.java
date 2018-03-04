@@ -65,7 +65,7 @@ public class NewJobFrame extends JInternalFrame {
 
         createOption(CUSTOMER_NAME, 1, custName);
         createOption( CUSTOMER_PART, 2, null);
-        createOption( PART_SOP, 3, null);
+        createOption( PART_SOP, 3, custName);
         createOption( DEPARTMENT , 4, null);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
@@ -291,7 +291,8 @@ public class NewJobFrame extends JInternalFrame {
             case 3:
                 choice = 2;//flag to tell the swing worker which table to read from
                 Loader l = new Loader();
-                SwingWorker work = l.createWorker(choice);
+                System.out.println("passed in" + custName.toString());
+                SwingWorker work = l.createWorker(choice, custName);
                 work.execute();
                 String result2 = "";
                 try{

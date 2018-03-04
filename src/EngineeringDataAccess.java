@@ -8,6 +8,7 @@ public interface EngineeringDataAccess {
     // AddressBookEntry containing information.
     public ArrayList<NewJobEntry>  findPerson(String userName , String password );
     public ArrayList<String> findCustomer();
+    public ArrayList<String> findSop(String custName);
 
     public boolean newUser( NewJobEntry person ) throws DataAccessException;
 

@@ -30,7 +30,7 @@ public class addDocForm  extends JInternalFrame {
         }
         Loader l = new Loader();
         int choice = 1;
-        SwingWorker work = l.createWorker(choice);
+        SwingWorker work = l.createWorker(choice, null);
         work.execute();
         try{
             ArrayList<String> customerNames2;

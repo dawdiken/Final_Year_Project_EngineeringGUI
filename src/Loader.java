@@ -9,13 +9,15 @@ public class Loader {
     /**
      * Creates SwingWorker
      */
-    public SwingWorker createWorker(int choice) {
+    public SwingWorker createWorker(int choice , String custName) {
         return new SwingWorker<ArrayList<String>, ArrayList<String>>() {
 
             private EngineeringDataAccess database;
 
             @Override
             protected ArrayList<String> doInBackground() throws Exception {
+                String customerName = custName;
+                System.out.println("doInBackground" + customerName);
 
                 try {
                     database = new DataBaseAccess();
@@ -30,7 +32,8 @@ public class Loader {
                     customerNames = database.findCustomer();
                 }
                 else if (choice == 2){
-                    customerNames = database.findCustomer();
+                    System.out.println("custName" + custName);
+                    customerNames = database.findSop(custName);
                     System.out.println("here not customers");
                 }
 
@@ -55,7 +58,7 @@ public class Loader {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                System.out.println("swing worker return = "+ chunks.get(2).toString());
+                //System.out.println("swing worker return = "+ chunks.get(0).toString());
             }
         };
     } // End of Method: createWorker()

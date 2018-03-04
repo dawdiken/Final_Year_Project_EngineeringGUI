@@ -42,6 +42,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindName;
     private PreparedStatement sqlInsertJob;
     private PreparedStatement sqlFindCustomer;
+    private PreparedStatement sqlFindSop;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlInsertDrawing;
     private PreparedStatement sqlInsertSOP;
@@ -88,6 +89,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
         sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
         sqlFindCustomerID = connection.prepareStatement("SELECT customer_ID FROM customer WHERE cust_name = ?");
+        sqlFindSop = connection.prepareStatement("SELECT sopName FROM sop_document WHERE customer_ID = ?");
+
 //        sqlFind = connection.prepareStatement(
 //                "SELECT users.userID, userName, pass" +
 //                        "FROM users" +
@@ -400,6 +403,70 @@ public class DataBaseAccess implements EngineeringDataAccess {
             while(resultSet.next()){
                 //NewJobEntry customer = new NewJobEntry();
                 names =resultSet.getString("cust_name");
+                arraylist.add(names);
+                System.out.println("person == " + names);
+            }
+//            customer.setCustomerName(resultSet.getString("cust_name"));
+//            System.out.println("person == " + customer.getCustomerName().toString());
+//
+//            arraylist.add(customer);
+
+            return arraylist;
+        }
+
+        // catch SQLException
+        catch ( SQLException sqlException ) {
+            return null;
+        }
+    }  // end method findPerson
+
+    // Locate specified User. Method returns AddressBookEntry
+    // containing information.
+    public ArrayList<String> findSop(String custName )
+    {
+        try {
+            String customername = custName.trim();
+            System.out.println("customer name database" );
+            System.out.println("customer name database" );
+            System.out.println("customer name database" + customername);
+            sqlFindCustomerID.setString(1,customername);
+            ResultSet resultSet2 = sqlFindCustomerID.executeQuery();
+
+            // if no records found, return immediately
+            if ( !resultSet2.isBeforeFirst()){
+                System.out.println("nulll cust id");
+                return null;
+            }
+            Integer cust_ID = 0;
+            while(resultSet2.next()) {
+                System.out.println("results are in");
+                cust_ID = resultSet2.getInt("customer_ID");
+            }
+
+            sqlFindSop.setInt(1,cust_ID);
+            ResultSet resultSet = sqlFindSop.executeQuery();
+
+            // if no records found, return immediately
+            if ( !resultSet.isBeforeFirst()){
+                System.out.println("nulll sopsss");
+                return null;
+            }
+
+            System.out.println("hererererererer 3");
+            ArrayList<String> arraylist = new ArrayList<>();
+            //System.out.println(resultSet.getString("cust_name"));
+
+            //NewJobEntry customer = new NewJobEntry();
+            // set AddressBookEntry properties
+//            for (int i = 0; i != resultSet.isLast() ; i++) {
+//                System.out.println("customer names here");
+//                System.out.println(customerNames.get(i));
+//            }
+            int i =0;
+            String names;
+            while(resultSet.next()){
+                //NewJobEntry customer = new NewJobEntry();
+                names =resultSet.getString("sopName");
                 arraylist.add(names);
                 System.out.println("person == " + names);
             }
