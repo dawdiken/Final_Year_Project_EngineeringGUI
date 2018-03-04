@@ -9,6 +9,7 @@ public interface EngineeringDataAccess {
     public ArrayList<NewJobEntry>  findPerson(String userName , String password );
     public ArrayList<String> findCustomer();
     public ArrayList<String> findSop(String custName);
+    public Integer findMaxJobId();
 
     public boolean newUser( NewJobEntry person ) throws DataAccessException;
 

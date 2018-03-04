@@ -187,14 +187,37 @@ public class NewJobFrame extends JInternalFrame {
     // GUI containing JLabel and JTextField
     private void createRow( String name )
     {
+
         JLabel label = new JLabel( name, SwingConstants.RIGHT );
         label.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         leftPanel.add( label );
 
-        JTextField field = new JTextField( 30 );
+        JTextField field = new JTextField( );
+        field.setText("why wont you work");
+        Integer jobNum = 0;
+        //String jobnn = "";
+        if (name.equals(JOB_NUMBER)){
+            try {
+                database = new DataBaseAccess();
+            }
+            // detect problems with database connection
+            catch ( Exception exception ) {
+                exception.printStackTrace();
+                System.exit( 1 );
+            }
+            System.out.println("job numeber search");
+            try{
+                jobNum = database.findMaxJobId();
+            }
+            catch (Exception ee){
+                System.out.println(ee);
+            }
+            System.out.println("jobNum" + jobNum);
+            field.setText(jobNum.toString());
+            field.setText("why wont you work");
+        }
         middlePanel.add( field );
-
         fields.put( name, field );
     }
 
