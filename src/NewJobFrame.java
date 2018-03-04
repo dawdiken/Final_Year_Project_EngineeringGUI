@@ -364,7 +364,7 @@ public class NewJobFrame extends JInternalFrame {
                 fields.put( name, cb3);
                 break;
             case 4:
-                String[] choices4 = { "TURNING", "MILLING", "PASAVATION", "LASER MARKING"};
+                String[] choices4 = { "TURNING", "MILLING", "PASAVATION", "LASER MARKING", "QUALITY"};
                 final JComboBox<String> cb4 = new JComboBox<String>(choices4);
 
                 cb4.setMaximumSize(cb4.getPreferredSize()); // added code

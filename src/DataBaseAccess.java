@@ -46,6 +46,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindTechDrawingByCustomer;
     private PreparedStatement sqlFindSopByName;
     private PreparedStatement sqlFindTechDrawingByName;
+    private PreparedStatement sqlFindDepartmentByName;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlInsertDrawing;
     private PreparedStatement sqlInsertSOP;
@@ -97,6 +98,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindTechDrawingByCustomer = connection.prepareStatement("SELECT drawingName FROM technical_drawing WHERE customer_ID = ?");
         sqlFindSopByName = connection.prepareStatement("SELECT sopID FROM sop_document WHERE sopName = ?");
         sqlFindTechDrawingByName = connection.prepareStatement("SELECT drawingID FROM technical_drawing WHERE drawingName = ?");
+        sqlFindDepartmentByName = connection.prepareStatement("SELECT department_id FROM department WHERE department_name = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
 
 
@@ -628,6 +630,22 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 drawing_ID = resultSet3.getInt("drawingID");
             }
 
+            System.out.println("failed 3");
+            sqlFindDepartmentByName.setString(1,person.getDepartment().trim());
+            System.out.println("getTechniaclDrawing ===============" + person.getDepartment());
+            ResultSet resultSet4 = sqlFindDepartmentByName.executeQuery();
+
+            // if no customer matching the ID is found, return immediately
+            if ( !resultSet4.isBeforeFirst()){
+                System.out.println("failed 4");
+                return false;
+            }
+            Integer dept_ID = 0;
+            while(resultSet4.next()) {
+                System.out.println("failed 5");
+                dept_ID = resultSet4.getInt("department_id");
+            }
+
 
             System.out.println("failed 6");
 
@@ -644,7 +662,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
             sqlInsertJob.setString( 1, person.getJobNumber() );
             sqlInsertJob.setString( 2, person.getActive() );
             sqlInsertJob.setString( 3, person.getCustomerName() );
-            sqlInsertJob.setString( 4, person.getDepartment() );
+            sqlInsertJob.setInt( 4, dept_ID );
             sqlInsertJob.setString( 5, person.getPartName() );
             sqlInsertJob.setInt( 6, person.getBatchNumber() );
             sqlInsertJob.setString( 7, person.getBatchQty() );
