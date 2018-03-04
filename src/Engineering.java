@@ -394,9 +394,14 @@ public class Engineering extends JFrame {
 //            System.out.printf(person.getBatchQty());
             System.out.println("Batch qty = " + person.getBatchQty());
             System.out.println("drop path = " + person.getDropPath());
-
+            //boolean success;
             try {
-                database.saveJob(person);
+                boolean success = database.saveJob(person);
+
+                if(success == true){
+                    JOptionPane.showMessageDialog( desktop, "Success!\nNew works order saved to the database",
+                            "Save successful", JOptionPane.PLAIN_MESSAGE );
+                }
             }
             // detect problems deleting person
             catch ( DataAccessException exception ) {
