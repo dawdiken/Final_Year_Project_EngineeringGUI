@@ -420,69 +420,42 @@ public class DataBaseAccess implements EngineeringDataAccess {
         }
     }  // end method findPerson
 
-    // Locate specified User. Method returns AddressBookEntry
-    // containing information.
+    // Locate specified Sop's for the correct customer only.
     public ArrayList<String> findSop(String custName )
     {
         try {
-            String customername = custName.trim();
-            System.out.println("customer name database" );
-            System.out.println("customer name database" );
-            System.out.println("customer name database" + customername);
-            sqlFindCustomerID.setString(1,customername);
+            sqlFindCustomerID.setString(1,custName);
             ResultSet resultSet2 = sqlFindCustomerID.executeQuery();
 
-            // if no records found, return immediately
+            // if no customer matching the ID is found, return immediately
             if ( !resultSet2.isBeforeFirst()){
-                System.out.println("nulll cust id");
                 return null;
             }
             Integer cust_ID = 0;
             while(resultSet2.next()) {
-                System.out.println("results are in");
                 cust_ID = resultSet2.getInt("customer_ID");
             }
 
             sqlFindSop.setInt(1,cust_ID);
             ResultSet resultSet = sqlFindSop.executeQuery();
 
-            // if no records found, return immediately
+            // if no Sop's found, return immediately
             if ( !resultSet.isBeforeFirst()){
-                System.out.println("nulll sopsss");
                 return null;
             }
-
-            System.out.println("hererererererer 3");
-            ArrayList<String> arraylist = new ArrayList<>();
-            //System.out.println(resultSet.getString("cust_name"));
-
-            //NewJobEntry customer = new NewJobEntry();
-            // set AddressBookEntry properties
-//            for (int i = 0; i != resultSet.isLast() ; i++) {
-//                System.out.println("customer names here");
-//                System.out.println(customerNames.get(i));
-//            }
-            int i =0;
+            ArrayList<String> sopList = new ArrayList<>();
             String names;
             while(resultSet.next()){
-                //NewJobEntry customer = new NewJobEntry();
                 names =resultSet.getString("sopName");
-                arraylist.add(names);
-                System.out.println("person == " + names);
+                sopList.add(names);
             }
-//            customer.setCustomerName(resultSet.getString("cust_name"));
-//            System.out.println("person == " + customer.getCustomerName().toString());
-//
-//            arraylist.add(customer);
-
-            return arraylist;
+            return sopList;
         }
-
         // catch SQLException
         catch ( SQLException sqlException ) {
             return null;
         }
-    }  // end method findPerson
+    }  // end method findSop
 
     // Insert new entry. Method returns boolean indicating
     // success or failure.
