@@ -46,7 +46,7 @@ public class NewJobFrame extends JInternalFrame {
     // construct GUI
     public NewJobFrame(int id, String custName)
     {
-        super( custName, true, true );
+        super( "Creat a new job for customer = " + custName , true, true );
 
         fields = new HashMap();
 
@@ -213,7 +213,7 @@ public class NewJobFrame extends JInternalFrame {
             System.out.println("jobNum" + jobNum);
             jobNum++;
             field.setText(jobNum.toString());
-
+            field.setEditable(false);
             //field.setText("why wont you work");
         }
         middlePanel.add( field );
