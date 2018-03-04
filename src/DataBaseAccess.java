@@ -42,8 +42,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindName;
     private PreparedStatement sqlInsertJob;
     private PreparedStatement sqlFindCustomer;
-    private PreparedStatement sqlFindSop;
-    private PreparedStatement sqlFindTechDrawing;
+    private PreparedStatement sqlFindSopByCustomer;
+    private PreparedStatement sqlFindTechDrawingByCustomer;
+    private PreparedStatement sqlFindSopByName;
+    private PreparedStatement sqlFindTechDrawingByName;
     private PreparedStatement sqlInsertBlob;
     private PreparedStatement sqlInsertDrawing;
     private PreparedStatement sqlInsertSOP;
@@ -65,8 +67,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                         "VALUES ( ? , ? )" );
 
         sqlInsertJob = connection.prepareStatement(
-                "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap) " +
-                        "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?, ? )" );
+                "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap, sop_ID, drawing_ID) " +
+                        "VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?, ? )" );
 
         sqlInsertBlob =  connection.prepareStatement(
                 "INSERT INTO workon_copy ( job_doc ) " +
@@ -91,8 +93,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
         sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
         sqlFindCustomerID = connection.prepareStatement("SELECT customer_ID FROM customer WHERE cust_name = ?");
-        sqlFindSop = connection.prepareStatement("SELECT sopName FROM sop_document WHERE customer_ID = ?");
-        sqlFindTechDrawing = connection.prepareStatement("SELECT drawingName FROM technical_drawing WHERE customer_ID = ?");
+        sqlFindSopByCustomer = connection.prepareStatement("SELECT sopName FROM sop_document WHERE customer_ID = ?");
+        sqlFindTechDrawingByCustomer = connection.prepareStatement("SELECT drawingName FROM technical_drawing WHERE customer_ID = ?");
+        sqlFindSopByName = connection.prepareStatement("SELECT sopID FROM sop_document WHERE sopName = ?");
+        sqlFindTechDrawingByName = connection.prepareStatement("SELECT drawingID FROM technical_drawing WHERE drawingName = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
 
 
@@ -489,8 +493,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 cust_ID = resultSet2.getInt("customer_ID");
             }
 
-            sqlFindSop.setInt(1,cust_ID);
-            ResultSet resultSet = sqlFindSop.executeQuery();
+            sqlFindSopByCustomer.setInt(1,cust_ID);
+            ResultSet resultSet = sqlFindSopByCustomer.executeQuery();
 
             // if no Sop's found, return immediately
             if ( !resultSet.isBeforeFirst()){
@@ -526,8 +530,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 cust_ID = resultSet2.getInt("customer_ID");
             }
 
-            sqlFindTechDrawing.setInt(1,cust_ID);
-            ResultSet resultSet = sqlFindTechDrawing.executeQuery();
+            sqlFindTechDrawingByCustomer.setInt(1,cust_ID);
+            ResultSet resultSet = sqlFindTechDrawingByCustomer.executeQuery();
 
             // if no Sop's found, return immediately
             if ( !resultSet.isBeforeFirst()){
@@ -594,6 +598,44 @@ public class DataBaseAccess implements EngineeringDataAccess {
     {
         // update person in database
         try {
+            sqlFindSopByName.setString(1,person.getPartSop().trim());
+            System.out.println("getPartSop ===============" + person.getPartSop());
+            ResultSet resultSet2 = sqlFindSopByName.executeQuery();
+
+            // if no customer matching the ID is found, return immediately
+            if ( !resultSet2.isBeforeFirst()){
+                System.out.println("failed 1");
+                return false;
+            }
+            Integer sop_ID = 0;
+            while(resultSet2.next()) {
+                System.out.println("failed 2");
+                sop_ID = resultSet2.getInt("sopID");
+            }
+            System.out.println("failed 3");
+            sqlFindTechDrawingByName.setString(1,person.getTechniaclDrawing().trim());
+            System.out.println("getTechniaclDrawing ===============" + person.getTechniaclDrawing());
+            ResultSet resultSet3 = sqlFindTechDrawingByName.executeQuery();
+
+            // if no customer matching the ID is found, return immediately
+            if ( !resultSet3.isBeforeFirst()){
+                System.out.println("failed 4");
+                return false;
+            }
+            Integer drawing_ID = 0;
+            while(resultSet3.next()) {
+                System.out.println("failed 5");
+                drawing_ID = resultSet3.getInt("drawingID");
+            }
+
+
+            System.out.println("failed 6");
+
+
+
+
+
+
             int result;
             //String filePath = person.getDropPath().trim();
             //InputStream inputStream = new FileInputStream(new File(filePath));
@@ -609,6 +651,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
             sqlInsertJob.setInt( 8, person.getMachineID() );
             sqlInsertJob.setInt( 9, person.getQtyMade() );
             sqlInsertJob.setInt( 10, person.getQtyScrap() );
+            sqlInsertJob.setInt( 11, sop_ID );
+            sqlInsertJob.setInt( 12, drawing_ID );
             //sqlInsertJob.setBlob( 11, inputStream );
             result = sqlInsertJob.executeUpdate();
 

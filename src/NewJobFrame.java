@@ -62,8 +62,6 @@ public class NewJobFrame extends JInternalFrame {
 //        rightPanel_2 = new JPanel();
 //        rightPanel_2.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
 
-//        createRow( FIRST_NAME , 1);
-
         createOption(CUSTOMER_NAME, 1, custName);
         createOption( CUSTOMER_PART, 2, null);
         createOption( PART_SOP, 3, custName);
@@ -73,17 +71,12 @@ public class NewJobFrame extends JInternalFrame {
         createRow( BATCH_QTY);
         //createDragDrop( DRAG_DROP );
 
-//        createRow( EIRCODE , 1);
-//        createRow( PHONE , 1);
-//        createRow( EMAIL , 1);
-
         container = getContentPane();
         container.add( leftPanel, BorderLayout.WEST );
         container.add( middlePanel, BorderLayout.CENTER );
         container.add( rightPanel, BorderLayout.EAST );
 
-
-        setBounds( xOffset, yOffset, 550, height );
+        setBounds( xOffset, yOffset, 600, height );
         xOffset = ( xOffset + 30 ) % 300;
         yOffset = ( yOffset + 30 ) % 300;
     }
@@ -120,6 +113,8 @@ public class NewJobFrame extends JInternalFrame {
         job.setCustomerName( getOption( CUSTOMER_NAME ) );
         job.setDepartment( getOption( DEPARTMENT ) );
         job.setPartName( getOption( CUSTOMER_PART ) );
+        job.setPartSop( getOption( PART_SOP ) );
+        job.setTechniaclDrawing( getOption( TECH_DRAWING ) );
         job.setBatchNumber(1234);
         job.setBatchQty( getField( BATCH_QTY ) );
         job.setMachineID(1);
@@ -284,9 +279,9 @@ public class NewJobFrame extends JInternalFrame {
 
 
 
-                JButton btn = new JButton("OK");
-                btn.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
-                rightPanel.add(btn);
+//                JButton btn = new JButton("OK");
+//                btn.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
+//                rightPanel.add(btn);
 
 
                 fields.put( name, cb );
@@ -305,10 +300,10 @@ public class NewJobFrame extends JInternalFrame {
                     label1.setBorder(
                             BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
                     leftPanel.add( label1 );
-
-                    JButton btn1 = new JButton("OK");
-                    btn1.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
-                    rightPanel.add(btn1);
+//
+//                    JButton btn1 = new JButton("OK");
+//                    btn1.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
+//                    rightPanel.add(btn1);
 
     //        frame.setVisible(true); // added code
     //        rightPanel.add( jcomp1 );
@@ -359,9 +354,9 @@ public class NewJobFrame extends JInternalFrame {
                         BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
                 leftPanel.add( label3 );
 
-                JButton btn3 = new JButton("OK");
-                btn3.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
-                rightPanel.add(btn3);
+//                JButton btn3 = new JButton("OK");
+//                btn3.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
+//                rightPanel.add(btn3);
 
                 //        frame.setVisible(true); // added code
                 //        rightPanel.add( jcomp1 );
@@ -382,9 +377,9 @@ public class NewJobFrame extends JInternalFrame {
                         BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
                 leftPanel.add( label4 );
 
-                JButton btn4 = new JButton("OK");
-                btn4.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
-                rightPanel.add(btn4);
+//                JButton btn4 = new JButton("OK");
+//                btn4.setAlignmentX(Component.CENTER_ALIGNMENT); // added code
+//                rightPanel.add(btn4);
 
                 //        frame.setVisible(true); // added code
                 //        rightPanel.add( jcomp1 );

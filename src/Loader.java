@@ -4,8 +4,6 @@ import java.util.List;
 
 
 public class Loader {
-
-
     /**
      * Creates SwingWorker
      */
@@ -41,9 +39,6 @@ public class Loader {
                     customerNames = database.findTechDrawing(custName);
                     System.out.println("tech ");
                 }
-
-
-
                 return customerNames;
             }
 
