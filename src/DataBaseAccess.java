@@ -52,7 +52,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlInsertSOP;
     private PreparedStatement sqlFindCustomerID;
     private PreparedStatement sqlFindMaxJobID;
-    private PreparedStatement sqlTest;
+    private PreparedStatement sqlFindAllJobs;
 
 
     // set up PreparedStatements to access database
@@ -100,6 +100,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindTechDrawingByName = connection.prepareStatement("SELECT drawingID FROM technical_drawing WHERE drawingName = ?");
         sqlFindDepartmentByName = connection.prepareStatement("SELECT department_id FROM department WHERE department_name = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
+        sqlFindAllJobs = connection.prepareStatement("SELECT * FROM workon_copy");
 
 
 //        sqlFind = connection.prepareStatement(
@@ -280,6 +281,50 @@ public class DataBaseAccess implements EngineeringDataAccess {
             System.out.println("result for job id here 4");
 
             return max;           // insert successful
+        }
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                System.out.println("result for job id 1111");
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return null;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                System.out.println("result for job id2222222222");
+                exception.printStackTrace();
+                return null;
+            }
+        }
+    }  // end method newUser
+
+    public ResultSet findAllJobs()
+    {
+        // insert person in database
+        try {
+
+            System.out.println("result");
+            ResultSet resultSet = sqlFindAllJobs.executeQuery();
+            //System.out.println("result" + result);
+//            if (resultSet.next()) {
+//                System.out.println("result max");
+//
+//            }
+
+            // if insert fails, rollback and discontinue
+            if (!resultSet.next()) {
+                connection.rollback(); // rollback insert
+                System.out.println("result for job id here 3");
+                return null;          // insert unsuccessful
+            }
+
+            System.out.println("result for job id here 4");
+
+            return resultSet;           // insert successful
         }
 
         // detect problems updating database

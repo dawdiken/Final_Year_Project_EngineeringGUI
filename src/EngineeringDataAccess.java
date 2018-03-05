@@ -11,6 +11,7 @@ public interface EngineeringDataAccess {
     public ArrayList<String> findSop(String custName);
     public ArrayList<String> findTechDrawing(String custName);
     public Integer findMaxJobId();
+    public ResultSet findAllJobs();
 
     public boolean newUser( NewJobEntry person ) throws DataAccessException;
 

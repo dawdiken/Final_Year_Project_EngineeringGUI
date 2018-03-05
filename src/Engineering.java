@@ -118,8 +118,8 @@ public class Engineering extends JFrame {
 
         //set a nice default colour for all JOptionPane/ComboBox panes throughout the program
         UIManager UI=new UIManager();
-        UI.put("OptionPane.background",new ColorUIResource(255,240,153));
-        UI.put("Panel.background",new ColorUIResource(255,240,153));
+        UI.put("OptionPane.background",new ColorUIResource( 0xCADBFF));
+        UI.put("Panel.background",new ColorUIResource( 0xCADBFF));
         UI.put("ComboBox.selectionBackground", new ColorUIResource(Color.green));
         UI.put("ComboBox.selectionForeground", new ColorUIResource(Color.WHITE));
 

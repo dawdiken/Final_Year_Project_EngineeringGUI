@@ -112,6 +112,8 @@ public class addDocForm  extends JInternalFrame {
                     {
                         field.setText("");
                         field.append( files[i].getCanonicalPath() + "\n" );
+                        field.setBorder(
+                                BorderFactory.createMatteBorder( 2, 2, 2, 2 , Color.green) );
                         path = files[i].getCanonicalPath();
                     }   // end try
                     catch( java.io.IOException e ) {
