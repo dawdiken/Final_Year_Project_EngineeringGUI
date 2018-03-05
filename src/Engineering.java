@@ -21,7 +21,7 @@ public class Engineering extends JFrame {
 
     // references to Actions
     Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
-            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction;
+            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction, viewAllJobsInDB;
 
     // set up database connection and GUI
     public Engineering() {
@@ -60,6 +60,8 @@ public class Engineering extends JFrame {
         newDocumentAction.setEnabled( true );    // disabled by default
         AddUserAction = new AddUserAction();
         AddUserAction.setEnabled( true );  // disabled by default
+        viewAllJobsInDB = new viewAllJobsInDB();
+        viewAllJobsInDB.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -91,6 +93,8 @@ public class Engineering extends JFrame {
         toolBar.add( LogOutAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( AddUserAction );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( viewAllJobsInDB );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -203,6 +207,15 @@ public class Engineering extends JFrame {
                     }
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
+        return frame;
+    }  // end method createAddressBookEntryFrame
+
+    // create a new NewJobEntryFrame and register listener
+    private TableFromDatabase createAllJobframe() {
+        TableFromDatabase frame = new TableFromDatabase();
+        frame.pack();
+        frame.setVisible(true);
+        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         return frame;
     }  // end method createAddressBookEntryFrame
 
@@ -839,6 +852,28 @@ public class Engineering extends JFrame {
                 JOptionPane.showMessageDialog( desktop,
                         "User:\n" + userName +
                                 "\" not found!" );
+
+        }
+
+    }  // end inner class AddNewUserAction
+
+    private class viewAllJobsInDB extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public viewAllJobsInDB()
+        {
+            putValue( NAME, "View works orders" );
+            putValue( SHORT_DESCRIPTION, "View works orders" );
+            putValue( LONG_DESCRIPTION,
+                    "View works orders in data base" );
+            putValue( MNEMONIC_KEY, new Integer( 'w' ) );
+        }
+
+        // save new entry or update existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+            TableFromDatabase entryFrame =
+                    createAllJobframe();
 
         }
 

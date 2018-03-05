@@ -7,6 +7,7 @@ import javax.swing.table.*;
 public class TableFromDatabase extends JFrame
 {
     private EngineeringDataAccess database;
+
     public TableFromDatabase()
     {
         Vector<Object> columnNames = new Vector<Object>();
@@ -71,18 +72,11 @@ public class TableFromDatabase extends JFrame
         };
 
         JTable table = new JTable( model );
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        table.setDefaultRenderer(String.class, centerRenderer);
+        table.setDefaultRenderer(Integer.class, centerRenderer);
         JScrollPane scrollPane = new JScrollPane( table );
         getContentPane().add( scrollPane );
-
-        JPanel buttonPanel = new JPanel();
-        getContentPane().add( buttonPanel, BorderLayout.SOUTH );
-    }
-
-    public static void main(String[] args)
-    {
-        TableFromDatabase frame = new TableFromDatabase();
-        frame.setDefaultCloseOperation( EXIT_ON_CLOSE );
-        frame.pack();
-        frame.setVisible(true);
     }
 }
