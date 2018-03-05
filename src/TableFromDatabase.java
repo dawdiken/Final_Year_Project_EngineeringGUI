@@ -42,8 +42,7 @@ public class TableFromDatabase extends JFrame
             }
 
             rs.close();
-//            stmt.close();
-//            connection.close();
+            database.close();
         }
         catch(Exception e)
         {
