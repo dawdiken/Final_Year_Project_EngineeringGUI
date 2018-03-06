@@ -1,3 +1,6 @@
+import jdk.nashorn.internal.parser.JSONParser;
+import netscape.javascript.JSObject;
+
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -5,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.spec.ECField;
 import java.util.Scanner;
+import org.json.*;
 
 public class vision_api {
     private static final String TARGET_URL =
@@ -52,6 +56,13 @@ public class vision_api {
             }
 
             Scanner httpResponseScanner = new Scanner (httpConnection.getInputStream());
+
+            String jsonString = "{\"firstName\":\"Sergey\",\"lastName\":\"Kargopolov\"}";
+            //JSONParser jsonParser = new JSONParser();
+
+            //System.out.println(objectFromString.toString());
+
+
             String resp = "";
             while (httpResponseScanner.hasNext()) {
 
@@ -63,6 +74,8 @@ public class vision_api {
 
                 System.out.println(line);  //  alternatively, print the line of response
             }
+            JSONObject myResponse = new JSONObject(resp.toString());
+            System.out.println("ipAddress- "+myResponse);
 
             httpResponseScanner.close();
 
