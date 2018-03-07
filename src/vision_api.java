@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.spec.ECField;
+import java.util.Arrays;
 import java.util.Scanner;
 import org.json.*;
 
@@ -57,25 +58,52 @@ public class vision_api {
 
             Scanner httpResponseScanner = new Scanner (httpConnection.getInputStream());
 
-            String jsonString = "{\"firstName\":\"Sergey\",\"lastName\":\"Kargopolov\"}";
-            //JSONParser jsonParser = new JSONParser();
-
-            //System.out.println(objectFromString.toString());
-
-
             String resp = "";
+            String respt = "";
             while (httpResponseScanner.hasNext()) {
 
                 String line = httpResponseScanner.nextLine();
-                if(line.contains("text")){
+                if(line.contains("text") && line.length()> 100 ){
                     //System.out.println(line);
+                    respt += line;
+                    System.out.println(line.length());
                 }
                 resp += line;
 
-                System.out.println(line);  //  alternatively, print the line of response
+
+
+                //System.out.println(line);  //  alternatively, print the line of response
             }
-            JSONObject myResponse = new JSONObject(resp.toString());
-            System.out.println("ipAddress- "+myResponse);
+            //JSONObject myResponse = new JSONObject(resp.toString());
+            System.out.println(respt);
+            //String[] lines = respt.split("\\r?\\n");
+            String strParts22 = respt.replace("\\\\", "");
+            String[] strParts = strParts22.split("n");
+
+
+//            String lines[] = String.split("\\r?\\n", -1);
+            //System.out.println("ipAddress- "+strParts.getString("text"));
+            String[] strParts2 = {};
+            for (int i = 0; i <strParts.length ; i++) {
+                strParts[i].replace("\\\\", "");
+                //strParts[i].substring(0,strParts.length-1);
+                System.out.println(strParts[i].toString());
+            }
+
+
+
+
+//            JSONArray jsonarray = new JSONArray(resp);
+//            for (int i = 0; i < jsonarray.length(); i++) {
+//                JSONObject jsonobject = jsonarray.getJSONObject(i);
+//                String name = jsonobject.getString("textAnnotations :");
+//                //String url = jsonobject.getString("text");
+//                System.out.println(name);
+//                //System.out.println(url);
+//            }
+
+
+
 
             httpResponseScanner.close();
 
