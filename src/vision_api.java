@@ -77,15 +77,16 @@ public class vision_api {
             //JSONObject myResponse = new JSONObject(resp.toString());
             System.out.println(respt);
             //String[] lines = respt.split("\\r?\\n");
-            String strParts22 = respt.replace("\\\\", "");
-            String[] strParts = strParts22.split("n");
+            //String strParts22 = respt.replace("\\\\", "");
+            String[] strParts = respt.split("\\\\n");
+            //String[] strParts = respt.split("\\R");
 
 
 //            String lines[] = String.split("\\r?\\n", -1);
             //System.out.println("ipAddress- "+strParts.getString("text"));
             String[] strParts2 = {};
             for (int i = 0; i <strParts.length ; i++) {
-                strParts[i].replace("\\\\", "");
+                //strParts[i].replace("\\\\", "");
                 //strParts[i].substring(0,strParts.length-1);
                 System.out.println(strParts[i].toString());
             }
