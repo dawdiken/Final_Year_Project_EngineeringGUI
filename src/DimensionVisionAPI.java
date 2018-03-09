@@ -11,7 +11,8 @@ public class DimensionVisionAPI {
             "https://vision.googleapis.com/v1/images:annotate?";
     private static final String API_KEY =
             "key=AIzaSyBpUPfVsfVn2SIgYL4xwfYfLUe0wHzsEbM";
-    public void DimensionVisionAPI(String FileName) {
+    public String[] DimensionVisionAPI(String FileName) {
+        //String FileName ="IC-Eisenhower-Box.jpg";
 
         try{
             URL serverUrl = new URL(TARGET_URL + API_KEY);
@@ -48,7 +49,7 @@ public class DimensionVisionAPI {
 
             if (httpConnection.getInputStream() == null) {
                 System.out.println("No stream");
-                return;
+                return null;
             }
 
             Scanner httpResponseScanner = new Scanner (httpConnection.getInputStream());
@@ -102,6 +103,7 @@ public class DimensionVisionAPI {
 
 
             httpResponseScanner.close();
+            return strParts;
 
 //            Object obj = parser.parse(s);
 //            Json array = (JSONArray)obj;
@@ -119,13 +121,16 @@ public class DimensionVisionAPI {
         catch(Exception ee){
             System.out.println(ee);
         }
+
+
         // GET https://www.googleapis.com/storage/v1/b/bucket/o/object
 
 //        InputStream content = new ByteArrayInputStream("Hello, World!".getBytes(UTF_8));
 //        Blob blob = bucket.create(blobName, content, "text/plain");
 
-
+        return null;
     }
+
 
 
 
