@@ -3,20 +3,15 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.spec.ECField;
-import java.util.Arrays;
 import java.util.Scanner;
-import org.json.*;
 
-public class vision_api {
+
+public class DimensionVisionAPI {
     private static final String TARGET_URL =
             "https://vision.googleapis.com/v1/images:annotate?";
     private static final String API_KEY =
             "key=AIzaSyBpUPfVsfVn2SIgYL4xwfYfLUe0wHzsEbM";
-    public static void main(String[] args) {
-    String name = "IC-Eisenhower-Box.jpg";
-    String name2 = "idler.jpg";
-
+    public void DimensionVisionAPI(String FileName) {
 
         try{
             URL serverUrl = new URL(TARGET_URL + API_KEY);
@@ -33,7 +28,7 @@ public class vision_api {
                             "    {\n" +
                             "      \"image\": {\n" +
                             "        \"source\": {\n" +
-                            "          \"gcsImageUri\": \"gs://vision_fyp/"+name2+"\"\n" +
+                            "          \"gcsImageUri\": \"gs://vision_fyp/"+FileName+"\"\n" +
                             "        }\n" +
                             "      },\n" +
                             "      \"features\": [\n" +
@@ -124,7 +119,7 @@ public class vision_api {
         catch(Exception ee){
             System.out.println(ee);
         }
-       // GET https://www.googleapis.com/storage/v1/b/bucket/o/object
+        // GET https://www.googleapis.com/storage/v1/b/bucket/o/object
 
 //        InputStream content = new ByteArrayInputStream("Hello, World!".getBytes(UTF_8));
 //        Blob blob = bucket.create(blobName, content, "text/plain");

@@ -57,7 +57,8 @@ public class CloudStorageHelper {
                     stream);
             Storage.Objects.Insert insert = storage.objects().insert(
                     bucketName, null, content);
-            insert.setName(file.getName());
+            insert.setName(file.getName());//set name of the file in the bucket
+            insert.setPredefinedAcl("publicread");//set the upload to public read so visiual api can be ran
 
             insert.execute();
         } finally {
@@ -199,15 +200,11 @@ public class CloudStorageHelper {
     }
 
     private static Storage getStorage() throws Exception {
-        System.out.println("here4");
         if (storage == null) {
-            System.out.println("here5");
             HttpTransport httpTransport = new NetHttpTransport();
             JsonFactory jsonFactory = new JacksonFactory();
-            System.out.println("here6");
             List<String> scopes = new ArrayList<String>();
             scopes.add(StorageScopes.DEVSTORAGE_FULL_CONTROL);
-            System.out.println("here7");
             Credential credential = new GoogleCredential.Builder()
                     .setTransport(httpTransport)
                     .setJsonFactory(jsonFactory)
@@ -217,12 +214,10 @@ public class CloudStorageHelper {
                             new File(getProperties().getProperty(
                                     PRIVATE_KEY_PATH_PROPERTY)))
                     .setServiceAccountScopes(scopes).build();
-            System.out.println("here8");
             storage = new Storage.Builder(httpTransport, jsonFactory,
                     credential).setApplicationName(
                     getProperties().getProperty(APPLICATION_NAME_PROPERTY))
                     .build();
-            System.out.println("here9");
         }
 
         return storage;

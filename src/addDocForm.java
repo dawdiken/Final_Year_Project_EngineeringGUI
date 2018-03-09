@@ -153,6 +153,15 @@ public class addDocForm  extends JInternalFrame {
                     table = 2;//flag to decide which table to write the document to (sop or technical drawing)
                     job.setPartSop(fileName);
                     database.newDocument(job ,table);
+                    try{
+                        String pathtoUpload = job.getDropPath().trim();
+                        CloudStorageHelper.uploadFile("vision_fyp", pathtoUpload);
+                        DimensionVisionAPI getDim = new DimensionVisionAPI();
+                        getDim.DimensionVisionAPI(fileName);
+                    }
+                    catch (Exception ee){
+                        System.out.println("this did not work\n" + ee);
+                    }
                 }
             }
             catch (DataAccessException ee){
