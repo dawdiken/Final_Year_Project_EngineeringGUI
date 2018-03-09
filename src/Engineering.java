@@ -210,14 +210,16 @@ public class Engineering extends JFrame {
         return frame;
     }  // end method createAddressBookEntryFrame
 
-    // create a new NewJobEntryFrame and register listener
-    private TableFromDatabase createAllJobframe() {
-        TableFromDatabase frame = new TableFromDatabase();
-        frame.pack();
-        frame.setVisible(true);
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        return frame;
-    }  // end method createAddressBookEntryFrame
+//    // create a new NewJobEntryFrame and register listener
+//    private TableFromDatabase createAllJobframe() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new TableFromDatabase();
+//            }
+//        });
+//        return null;
+//    }  // end method createAddressBookEntryFrame
 
 
 
@@ -373,9 +375,6 @@ public class Engineering extends JFrame {
             else{
                 System.out.println("no customer here");
             }
-
-
-
         }
 
     }  // end inner class NewAction
@@ -872,9 +871,15 @@ public class Engineering extends JFrame {
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
-            TableFromDatabase entryFrame =
-                    createAllJobframe();
-
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new TableFromDatabase();
+                }
+            });
+//            TableFromDatabase entryFrame =
+//                    createAllJobframe();
+            
         }
 
     }  // end inner class AddNewUserAction

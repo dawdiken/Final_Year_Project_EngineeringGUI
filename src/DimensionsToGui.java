@@ -2,6 +2,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
+
 public class DimensionsToGui extends JFrame
 {
     public DimensionsToGui()
@@ -52,6 +54,9 @@ public class DimensionsToGui extends JFrame
         }
         System.out.println();
         JTable table = new JTable(dataNEw, columns);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        table.setDefaultRenderer(String.class, centerRenderer);
+        table.setDefaultRenderer(Integer.class, centerRenderer);
 
         //add the table to the frame
         this.add(new JScrollPane(table));

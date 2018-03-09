@@ -77,5 +77,8 @@ public class TableFromDatabase extends JFrame
         table.setDefaultRenderer(Integer.class, centerRenderer);
         JScrollPane scrollPane = new JScrollPane( table );
         getContentPane().add( scrollPane );
+        this.pack();
+        this.setVisible(true);
+        this.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
     }
 }
