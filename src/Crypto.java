@@ -41,9 +41,9 @@ public class Crypto {
 
     public static void main(String[] args) {
         String key = "This is a secret";
-        File inputFile = new File("C:\\Users\\david\\Desktop\\Final_project_ENG_GUI\\src\\text");
+        File inputFile = new File("C:\\Users\\david\\Desktop\\Final_project_ENG_GUI\\Folder.zip");
         File encryptedFile = new File("text.encrypted");
-        File decryptedFile = new File("decrypted-text.txt");
+        File decryptedFile = new File("decrypted-text.zip");
 
         try {
             Crypto.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
