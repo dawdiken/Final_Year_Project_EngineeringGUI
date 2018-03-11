@@ -1,5 +1,8 @@
 // Java core packages
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,6 +56,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindCustomerID;
     private PreparedStatement sqlFindMaxJobID;
     private PreparedStatement sqlFindAllJobs;
+    private PreparedStatement sqlInsertDimensions;
+    private PreparedStatement sqlFindDimensions;
 
 
     // set up PreparedStatements to access database
@@ -79,10 +84,14 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 "INSERT INTO technical_drawing ( customer_ID, drawingName, document_blob ) " +
                         "VALUES (? , ?, ? )" );
 
-        sqlInsertSOP =  connection.prepareStatement(
-        "INSERT INTO sop_document ( customer_ID, sopName, document_blob ) " +
-                "VALUES (? , ?, ? )" );
 
+        sqlInsertSOP =  connection.prepareStatement(
+                "INSERT INTO sop_document ( customer_ID, sopName, document_blob ) " +
+                        "VALUES (? , ?, ? )" );
+
+        sqlInsertDimensions =  connection.prepareStatement(
+                "INSERT INTO DIMENSIONS ( dimension_json ) " +
+                        "VALUES (? )" );
 
         // locate person
 //        sqlFind = connection.prepareStatement(
@@ -101,6 +110,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindDepartmentByName = connection.prepareStatement("SELECT department_id FROM department WHERE department_name = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
         sqlFindAllJobs = connection.prepareStatement("SELECT * FROM workon_copy");
+        sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM DIMENSIONS WHERE dimension_id = ?");
 
 
 //        sqlFind = connection.prepareStatement(
@@ -213,7 +223,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     }
 
 
-        // Insert new User. Method returns boolean indicating
+    // Insert new User. Method returns boolean indicating
     // success or failure.
     public boolean newPerson( NewJobEntry person )
             throws DataAccessException
@@ -637,6 +647,93 @@ public class DataBaseAccess implements EngineeringDataAccess {
             }
         }
     }  // end method newPerson
+
+
+    // Insert new entry. Method returns boolean indicating
+    // success or failure.
+    public boolean newDimensions( String jsonarray )
+            throws DataAccessException
+    {
+        // insert person in database
+        try {
+            int result;
+
+            // insert first and last name in names table
+            sqlInsertDimensions.setString( 1, jsonarray );
+            result = sqlInsertDimensions.executeUpdate();
+
+            // if insert fails, rollback and discontinue
+            if ( result == 0 ) {
+                connection.rollback(); // rollback insert
+                return false;          // insert unsuccessful
+            }
+            connection.commit();   // commit insert
+            return true;           // insert successful
+        }  // end try
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return false;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                exception.printStackTrace();
+                throw new DataAccessException( exception );
+            }
+        }
+    }  // end method newPerson
+
+    public String sqlFindDimensions(int id)
+    {
+        // insert person in database
+        try {
+
+            System.out.println("result");
+            sqlFindDimensions.setInt( 1, id );
+            ResultSet resultSet = sqlFindDimensions.executeQuery();
+            //System.out.println("result" + result);
+//            if (resultSet.next()) {
+//                System.out.println("result max");
+//
+//            }
+
+            // if insert fails, rollback and discontinue
+            if (!resultSet.next()) {
+                connection.rollback(); // rollback insert
+                System.out.println("result for job id here 3");
+                return null;          // insert unsuccessful
+            }
+
+            String dimesions = resultSet.getString(1);
+
+            System.out.println("result for job id here 4" + dimesions);
+
+            return dimesions;           // insert successful
+        }
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                System.out.println("result for job id 1111");
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return null;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                System.out.println("result for job id2222222222");
+                exception.printStackTrace();
+                return null;
+            }
+        }
+    }  // end method newUser
 
     // Update an entry. Method returns boolean indicating
     // success or failure.
