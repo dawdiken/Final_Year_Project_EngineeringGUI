@@ -8,3 +8,5 @@ create table users (
 
 
 http://www.htmlcsscolor.com/hex/CADBFF
+
+https://www.javamex.com/tutorials/cryptography/ciphers.shtml
