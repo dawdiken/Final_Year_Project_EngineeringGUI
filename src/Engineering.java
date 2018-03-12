@@ -20,8 +20,8 @@ public class Engineering extends JFrame {
     private EngineeringDataAccess database;
 
     // references to Actions
-    Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
-            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction, viewAllJobsInDB;
+    private Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
+            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction, viewAllJobsInDB, storeFinishedJobsInBucket;
 
     // set up database connection and GUI
     public Engineering() {
@@ -37,6 +37,9 @@ public class Engineering extends JFrame {
             System.out.println("datbase connection failed");
             System.exit( 1 );
         }
+
+        CreateDirectory makeHome = new CreateDirectory();
+        makeHome.CreateDirectory();
 
         // database connection successful, create GUI
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
@@ -62,6 +65,8 @@ public class Engineering extends JFrame {
         AddUserAction.setEnabled( true );  // disabled by default
         viewAllJobsInDB = new viewAllJobsInDB();
         viewAllJobsInDB.setEnabled( true );  // disabled by default
+        storeFinishedJobsInBucket = new storeFinishedJobsInBucket();
+        storeFinishedJobsInBucket.setEnabled( true );  // disabled by default
 //        searchAction = new SearchAction();
 //        exitAction = new ExitAction();
 //        savePhone = new SavePhoneNum();
@@ -95,6 +100,8 @@ public class Engineering extends JFrame {
         toolBar.add( AddUserAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( viewAllJobsInDB );
+        toolBar.add( new JToolBar.Separator() );
+        toolBar.add( storeFinishedJobsInBucket );
 
         // add actions to File menu
         fileMenu.add( newAction );
@@ -934,6 +941,28 @@ public class Engineering extends JFrame {
 //            });
 //        }
 //    }
+
+    private class storeFinishedJobsInBucket extends AbstractAction {
+
+        // set up action's name, icon, descriptions and mnemonic
+        public storeFinishedJobsInBucket()
+        {
+            putValue( NAME, "Archive finsished work" );
+            putValue( SHORT_DESCRIPTION, "Store finsished works orders" );
+            putValue( LONG_DESCRIPTION,
+                    "Store finsished works orders in long term storage" );
+            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
+        }
+
+        // save new entry or update existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+//            Crypto;
+//            CloudStorageHelper.uploadFile();
+
+        }
+
+    }  // end inner class AddNewUserAction
 
     private class AddAddressAction extends AbstractAction {
 
