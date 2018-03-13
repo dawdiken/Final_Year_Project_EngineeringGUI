@@ -10,17 +10,15 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
     private List <String> fileList;
-    private static final String OUTPUT_ZIP_FILE = "Folder.zip";
-    private static final String SOURCE_FOLDER = "C:\\Users\\david\\Desktop\\testencrypt"; // SourceFolder path
+    private static final String OUTPUT_ZIP_FILE = "C:\\EDHRHOME\\Folder.zip";
+    private static final String SOURCE_FOLDER = "C:\\EDHRHOME\\FinishedWorksOrders\\test1"; // SourceFolder path
 
     public ZipUtils() {
         fileList = new ArrayList < String > ();
     }
 
     public static void main(String[] args) {
-        ZipUtils appZip = new ZipUtils();
-        appZip.generateFileList(new File(SOURCE_FOLDER));
-        appZip.zipIt(OUTPUT_ZIP_FILE);
+
     }
 
     public void zipIt(String zipFile) {

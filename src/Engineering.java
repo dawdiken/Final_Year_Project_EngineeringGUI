@@ -4,6 +4,7 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 
 // Java extension packages
@@ -947,18 +948,50 @@ public class Engineering extends JFrame {
         // set up action's name, icon, descriptions and mnemonic
         public storeFinishedJobsInBucket()
         {
-            putValue( NAME, "Archive finsished work" );
-            putValue( SHORT_DESCRIPTION, "Store finsished works orders" );
+            putValue( NAME, "Archive finished work" );
+            putValue( SHORT_DESCRIPTION, "Archive finished works orders" );
             putValue( LONG_DESCRIPTION,
-                    "Store finsished works orders in long term storage" );
-            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
+                    "Store finished works orders in long term storage" );
+            putValue( MNEMONIC_KEY, new Integer( 'A' ) );
         }
 
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
-//            Crypto;
-//            CloudStorageHelper.uploadFile();
+            ArchiveToCloud saveWorksOrders = new ArchiveToCloud();
+            String pathToFolder = saveWorksOrders.ArchiveToCloud();
+            System.out.println("pathtofolder" + pathToFolder);
+            //get the file name so you can use it to save the save the file to the cloud using its name
+            File f = new File(pathToFolder);
+            System.out.println(f.getName());
+            String saveAs = f.getName();
+
+            //check that you are only trying to zip and push finished works orders to the cloud
+            if (pathToFolder.contains("C:\\EDHRHOME\\FinishedWorksOrders")){
+                System.out.println("successsssssss");
+                ZipUtils appZip = new ZipUtils();
+                appZip.generateFileList(new File(pathToFolder));
+                appZip.zipIt("C:\\EDHRHOME\\"+saveAs);//default location where zippe file will always be
+                try{
+                    CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\"+saveAs);
+                }
+                catch(Exception ee){
+                    System.out.println(ee);
+                }
+            }
+//            ZipUtils appZip = new ZipUtils();
+//            appZip.generateFileList(new File("C:\\EDHRHOME\\FinishedWorksOrders\\test1"));
+//            appZip.zipIt("C:\\EDHRHOME\\Folder.zip");
+//            try{
+//                //CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\Folder");
+//            }
+//            catch(Exception ee){
+//                System.out.println(ee);
+//            }
+
+
+            //appZip.generateFileList(new File(SOURCE_FOLDER));
+            //appZip.zipIt(OUTPUT_ZIP_FILE);
 
         }
 
