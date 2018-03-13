@@ -959,40 +959,7 @@ public class Engineering extends JFrame {
         public void actionPerformed( ActionEvent e )
         {
             ArchiveToCloud saveWorksOrders = new ArchiveToCloud();
-            String pathToFolder = saveWorksOrders.ArchiveToCloud();
-            System.out.println("pathtofolder" + pathToFolder);
-            //get the file name so you can use it to save the save the file to the cloud using its name
-            File f = new File(pathToFolder);
-            System.out.println(f.getName());
-            String saveAs = f.getName();
-
-            //check that you are only trying to zip and push finished works orders to the cloud
-            if (pathToFolder.contains("C:\\EDHRHOME\\FinishedWorksOrders")){
-                System.out.println("successsssssss");
-                ZipUtils appZip = new ZipUtils();
-                appZip.generateFileList(new File(pathToFolder));
-                appZip.zipIt("C:\\EDHRHOME\\"+saveAs);//default location where zippe file will always be
-                try{
-                    CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\"+saveAs);
-                }
-                catch(Exception ee){
-                    System.out.println(ee);
-                }
-            }
-//            ZipUtils appZip = new ZipUtils();
-//            appZip.generateFileList(new File("C:\\EDHRHOME\\FinishedWorksOrders\\test1"));
-//            appZip.zipIt("C:\\EDHRHOME\\Folder.zip");
-//            try{
-//                //CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\Folder");
-//            }
-//            catch(Exception ee){
-//                System.out.println(ee);
-//            }
-
-
-            //appZip.generateFileList(new File(SOURCE_FOLDER));
-            //appZip.zipIt(OUTPUT_ZIP_FILE);
-
+            saveWorksOrders.ArchiveToCloud();
         }
 
     }  // end inner class AddNewUserAction
