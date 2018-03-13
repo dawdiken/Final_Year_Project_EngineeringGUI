@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
 
-    private static void fileProcessor(int cipherMode,String key,File inputFile,File outputFile){
+    public static void fileProcessor(int cipherMode,String key,File inputFile,File outputFile){
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -39,20 +39,20 @@ public class Crypto {
         }
     }
 
-    public static void main(String[] args) {
-        String key = "This is a secret";
-        File inputFile = new File("C:\\Users\\david\\Desktop\\Final_project_ENG_GUI\\Folder.zip");
-        File encryptedFile = new File("text.encrypted");
-        File decryptedFile = new File("decrypted-text.zip");
-
-        try {
-            Crypto.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
-            Crypto.fileProcessor(Cipher.DECRYPT_MODE,key,encryptedFile,decryptedFile);
-            System.out.println("Sucess");
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        String key = "This is a secret";
+//        File inputFile = new File("C:\\Users\\david\\Desktop\\Final_project_ENG_GUI\\Folder.zip");
+//        File encryptedFile = new File("text.encrypted");
+//        File decryptedFile = new File("decrypted-text.zip");
+//
+//        try {
+//            Crypto.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
+//            Crypto.fileProcessor(Cipher.DECRYPT_MODE,key,encryptedFile,decryptedFile);
+//            System.out.println("Sucess");
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//            ex.printStackTrace();
+//        }
+//    }
 
 }
