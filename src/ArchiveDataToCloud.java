@@ -116,7 +116,7 @@ public class ArchiveDataToCloud extends JPanel
         frame.setVisible(true);
     }
 
-    public void SendToCloud() {
+    private void SendToCloud() {
         JFileChooser jfc = new JFileChooser("C:\\EDHRHOME\\FinishedWorksOrders");
         jfc.setDialogTitle("Choose Works Order to Archive: ");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -138,30 +138,27 @@ public class ArchiveDataToCloud extends JPanel
         }
     }
 
-    private String ZippFolder(String pathToFolder, String saveAs){
+    private void ZippFolder(String pathToFolder, String saveAs){
         ZipUtils appZip = new ZipUtils();
         appZip.generateFileList(new File(pathToFolder));
         appZip.zipIt("C:\\EDHRHOME\\"+saveAs);//default location where zippe file will always be
-        return null;
     }
 
-    private String EncryptFolder(String saveAs){
+    private void EncryptFolder(String saveAs){
         String key = "This is a secret";
         File encryptedFile = new File("C:\\EDHRHOME\\"+saveAs+".encrypted");
         File inputFile = new File("C:\\EDHRHOME\\"+saveAs);
         EncryptFiles encryptMyFolder = new EncryptFiles();
         encryptMyFolder.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
-        return null;
     }
 
-    private String StoreInCloud(String saveAs){
+    private void StoreInCloud(String saveAs){
         try{
             CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\"+saveAs+".encrypted");
         }
         catch(Exception ee){
             System.out.println(ee);
         }
-        return null;
     }
 
     private class Worker extends SwingWorker<String, String> {
@@ -176,12 +173,12 @@ public class ArchiveDataToCloud extends JPanel
             setProgress(0);
             try {
                 setProgress(5);
-                String zippedAs = ZippFolder(pathToFolder,saveAs);
+                ZippFolder(pathToFolder,saveAs);
                 setProgress(25);
-                String encryptAs = EncryptFolder(saveAs);
+                EncryptFolder(saveAs);
                 setProgress(45);
                 setProgress(65);
-                String pushToCloud = StoreInCloud(saveAs);
+                StoreInCloud(saveAs);
                 setProgress(85);
                 setProgress(100);
             }
