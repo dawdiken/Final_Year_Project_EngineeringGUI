@@ -41,7 +41,7 @@ public class ArchiveToCloud {
 
    private String EncryptFolder(String saveAs){
        String key = "This is a secret";
-       File encryptedFile = new File("C:\\EDHRHOME\\text.encrypted");
+       File encryptedFile = new File("C:\\EDHRHOME\\"+saveAs+".encrypted");
        File inputFile = new File("C:\\EDHRHOME\\"+saveAs);
        Crypto encryptMyFolder = new Crypto();
        encryptMyFolder.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
@@ -50,12 +50,11 @@ public class ArchiveToCloud {
 
    private String StoreInCloud(String saveAs){
        try{
-           CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\text.encrypted");
+           CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\"+saveAs+".encrypted");
        }
        catch(Exception ee){
            System.out.println(ee);
        }
-
        return null;
    }
 }
