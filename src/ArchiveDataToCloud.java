@@ -74,7 +74,7 @@ public class ArchiveDataToCloud extends JPanel
      * Invoked when worker's progress property changes.
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName() ) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             if (progress<35){
                 taskOutput.append("Folder selected\n");
