@@ -45,39 +45,6 @@ public class ArchiveDataToCloud extends JPanel
     private JTextArea taskOutput;
     private Worker worker;
 
-    private class Worker extends SwingWorker<String, String> {
-        //get paths and filename to save as sent into the string worker
-        public Worker(String pathToFolder, String saveAs) {
-            this.pathToFolder = pathToFolder;
-            this.saveAs = saveAs;
-        }
-
-        @Override
-        public String doInBackground() {
-            setProgress(0);
-            try {
-                setProgress(5);
-                String zippedAs = ZippFolder(pathToFolder,saveAs);
-                setProgress(25);
-                String encryptAs = EncryptFolder(saveAs);
-                setProgress(45);
-                setProgress(65);
-                String pushToCloud = StoreInCloud(saveAs);
-                setProgress(85);
-                setProgress(100);
-            } catch (Exception ignore) {}
-            return null;
-        }
-
-        @Override
-        public void done() {
-            Toolkit.getDefaultToolkit().beep();
-            selectWorksOrder.setEnabled(true);
-        }
-        private String pathToFolder;
-        private String saveAs;
-    }
-
     public ArchiveDataToCloud() {
         super(new BorderLayout());
 
@@ -95,10 +62,6 @@ public class ArchiveDataToCloud extends JPanel
 
     }
 
-
-    /**
-     * Invoked when the user presses the start button.
-     */
     public void actionPerformed(ActionEvent evt) {
         progressMonitor = new ProgressMonitor(ArchiveDataToCloud.this,
                 "Encrypting and pushing files to the cloud",
@@ -111,8 +74,6 @@ public class ArchiveDataToCloud extends JPanel
      * Invoked when worker's progress property changes.
      */
     public void propertyChange(PropertyChangeEvent evt) {
-
-
         if ("progress" == evt.getPropertyName() ) {
             int progress = (Integer) evt.getNewValue();
             if (progress<35){
@@ -201,5 +162,41 @@ public class ArchiveDataToCloud extends JPanel
             System.out.println(ee);
         }
         return null;
+    }
+
+    private class Worker extends SwingWorker<String, String> {
+        //get paths and filename to save as sent into the string worker
+        public Worker(String pathToFolder, String saveAs) {
+            this.pathToFolder = pathToFolder;
+            this.saveAs = saveAs;
+        }
+
+        @Override
+        public String doInBackground() {
+            setProgress(0);
+            try {
+                setProgress(5);
+                String zippedAs = ZippFolder(pathToFolder,saveAs);
+                setProgress(25);
+                String encryptAs = EncryptFolder(saveAs);
+                setProgress(45);
+                setProgress(65);
+                String pushToCloud = StoreInCloud(saveAs);
+                setProgress(85);
+                setProgress(100);
+            }
+            catch (Exception ee) {
+                System.out.println(ee);
+            }
+            return null;
+        }
+
+        @Override
+        public void done() {
+            Toolkit.getDefaultToolkit().beep();
+            selectWorksOrder.setEnabled(true);
+        }
+        private String pathToFolder;
+        private String saveAs;
     }
 }

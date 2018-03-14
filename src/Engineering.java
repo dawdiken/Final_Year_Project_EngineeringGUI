@@ -953,7 +953,6 @@ public class Engineering extends JFrame {
                     "Store finished works orders in long term storage" );
             putValue( MNEMONIC_KEY, new Integer( 'A' ) );
         }
-
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
@@ -961,11 +960,9 @@ public class Engineering extends JFrame {
                 @Override
                 public void run() {
                     new ArchiveDataToCloud().createAndShowGUI();
-                    //saveWorksOrders.SendToCloud();
                 }
             });
         }
-
     }  // end inner class AddNewUserAction
 
     private class AddAddressAction extends AbstractAction {
