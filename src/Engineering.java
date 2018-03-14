@@ -4,7 +4,6 @@
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
 
 // Java extension packages
@@ -958,8 +957,13 @@ public class Engineering extends JFrame {
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
-            ArchiveToCloud saveWorksOrders = new ArchiveToCloud();
-            saveWorksOrders.ArchiveToCloud();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new ArchiveDataToCloud().createAndShowGUI();
+                    //saveWorksOrders.SendToCloud();
+                }
+            });
         }
 
     }  // end inner class AddNewUserAction
