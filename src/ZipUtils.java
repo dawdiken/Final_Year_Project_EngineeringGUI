@@ -10,20 +10,16 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
     private List <String> fileList;
-    private static final String OUTPUT_ZIP_FILE = "C:\\EDHRHOME\\Folder.zip";
-    private static final String SOURCE_FOLDER = "C:\\EDHRHOME\\FinishedWorksOrders\\test1"; // SourceFolder path
+    //private static final String OUTPUT_ZIP_FILE = "C:\\EDHRHOME\\Folder.zip";
+    //private static final String SOURCE_FOLDER = "C:\\EDHRHOME\\FinishedWorksOrders\\test1"; // SourceFolder path
 
     public ZipUtils() {
         fileList = new ArrayList < String > ();
     }
 
-    public static void main(String[] args) {
-
-    }
-
-    public void zipIt(String zipFile) {
+    public void zipIt(String zipFile, String pathToFolder) {
         byte[] buffer = new byte[1024];
-        String source = new File(SOURCE_FOLDER).getName();
+        String source = new File(pathToFolder).getName();
         FileOutputStream fos = null;
         ZipOutputStream zos = null;
         try {
@@ -38,7 +34,7 @@ public class ZipUtils {
                 ZipEntry ze = new ZipEntry(source + File.separator + file);
                 zos.putNextEntry(ze);
                 try {
-                    in = new FileInputStream(SOURCE_FOLDER + File.separator + file);
+                    in = new FileInputStream(pathToFolder + File.separator + file);
                     int len;
                     while ((len = in .read(buffer)) > 0) {
                         zos.write(buffer, 0, len);
@@ -62,21 +58,22 @@ public class ZipUtils {
         }
     }
 
-    public void generateFileList(File node) {
-        // add file only
+    public void generateFileList(File node, String source) {
+        //zip file only
         if (node.isFile()) {
-            fileList.add(generateZipEntry(node.toString()));
+            System.out.println(node.toString());
+            fileList.add(generateZipEntry(node.toString(), source));
         }
-
+        //zip directory and check for sub folders and directories
         if (node.isDirectory()) {
             String[] subNote = node.list();
-            for (String filename: subNote) {
-                generateFileList(new File(node, filename));
-            }
+                for (String filename : subNote) {
+                    generateFileList(new File(node, filename), source);//done like this to zip files within folders
+                }
         }
     }
 
-    private String generateZipEntry(String file) {
-        return file.substring(SOURCE_FOLDER.length() + 1, file.length());
+    private String generateZipEntry(String file, String source) {
+        return file.substring(source.length() + 1, file.length());
     }
 }

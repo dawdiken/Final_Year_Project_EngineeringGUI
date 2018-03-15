@@ -140,14 +140,14 @@ public class ArchiveDataToCloud extends JPanel
 
     private void ZippFolder(String pathToFolder, String saveAs){
         ZipUtils appZip = new ZipUtils();
-        appZip.generateFileList(new File(pathToFolder));
-        appZip.zipIt("C:\\EDHRHOME\\"+saveAs);//default location where zippe file will always be
+        appZip.generateFileList(new File(pathToFolder),pathToFolder);
+        appZip.zipIt("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs,pathToFolder );//default location where zippe file will always be
     }
 
     private void EncryptFolder(String saveAs){
         String key = "This is a secret";
-        File encryptedFile = new File("C:\\EDHRHOME\\"+saveAs+".encrypted");
-        File inputFile = new File("C:\\EDHRHOME\\"+saveAs);
+        File encryptedFile = new File("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs+".encrypted");
+        File inputFile = new File("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs);
         EncryptFiles encryptMyFolder = new EncryptFiles();
         encryptMyFolder.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
     }
@@ -163,7 +163,7 @@ public class ArchiveDataToCloud extends JPanel
 
     private class Worker extends SwingWorker<String, String> {
         //get paths and filename to save as sent into the string worker
-        public Worker(String pathToFolder, String saveAs) {
+        private Worker(String pathToFolder, String saveAs) {
             this.pathToFolder = pathToFolder;
             this.saveAs = saveAs;
         }

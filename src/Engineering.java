@@ -866,7 +866,7 @@ public class Engineering extends JFrame {
     private class viewAllJobsInDB extends AbstractAction {
 
         // set up action's name, icon, descriptions and mnemonic
-        public viewAllJobsInDB()
+        private viewAllJobsInDB()
         {
             putValue( NAME, "View works orders" );
             putValue( SHORT_DESCRIPTION, "View works orders" );
@@ -945,7 +945,7 @@ public class Engineering extends JFrame {
     private class storeFinishedJobsInBucket extends AbstractAction {
 
         // set up action's name, icon, descriptions and mnemonic
-        public storeFinishedJobsInBucket()
+        private storeFinishedJobsInBucket()
         {
             putValue( NAME, "Archive finished work" );
             putValue( SHORT_DESCRIPTION, "Archive finished works orders" );
