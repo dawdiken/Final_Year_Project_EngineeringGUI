@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class addDocForm  extends JInternalFrame {
@@ -8,6 +9,10 @@ public class addDocForm  extends JInternalFrame {
     //private NewJobEntry job;
 
     public addDocForm(){
+        Loader l = new Loader();
+        int choice = 1;
+        SwingWorker work = l.createWorker(choice, null);
+        work.execute();
         NewJobEntry job = new NewJobEntry();
 
         String[] choices = {"SOP", "Technical Drawing"};
@@ -28,21 +33,21 @@ public class addDocForm  extends JInternalFrame {
             exception.printStackTrace();
             System.exit( 1 );
         }
-        Loader l = new Loader();
-        int choice = 1;
-        SwingWorker work = l.createWorker(choice, null);
-        work.execute();
-        try{
-            ArrayList<String> customerNames2;
-
-
-            System.out.println("this is work "+ work.get().toString());
-        }
-        catch( Exception ee){
-            System.out.println(ee);
-
-
-        }
+//        Loader l = new Loader();
+//        int choice = 1;
+//        SwingWorker work = l.createWorker(choice, null);
+//        work.execute();
+//        try{
+//            ArrayList<String> customerNames2;
+//
+//
+//            System.out.println("this is work "+ work.get().toString());
+//        }
+//        catch( Exception ee){
+//            System.out.println(ee);
+//
+//
+//        }
 
         ArrayList<String> customerNames = database.findCustomer();
         String[] result = {};
@@ -55,8 +60,8 @@ public class addDocForm  extends JInternalFrame {
         try{
            result2 = work.get().toString().replace("[", "").replace("]", "");
         }
-        catch (Exception ee){
-            System.out.println(ee);
+        catch (Exception exception){
+            exception.printStackTrace();
         }
 
         String[] ary = result2.split(",");
@@ -115,8 +120,8 @@ public class addDocForm  extends JInternalFrame {
                                 BorderFactory.createMatteBorder( 2, 2, 2, 2 , Color.green) );
                         path = files[i].getCanonicalPath();
                     }   // end try
-                    catch( java.io.IOException e ) {
-                        System.out.println("Drop failed/n" + e);
+                    catch( IOException e ) {
+                        e.printStackTrace();
                     }
                     ViewFileDropped v1 = new ViewFileDropped();
                     v1.ViewFileDropped(path);
@@ -172,7 +177,7 @@ public class addDocForm  extends JInternalFrame {
                 }
             }
             catch (DataAccessException ee){
-                System.out.println(ee);
+                ee.printStackTrace();
             }
         }
     }

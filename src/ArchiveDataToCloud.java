@@ -1,40 +1,11 @@
-/*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- *   - Neither the name of Oracle or the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.crypto.Cipher;
 import javax.swing.*;
 import java.beans.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArchiveDataToCloud extends JPanel
         implements ActionListener,
@@ -60,6 +31,12 @@ public class ArchiveDataToCloud extends JPanel
         add(new JScrollPane(taskOutput), BorderLayout.CENTER);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        List<String> list = new ArrayList<String>();
+        list = CloudContents();
+        taskOutput.append("Archive Contents = \n");
+        for (String number : list) {
+            taskOutput.append(number+ "\n");
+        }
     }
 
     public void actionPerformed(ActionEvent evt) {
@@ -153,15 +130,27 @@ public class ArchiveDataToCloud extends JPanel
     }
 
     private void StoreInCloud(String saveAs){
+        List<String> list = new ArrayList<String>();
         try{
-            CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\"+saveAs+".encrypted");
+            CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\ArchivedFiles\\"+saveAs+".encrypted");
         }
         catch(Exception ee){
-            System.out.println(ee);
+            ee.printStackTrace();
         }
     }
 
-    private class Worker extends SwingWorker<String, String> {
+    private List<String> CloudContents(){
+        List<String> list = new ArrayList<String>();
+        try{
+            list = CloudStorageHelper.listBucket("longtermstorageedhr");
+        }
+        catch(Exception ee){
+            ee.printStackTrace();
+        }
+        return list;
+    }
+
+    private class Worker extends SwingWorker< List<String>, String> {
         //get paths and filename to save as sent into the string worker
         private Worker(String pathToFolder, String saveAs) {
             this.pathToFolder = pathToFolder;
@@ -169,29 +158,46 @@ public class ArchiveDataToCloud extends JPanel
         }
 
         @Override
-        public String doInBackground() {
+        public  List<String> doInBackground() {
             setProgress(0);
+            List<String> list = new ArrayList<String>();
             try {
                 setProgress(5);
                 ZippFolder(pathToFolder,saveAs);
                 setProgress(25);
                 EncryptFolder(saveAs);
                 setProgress(45);
-                setProgress(65);
+                setProgress(70);
                 StoreInCloud(saveAs);
                 setProgress(85);
                 setProgress(100);
+                list = CloudContents();
             }
             catch (Exception ee) {
-                System.out.println(ee);
+               ee.printStackTrace();
             }
-            return null;
+            return list;
         }
 
         @Override
         public void done() {
+            try{
+                List<String> list = get();
+                taskOutput.append("\nArchive Contents = \n");
+                for (String number : list) {
+                    taskOutput.append(number+ "\n");
+                }
+            }
+            catch (Exception ee){
+                ee.printStackTrace();
+            }
+
+
+
+
             Toolkit.getDefaultToolkit().beep();
             selectWorksOrder.setEnabled(true);
+            //taskOutput.append(number+ "\n\n").get;
         }
         private String pathToFolder;
         private String saveAs;

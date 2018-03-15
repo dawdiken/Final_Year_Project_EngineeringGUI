@@ -8,22 +8,21 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class  LoginFrame extends JFrame implements ActionListener{
-    JLabel l1, l2, l3;
-    JTextField tf1;
-    JButton btn1;
-    JPasswordField p1;
+
+    private JTextField tf1;
+    private JPasswordField p1;
 
     public LoginFrame() {
         JFrame frame = new JFrame("Login Form");
-        l1 = new JLabel("Login Form");
+        JLabel l1 = new JLabel("Login Form");
         l1.setForeground(Color.blue);
         l1.setFont(new Font("Serif", Font.BOLD, 20));
 
-        l2 = new JLabel("Username");
-        l3 = new JLabel("Password");
+        JLabel l2 = new JLabel("Username");
+        JLabel l3 = new JLabel("Password");
         tf1 = new JTextField();
         p1 = new JPasswordField();
-        btn1 = new JButton("Login");
+        JButton btn1 = new JButton("Login");
         btn1.addActionListener(this);
 
         l1.setBounds(100, 30, 400, 30);
@@ -43,8 +42,6 @@ public class  LoginFrame extends JFrame implements ActionListener{
         frame.setSize(400, 400);
         frame.setLayout(null);
         frame.setVisible(true);
-        String Success = "Success";
-//       return Success;
     }
 
     public void actionPerformed(ActionEvent ae) {
@@ -70,8 +67,3 @@ public class  LoginFrame extends JFrame implements ActionListener{
         }
     }
 }
-
-//    public static void main(String[] args) {
-//        new LoginFrame();
-//    }
-//}
