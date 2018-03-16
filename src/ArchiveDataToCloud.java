@@ -83,7 +83,7 @@ public class ArchiveDataToCloud extends JPanel
     public void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Save Works Order to the cloud");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JComponent newContentPane = new ArchiveDataToCloud();
         newContentPane.setOpaque(true);
@@ -162,21 +162,45 @@ public class ArchiveDataToCloud extends JPanel
             setProgress(0);
             List<String> list = new ArrayList<String>();
             try {
-                setProgress(5);
+                //setProgress(5);
+                int i = 5;
+                process(i);
                 ZippFolder(pathToFolder,saveAs);
-                setProgress(25);
+                //setProgress(25);
+                i = 25;
+                process(i);
                 EncryptFolder(saveAs);
-                setProgress(45);
-                setProgress(70);
+                i = 45;
+                process(i);
+                //setProgress(45);
+                i = 70;
+                process(i);
+                //setProgress(70);
                 StoreInCloud(saveAs);
-                setProgress(85);
-                setProgress(100);
+                i = 80;
+                process(i);
+                //setProgress(85);
+                i = 100;
+                process(i);
+                //setProgress(100);
                 list = CloudContents();
+
             }
             catch (Exception ee) {
                ee.printStackTrace();
             }
             return list;
+        }
+
+//        @Override
+        public void process(Integer chunks)
+        {
+            // define what the event dispatch thread
+            // will do with the intermediate results received
+            // while the thread is executing
+            int val = chunks;
+            setProgress(val);
+            System.out.println("val"+val);
         }
 
         @Override
@@ -191,13 +215,8 @@ public class ArchiveDataToCloud extends JPanel
             catch (Exception ee){
                 ee.printStackTrace();
             }
-
-
-
-
             Toolkit.getDefaultToolkit().beep();
             selectWorksOrder.setEnabled(true);
-            //taskOutput.append(number+ "\n\n").get;
         }
         private String pathToFolder;
         private String saveAs;
