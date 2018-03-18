@@ -11,6 +11,12 @@ public class CreateDirectory {
             if (file.mkdir()) {
                 System.out.println("Directory is created!");
             }
+            if (file1.mkdir()) {
+                System.out.println("Directory is created!");
+            }
+            if (file2.mkdir()) {
+                System.out.println("Directory is created!");
+            }
             else {
                 System.out.println("Failed to create directory!");
             }
