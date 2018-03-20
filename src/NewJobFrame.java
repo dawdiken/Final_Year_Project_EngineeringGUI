@@ -4,6 +4,8 @@ import java.awt.*;
 
 // Java extension packages
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class NewJobFrame extends JInternalFrame {
     //database connection
@@ -16,7 +18,7 @@ public class NewJobFrame extends JInternalFrame {
     private NewJobEntry job;
 
     // panels to organize GUI
-    private JPanel leftPanel, rightPanel, middlePanel;
+    private JPanel leftPanel, rightPanel, middlePanel,bottomPanel;
 //    private JComboBox jcomp1;
 //    private JPanel leftPanel_2, rightPanel_2;
 
@@ -53,9 +55,11 @@ public class NewJobFrame extends JInternalFrame {
         leftPanel = new JPanel();
         leftPanel.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
         middlePanel = new JPanel();
-        middlePanel.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
+        middlePanel.setLayout( new GridLayout( rowCount, 100, 0, 5 ) );
         rightPanel = new JPanel();
         rightPanel.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout( new GridLayout( 50, 1, 0, 5 ) );
 
 //        leftPanel_2 = new JPanel();
 //        leftPanel_2.setLayout( new GridLayout( rowCount, 1, 0, 5 ) );
@@ -69,12 +73,14 @@ public class NewJobFrame extends JInternalFrame {
         createOption( DEPARTMENT , 4, null);
         createRow(JOB_NUMBER);
         createRow( BATCH_QTY);
+        createTable(JOB_NUMBER);
         //createDragDrop( DRAG_DROP );
 
         container = getContentPane();
         container.add( leftPanel, BorderLayout.WEST );
         container.add( middlePanel, BorderLayout.CENTER );
         container.add( rightPanel, BorderLayout.EAST );
+        container.add( bottomPanel,400,400 );
 
         setBounds( xOffset, yOffset, 600, height );
         xOffset = ( xOffset + 30 ) % 300;
@@ -191,7 +197,7 @@ public class NewJobFrame extends JInternalFrame {
         leftPanel.add( label );
 
         JTextField field = new JTextField( );
-        field.setText("why wont you work");
+
         Integer jobNum = 0;
         //String jobnn = "";
         if (name.equals(JOB_NUMBER)){
@@ -218,6 +224,52 @@ public class NewJobFrame extends JInternalFrame {
         }
         middlePanel.add( field );
         fields.put( name, field );
+    }
+
+    private void createTable( String name )
+    {
+
+        final String[] columnNames = { "First Name", "Last Name", "Sport",
+                "# of Years", "Vegetarian" };
+
+        final Object[][] data = {
+                { "Mary", "Campione", "Snowboarding", new Integer(5),
+                        new Boolean(false) },
+                { "Alison", "Huml", "Rowing", new Integer(3), new Boolean(true) },
+                { "Kathy", "Walrath", "Knitting", new Integer(2), new Boolean(false) },
+                { "Sharon", "Zakhour", "Speed reading", new Integer(20),
+                        new Boolean(true) },
+                { "Philip", "Milne", "Pool", new Integer(10), new Boolean(false) } };
+
+        final JTable table = new JTable(data, columnNames);
+        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        table.setFillsViewportHeight(true);
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        ListSelectionModel rowSM = table.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                // Ignore extra messages.
+                if (e.getValueIsAdjusting())
+                    return;
+
+                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+                if (lsm.isSelectionEmpty()) {
+                    System.out.println("No rows are selected.");
+                } else {
+                    int selectedRow = lsm.getMinSelectionIndex();
+                    System.out.println("Row " + selectedRow + " is now selected.");
+                }
+            }
+        });
+
+        // Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Add the scroll pane to this panel.
+        add(scrollPane);
+        bottomPanel.add( scrollPane );
+        //fields.put( name, field );
     }
 
 //    private void createDragDrop( String name )
