@@ -124,7 +124,7 @@ public class addDocForm  extends JInternalFrame {
                         e.printStackTrace();
                     }
                     ViewFileDropped v1 = new ViewFileDropped();
-                    v1.ViewFileDropped(path);
+                    v1.viewFileDropped(path);
                 }   // end for: through each dropped file
             }   // end filesDropped
         }); // end FileDrop.Listener

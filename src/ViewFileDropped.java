@@ -1,7 +1,6 @@
 public class ViewFileDropped {
 
-    public void ViewFileDropped(String pathto) {
-
+    public void viewFileDropped(String pathto) {
         try {
             String command = "rundll32 url.dll,FileProtocolHandler " + pathto;
             System.out.println(command);
@@ -9,9 +8,6 @@ public class ViewFileDropped {
                     .getRuntime()
                     .exec(command);
             p.waitFor();
-
-            System.out.println("Done");
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
