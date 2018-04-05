@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class DimensionsToGui extends JFrame
 {
-    public DimensionsToGui()
+    public DimensionsToGui(String fileName)
     {
         //headers for the table
         String[] columns = new String[] {
@@ -15,7 +15,8 @@ public class DimensionsToGui extends JFrame
 
         DimensionVisionAPI getMeString = new DimensionVisionAPI();
         System.out.println("herererere1");
-        String[] data2 = getMeString.DimensionVisionAPI("sink.jpeg");
+        System.out.println(fileName);
+        String[] data2 = getMeString.DimensionVisionAPI(fileName);
         for (int i = 0; i <data2.length ; i++) {
             //strParts[i].replace("\\\\", "");
             //strParts[i].substring(0,strParts.length-1);
