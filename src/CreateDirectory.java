@@ -21,22 +21,6 @@ public class CreateDirectory {
                 System.out.println("Failed to create directory!");
             }
         }
-//        if (!file1.exists()) {
-//            if (file1.mkdir()) {
-//                System.out.println("Directory is created!");
-//            }
-//            else {
-//                System.out.println("Failed to create directory!");
-//            }
-//        }
-//        if (!file2.exists()) {
-//            if (file2.mkdir()) {
-//                System.out.println("Directory is created!");
-//            }
-//            else {
-//                System.out.println("Failed to create directory!");
-//            }
-//        }
         else {
             System.out.println("Home directory already exists");
         }
