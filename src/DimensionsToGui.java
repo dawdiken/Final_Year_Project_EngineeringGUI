@@ -63,7 +63,7 @@ public class DimensionsToGui extends JFrame
         this.add(new JScrollPane(table));
 
         this.setTitle("Dimensions returned from the Technical Drawing");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
         this.setVisible(true);
     }

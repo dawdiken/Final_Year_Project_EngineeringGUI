@@ -162,7 +162,7 @@ public class addDocForm  extends JInternalFrame {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                new DimensionsToGui();
+                                new DimensionsToGui(fileName);
                             }
                         });
                     }
