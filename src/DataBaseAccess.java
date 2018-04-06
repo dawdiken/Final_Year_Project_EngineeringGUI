@@ -76,8 +76,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                         "VALUES (? )" );
 
         sqlInsertDrawing =  connection.prepareStatement(
-                "INSERT INTO technical_drawing ( customer_ID, drawingName, document_blob ) " +
-                        "VALUES (? , ?, ? )" );
+                "INSERT INTO technical_drawing ( customer_ID, drawingName, document_blob, dimension_json ) " +
+                        "VALUES (? , ?, ?, ? )" );
 
 
         sqlInsertSOP =  connection.prepareStatement(
@@ -443,6 +443,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 sqlInsertDrawing.setInt( 1, cust_ID );
                 sqlInsertDrawing.setString( 2, job.getTechniaclDrawing() );
                 sqlInsertDrawing.setBlob( 3, inputStream );
+                sqlInsertDrawing.setString( 4, job.getDimension());
                 result = sqlInsertDrawing.executeUpdate();
             }
             else if (table == 2){

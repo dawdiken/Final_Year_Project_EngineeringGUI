@@ -1,3 +1,6 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -125,9 +128,9 @@ public class addDocForm  extends JInternalFrame {
                     }
                     ViewFileDropped v1 = new ViewFileDropped();
                     v1.viewFileDropped(path);
-                }   // end for: through each dropped file
-            }   // end filesDropped
-        }); // end FileDrop.Listener
+                }
+            }
+        });
 
         final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
         int jpane = JOptionPane.showConfirmDialog(null, myPanel,
@@ -151,24 +154,16 @@ public class addDocForm  extends JInternalFrame {
                     //set values for the job object to be passed to database.newDocument function
                     table = 1;//flag to decide which table to write the document to (sop or technical drawing)
                     job.setTechniaclDrawing(fileName);
-                    database.newDocument(job ,table);
                     try{
                         String pathtoUpload = job.getDropPath().trim();
                         CloudStorageHelper.uploadFile("vision_fyp", pathtoUpload);
-                        //DimensionVisionAPI getDim = new DimensionVisionAPI();
-                        //getDim.DimensionVisionAPI(fileName);
-                        //TableExample showDimsionsTable = new TableExample();
-                        //showDimsionsTable.run();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                new DimensionsToGui(fileName);
-                            }
-                        });
+                        DimensionVisionAPI getDim = new DimensionVisionAPI();
+                        getDim.DimensionVisionAPI(fileName, job);
                     }
                     catch (Exception ee){
                         System.out.println("this did not work\n" + ee);
                     }
+                    database.newDocument(job ,table);
                 }
                else if (document_type.equals("SOP")){
                     table = 2;//flag to decide which table to write the document to (sop or technical drawing)

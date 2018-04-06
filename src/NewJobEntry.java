@@ -1,3 +1,8 @@
+import com.google.api.client.json.Json;
+import com.google.gson.JsonArray;
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+
 public class NewJobEntry {
 
     private Integer jobId;
@@ -13,6 +18,8 @@ public class NewJobEntry {
     private Integer qtyScrap;
     private String dropPath = "";
     private String techniaclDrawing = "";
+
+    private String dimension;
 
     private String partSop = "";
     private String userName = "";
@@ -177,6 +184,14 @@ public class NewJobEntry {
 
     public void setTechniaclDrawing(String techniaclDrawing) {
         this.techniaclDrawing = techniaclDrawing;
+    }
+
+    public String getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(String dimension) {
+        this.dimension = dimension;
     }
 
 }  // end class NewJobEntry

@@ -1,3 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.json.JSONArray;
+
+import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -10,7 +15,7 @@ public class DimensionVisionAPI {
             "https://vision.googleapis.com/v1/images:annotate?";
     private static final String API_KEY =
             "key=AIzaSyBpUPfVsfVn2SIgYL4xwfYfLUe0wHzsEbM";
-    public String[] DimensionVisionAPI(String FileName) {
+    public int DimensionVisionAPI(String FileName, NewJobEntry job) {
 
         try{
             URL serverUrl = new URL(TARGET_URL + API_KEY);
@@ -44,26 +49,36 @@ public class DimensionVisionAPI {
 
             if (httpConnection.getInputStream() == null) {
                 System.out.println("No stream");
-                return null;
+                return 1;
             }
 
             Scanner httpResponseScanner = new Scanner (httpConnection.getInputStream());
 
-            String respt = "";
+            String resp = "";
             while (httpResponseScanner.hasNext()) {
                 String line = httpResponseScanner.nextLine();
                 if(line.contains("text") && line.length()> 100 ) {
-                    respt += line;
+                    resp += line;
                 }
             }
 
-            String[] strParts = respt.split("\\\\n");
+            String[] strParts = resp.split("\\\\n");
             httpResponseScanner.close();
-            return strParts;
+            Gson gson=new GsonBuilder().create();
+            String jsonArray=gson.toJson(strParts);
+            job.setDimension(jsonArray);
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new DimensionsToGui(strParts);
+                }
+            });
+            return 0;
         }
         catch(Exception ee){
             ee.printStackTrace();
         }
-        return null;
+        return 1;
     }
 }
