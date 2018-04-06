@@ -131,8 +131,8 @@ public class addDocForm  extends JInternalFrame {
                 }
             }
         });
-
-        final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
+        //final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\New-file-icon.png");
+        final ImageIcon icon = new ImageIcon("C:\\EDHRHOME\\Icons\\New-file-icon.png");
         int jpane = JOptionPane.showConfirmDialog(null, myPanel,
                 "Drag And Drop New Documents", JOptionPane.OK_CANCEL_OPTION, 1, icon );
         if (jpane == JOptionPane.OK_OPTION) {

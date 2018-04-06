@@ -80,7 +80,7 @@ public class NewJobFrame extends JInternalFrame {
         container.add( leftPanel, BorderLayout.WEST );
         container.add( middlePanel, BorderLayout.CENTER );
         container.add( rightPanel, BorderLayout.EAST );
-        container.add( bottomPanel,400,400 );
+        //container.add( bottomPanel,400,400 );
 
         setBounds( xOffset, yOffset, 600, height );
         xOffset = ( xOffset + 30 ) % 300;
@@ -268,7 +268,7 @@ public class NewJobFrame extends JInternalFrame {
 
         // Add the scroll pane to this panel.
         add(scrollPane);
-        bottomPanel.add( scrollPane );
+       // bottomPanel.add( scrollPane );
         //fields.put( name, field );
     }
 

@@ -229,35 +229,6 @@ public class Engineering extends JFrame {
 //    }  // end method createAddressBookEntryFrame
 
 
-
-    // create a new UserEntryFrame and register listener
-    private UserEntryFrame createUserEntryFrame() {
-        UserEntryFrame frame = new UserEntryFrame();
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        frame.addInternalFrameListener(
-                new InternalFrameAdapter() {
-
-                    // internal frame becomes active frame on desktop
-                    public void internalFrameActivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( true );
-                        //deleteAction.setEnabled( true );
-                    }
-
-                    // internal frame becomes inactive frame on desktop
-                    public void internalFrameDeactivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( false );
-                        //deleteAction.setEnabled( false );
-                    }
-                }  // end InternalFrameAdapter anonymous inner class
-        ); // end call to addInternalFrameListener
-
-        return frame;
-    }  // end method createAddressBookEntryFrame
-
     // create a new AddressBookEntryFrame and register listener
 //    private PhoneNumEntryFrame createPhoneNumEntryFrame() {
 //        PhoneNumEntryFrame frame = new PhoneNumEntryFrame();
@@ -326,10 +297,8 @@ public class Engineering extends JFrame {
         // display window in which user can input entry
         public void actionPerformed( ActionEvent e )
         {
-
-           ArrayList<String> customerNames = database.findCustomer();
+            ArrayList<String> customerNames = database.findCustomer();
             String[] result = {};
-            //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
             for (int i = 0; i < customerNames.size() ; i++) {
                 result = customerNames.toArray(new String[]{});
             }
@@ -344,16 +313,12 @@ public class Engineering extends JFrame {
                     result,
                     result[0]);
 
-            // favoritePizza will be null if the user clicks Cancel
             System.out.printf("customerName is %s.\n", customerName);            // create new internal window
 
-            if (customerName.equalsIgnoreCase("Boston Scientific")) {
+            //if (customerName.equalsIgnoreCase("Boston Scientific")) {
                 int id = 1;
                 NewJobFrame entryFrame =
                         createNewJobFrame(id, customerName);
-//                entryFrame.setAddressBookEntry(
-//                        new NewJobEntry() );
-
 
             // set new AddressBookEntry in window
             entryFrame.setAddressBookEntry(
@@ -362,26 +327,23 @@ public class Engineering extends JFrame {
                 // display window
                 desktop.add( entryFrame );
                 entryFrame.setVisible( true );
-            }
-            else if (customerName.equalsIgnoreCase("Medtronic")){
-                int id = 2;
-                NewJobFrame entryFrame =
-                        createNewJobFrame(id, customerName);
+           // }
+//            else if (customerName.equalsIgnoreCase("Medtronic")){
+//                int id = 2;
+//                NewJobFrame entryFrame =
+//                        createNewJobFrame(id, customerName);
+//
+//                // set new AddressBookEntry in window
 //                entryFrame.setAddressBookEntry(
-//                        new NewJobEntry() );
-
-
-                // set new AddressBookEntry in window
-                entryFrame.setAddressBookEntry(
-                        new NewJobEntry(id) );
-
-                // display window
-                desktop.add( entryFrame );
-                entryFrame.setVisible( true );
-            }
-            else{
-                System.out.println("no customer here");
-            }
+//                        new NewJobEntry(id) );
+//
+//                // display window
+//                desktop.add( entryFrame );
+//                entryFrame.setVisible( true );
+//            }
+//            else{
+//                System.out.println("no customer here");
+//            }
         }
 
     }  // end inner class NewAction
@@ -408,21 +370,17 @@ public class Engineering extends JFrame {
                     ( NewJobFrame ) desktop.getSelectedFrame();
 
             // obtain AddressBookEntry from window
-            NewJobEntry person =
+            NewJobEntry newWorksOrder =
                     currentFrame.getAddressBookEntry();
-//            System.out.printf(person.getBatchQty());
-            System.out.println("Batch qty = " + person.getBatchQty());
-            System.out.println("drop path = " + person.getDropPath());
             //boolean success;
             try {
-                boolean success = database.saveJob(person);
-
-                if(success == true){
+                boolean success = database.saveJob(newWorksOrder);
+                if(success){
                     JOptionPane.showMessageDialog( desktop, "Success!\nNew works order saved to the database",
                             "Save successful", JOptionPane.PLAIN_MESSAGE );
                 }
             }
-            // detect problems deleting person
+            // detect problems saving job
             catch ( DataAccessException exception ) {
                 JOptionPane.showMessageDialog( desktop, exception,
                         "Save failed", JOptionPane.ERROR_MESSAGE );
@@ -431,7 +389,6 @@ public class Engineering extends JFrame {
                 // close current window and dispose of resources
                 currentFrame.dispose();
         }  // end method actionPerformed
-
     }  // end inner class SaveAction
 
 
@@ -840,19 +797,18 @@ public class Engineering extends JFrame {
 ////                    deleteAction.setEnabled( true );
 //                addAddressAction.setEnabled(true);
 //                LogOutAction.setEnabled(true);  // disabled by default
-                UserEntryFrame entryFrame =
-                        createUserEntryFrame();
-                entryFrame.setAddressBookEntry(
-                        new NewJobEntry() );
-
-
-                // set new AddressBookEntry in window
-                entryFrame.setAddressBookEntry(
-                        new NewJobEntry() );
-
-                // display window
-                desktop.add( entryFrame );
-                entryFrame.setVisible( true );
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        UserEntryFrame entryFrame =  new UserEntryFrame();
+                        // set new AddressBookEntry in window
+                        entryFrame.setAddressBookEntry(
+                                new NewJobEntry() );
+                        // display window
+                        desktop.add( entryFrame );
+                        entryFrame.setVisible( true );
+                    }
+                });
             }
             else
                 JOptionPane.showMessageDialog( desktop,
@@ -1008,144 +964,5 @@ public class Engineering extends JFrame {
         }
     }
 
-//
-//    private class AddPhonesAction extends AbstractAction {
-//        public AddPhonesAction()
-//        {
-//            putValue( NAME, "Add Phone Num" );
-//            //          putValue( SMALL_ICON, new ImageIcon(
-////                    getClass().getResource( "images/Find24.png" ) ) );
-//            putValue( SHORT_DESCRIPTION, "Add Phone Num" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Search for an address book entry and Add Phone Num" );
-//            putValue( MNEMONIC_KEY, new Integer( 'r' ) );
-//        }
-//
-//        // locate existing entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop,
-//                            "Enter last name" );
-//
-//            // if last name was input, search for it; otherwise,
-//            // do nothing
-//            if ( lastName != null ) {
-//
-//                // Execute search. If found, AddressBookEntry
-//                // is returned containing data.
-//                ArrayList<AddressBookEntry> person = database.findPerson(
-//                        lastName );
-//
-//
-//                if ( person != null ) {
-//
-//                    // create window to display AddressBookEntry
-//
-//                    System.out.printf("Person" + person);
-//
-//
-//                    // set AddressBookEntry to display
-//                    for (int i = 0; i <person.size() ; i++) {
-//                        PhoneNumEntryFrame entryFrame =
-//                                createPhoneNumEntryFrame();
-//                        entryFrame.setAddressBookEntry( person.get(i) );
-//                        desktop.add( entryFrame );
-//                        entryFrame.setVisible( true );
-//                    }
-//
-//
-////                    need to add actioner listener which
-////                            calls this
-////                    System.out.println(database.newPerson(person));
-////                    but not new person
-//
-//                }
-//                else
-//                    JOptionPane.showMessageDialog( desktop,
-//                            "Entry with last name \"" + lastName +
-//                                    "\" not found in address book" );
-//
-//            }  // end "if ( lastName == null )"
-//
-//        }  // end method actionPerformed
-//
-//    }  // end inner class SearchAction
-//
-//    // inner class defines an action that can save new or
-//    // updated entry
-//    private class SavePhoneNum extends AbstractAction {
-//
-//        // set up action's name, icon, descriptions and mnemonic
-//        public SavePhoneNum()
-//        {
-//            putValue( NAME, "Save New Num" );
-//            putValue( SHORT_DESCRIPTION, "Save New Num" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Save new phone nnum" );
-//            putValue( MNEMONIC_KEY, new Integer( 'N' ) );
-//        }
-//
-//        // save new entry or update existing entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            // get currently active window
-//            PhoneNumEntryFrame currentFrame =
-//                    ( PhoneNumEntryFrame ) desktop.getSelectedFrame();
-//
-//            // obtain AddressBookEntry from window
-//            AddressBookEntry person =
-//                    currentFrame.getAddressBookEntry();
-//
-//
-//            try {
-//
-//                // Get personID. If 0, this is a new entry;
-//                // otherwise an update must be performed.
-//                int personID = person.getPersonID();
-//                System.out.println("personID" +personID);
-//
-//                // determine string for message dialogs
-//                String operation =
-//                        (personID == 0) ? "Insertion" : "Update";
-//
-//                // insert or update entry
-//
-//                System.out.println(database.newNumber(person));
-//
-//                // display success message
-//                JOptionPane.showMessageDialog(desktop,
-//                        operation + " successful");
-//            }  // end try
-//
-//            // detect database errors
-//            catch (Exception exception) {
-//                JOptionPane.showMessageDialog(desktop, exception,
-//                        "DataAccessException",
-//                        JOptionPane.ERROR_MESSAGE);
-//                exception.printStackTrace();
-//            }
-//
-//            // close current window and dispose of resources
-//            currentFrame.dispose();
-//
-//        }  // end method actionPerformed
-//
-//    }  // end inner class SaveAction
-//
-//    // utility method to check the valildity of the eircode
-//    private boolean isValid(String input) {
-//        if(input.length() == 8 &&
-//                input.charAt(0) != ' ' &&
-//                input.charAt(1) != ' ' &&
-//                input.charAt(2) != ' ' &&
-//                input.charAt(3) == ' ' &&
-//                input.charAt(4) != ' ' &&
-//                input.charAt(5) != ' ' &&
-//                input.charAt(6) != ' ' &&
-//                input.charAt(7) != ' ')
-//            return true;
-//        else
-//            return false;
-//    }
+
 }
