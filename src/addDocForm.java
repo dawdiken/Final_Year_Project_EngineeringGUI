@@ -158,7 +158,7 @@ public class addDocForm  extends JInternalFrame {
                         String pathtoUpload = job.getDropPath().trim();
                         CloudStorageHelper.uploadFile("vision_fyp", pathtoUpload);
                         DimensionVisionAPI getDim = new DimensionVisionAPI();
-                        getDim.DimensionVisionAPI(fileName, job);
+                        getDim.dimensionVisionAPI(fileName, job);
                     }
                     catch (Exception ee){
                         System.out.println("this did not work\n" + ee);
