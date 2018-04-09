@@ -182,13 +182,11 @@ public class OpperatorGui extends JFrame
 
         String[] info =  parseDimensions();
         JPanel tablePanel2 = new JPanel(new MigLayout("wrap 4","[][]","[10][10]"));
-        for (int i = 0; i <10 ; i++) {
-            System.out.println("info = " +info[i]);
-        }
+
         tablePanel2.add(new JLabel("Dimension"),"span 1,");
         tablePanel2.add(new JLabel("Measurement"),"span 2");
         tablePanel2.add(new JLabel("Tolerance"),"span 3,wrap");
-        ArrayList<JTextField> cps = new ArrayList<JTextField>();
+        ArrayList<JTextField> cps = new ArrayList<JTextField>();//List to store JtextFields so i can access them to get text to write to the Database
         for (int i = 0; i <info.length ; i++) {
             JLabel l5[] =new JLabel[]{
                  new JLabel(),
@@ -197,104 +195,27 @@ public class OpperatorGui extends JFrame
             JTextField a[] = new JTextField[]
                     {
                             new JTextField(),
-                            //new JTextField(10),
-                            //new JTextField("Hello"),
                             new JTextField("", 20)};
-                            //new JTextField("",20)};
             JLabel b[] = new JLabel[]
                     {
                             new JLabel(),
-                            //new JTextField(10),
-                            //new JTextField("Hello"),
-                            //new JTextField("Goodbye", 20),
                             new JLabel("  +/-0.10")
                     };
-//            c[i] = new JTextField[]
-//                    {
-//                            new JTextField(),
-//                            //new JTextField(10),
-//                            //new JTextField("Hello"),
-//                            new JTextField("Goodbye" + i, 20)};
-            //cps.add(l5[1]);
-            //a[1].setText("Goodbye");
             cps.add(a[1]);
-            //cps.add(b[1]);
-            //cps.add(b[1]);
-
             tablePanel2.add( l5[1],"span 1,");
             tablePanel2.add(a[1],"span 2");
             tablePanel2.add(b[1],"span 3,wrap");
-            //tablePanel2.add(c[1],"span 4,wrap");
         }
-
-//        JTextField a[] = new JTextField[]
-//                {
-//                        new JTextField(),
-//                        //new JTextField(10),
-//                        //new JTextField("Hello"),
-//                        //new JTextField("Goodbye" + i, 20)};
-//                        new JTextField("",20)};
 
         for (int i = 0; i <info.length ; i++) {
 
             System.out.println(cps.get(i).getText());
-//            tablePanel2.add( cps.get(i),"span 1");
-//            tablePanel2.add( cps.get(i+1),"span 2");
-//            tablePanel2.add( cps.get(i+2),"span 3,wrap");
 
         }
-//        JTextField a[] = new JTextField[]
-//                {
-//                        new JTextField(),
-//                        //new JTextField(10),
-//                        //new JTextField("Hello"),
-//                        //new JTextField("Goodbye", 20),
-//                        new JTextField(info[1], 20),
-//                        new JTextField(info[2], 20),
-//                        new JTextField(info[3], 20),
-//                        new JTextField(info[4], 20)
-//
-//                };
-
-
-//        for (int i = 0; i <4 ; i++) {
-//            tablePanel2.add(a[i]);
-////            tablePanel2.add(a[i]);
-////            tablePanel2.add(a[i],2,2);
-//        }
-
-//        tablePanel2.add(a[1]);
-//        tablePanel2.add(a[2]);
-//        tablePanel2.add(a[3],2,2);
-        //tablePanel2.add(a[4]);
-        //tablePanel2.setPreferredSize(new Dimension(800,500));
 
         tablePanel2.setBorder(border);
-        //tablePanel2.add(label4);
         JScrollPane scrollPane1 = new JScrollPane( tablePanel2 );
         scrollPane1.setPreferredSize(new Dimension(1000,500));
-        //getContentPane().add( scrollPane );
-        //tablePanel.add(scrollPane);
-
-
-
-
-//        try {
-//            if (! table1.print()) {
-//                System.err.println("User cancelled printing");
-//            }
-//        } catch (java.awt.print.PrinterException e) {
-//            System.err.format("Cannot print %s%n", e.getMessage());
-//        }
-//        MessageFormat header = new MessageFormat("Page {0,number,String}");
-//        try {
-//            table.print(JTable.PrintMode.FIT_WIDTH, header, null);
-//        } catch (java.awt.print.PrinterException e) {
-//            System.err.format("Cannot print %s%n", e.getMessage());
-//        }
-//        JOptionPane.showMessageDialog(frame, colValues.toString());
-
-
 
         mainPanel.add(titlePanel,"wrap");
         mainPanel.add(tablePanel,"wrap");
@@ -312,14 +233,11 @@ public class OpperatorGui extends JFrame
 
     public static void main(String[] args) {
         OpperatorGui asd = new OpperatorGui();
-       // asd.
-
     }
 
     public String[] parseDimensions (){
         String splitdime[] = {""};
         try {
-
 
             DataBaseAccess thisconn = new DataBaseAccess();
 
@@ -332,7 +250,6 @@ public class OpperatorGui extends JFrame
             for (int i = 0; i < splitdime.length; i++) {
                 System.out.println(splitdime[i]);
             }
-            //return splitdime;
         }
         catch (Exception ee){
                 System.out.println(ee);
