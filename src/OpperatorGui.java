@@ -110,11 +110,6 @@ public class OpperatorGui extends JFrame
 
         JPanel paintPanel = new JPanel();
         JPanel textPanel = new JPanel();
-
-
-
-
-
         JPanel titlePanel = new JPanel();
 
         titlePanel.setLayout(new GridLayout(1,4));
@@ -182,24 +177,10 @@ public class OpperatorGui extends JFrame
         table.setDefaultRenderer(String.class, centerRenderer);
         table.setDefaultRenderer(Integer.class, centerRenderer);
         JScrollPane scrollPane = new JScrollPane( table );
-        //getContentPane().add( scrollPane );
         tablePanel.add(scrollPane);
 
-//        JPanel tablePanel1 = new JPanel();
-//
-//        JTable table1 = new JTable( model );
-//        table1.setPreferredScrollableViewportSize(new Dimension(1500,200));
-//        //table.setFillsViewportHeight(true);
-//        DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
-//        centerRenderer1.setHorizontalAlignment( JLabel.CENTER );
-//        table1.setDefaultRenderer(String.class, centerRenderer1);
-//        table1.setDefaultRenderer(Integer.class, centerRenderer1);
-//
-//        tablePanel1.add(table1);
-
-        JLabel l1,l2;
         String[] info =  parseDimensions();
-        JPanel tablePanel2 = new JPanel(new MigLayout("","[100][100]","[][][][][]"));
+        JPanel tablePanel2 = new JPanel(new MigLayout("wrap 4","[][]","[10][10]"));
         for (int i = 0; i <10 ; i++) {
             System.out.println("info = " +info[i]);
         }
@@ -216,8 +197,16 @@ public class OpperatorGui extends JFrame
                             //new JTextField("Hello"),
                             //new JTextField("Goodbye", 20),
                             new JTextField(info[i])};
-            tablePanel2.add( l5[1],"split 3");
-            tablePanel2.add(a[1],"split 2, gap 35,wrap");
+            JTextField b[] = new JTextField[]
+                    {
+                            new JTextField(),
+                            //new JTextField(10),
+                            //new JTextField("Hello"),
+                            //new JTextField("Goodbye", 20),
+                            new JTextField(info[i])};
+            tablePanel2.add( l5[1],"span 1,");
+            tablePanel2.add(a[1],"span 2");
+            tablePanel2.add(b[1],"span 3,wrap");
         }
 //        JTextField a[] = new JTextField[]
 //                {
@@ -246,7 +235,7 @@ public class OpperatorGui extends JFrame
         //tablePanel2.setPreferredSize(new Dimension(800,500));
 
         tablePanel2.setBorder(border);
-        tablePanel2.add(label4);
+        //tablePanel2.add(label4);
         JScrollPane scrollPane1 = new JScrollPane( tablePanel2 );
         scrollPane1.setPreferredSize(new Dimension(1000,500));
         //getContentPane().add( scrollPane );
@@ -274,16 +263,11 @@ public class OpperatorGui extends JFrame
 
         mainPanel.add(titlePanel,"wrap");
         mainPanel.add(tablePanel,"wrap");
-        //mainPanel.add(tablePanel1,"wrap");
         mainPanel.add(scrollPane1,"wrap");
-//        mainPanel.add(tablePanel,LEFT_ALIGNMENT,2);
 
-        //frame.add(l1);
+
         frame.add(mainPanel);
-        //frame.add(tablePanel);
-        //frame.add(l1);
         frame.pack();
-       // this.setVisible(true);
         frame.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 
         frame.setSize(1550  , 800);
