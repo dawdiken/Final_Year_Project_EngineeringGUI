@@ -14,6 +14,7 @@ import net.miginfocom.swing.MigLayout;
 public class OpperatorGui extends JFrame
 {
     private EngineeringDataAccess database;
+    JTextField c[] = new JTextField[10];
 
     public OpperatorGui()
     {
@@ -184,7 +185,10 @@ public class OpperatorGui extends JFrame
         for (int i = 0; i <10 ; i++) {
             System.out.println("info = " +info[i]);
         }
-
+        tablePanel2.add(new JLabel("Dimension"),"span 1,");
+        tablePanel2.add(new JLabel("Measurement"),"span 2");
+        tablePanel2.add(new JLabel("Tolerance"),"span 3,wrap");
+        ArrayList<JTextField> cps = new ArrayList<JTextField>();
         for (int i = 0; i <info.length ; i++) {
             JLabel l5[] =new JLabel[]{
                  new JLabel(),
@@ -195,18 +199,49 @@ public class OpperatorGui extends JFrame
                             new JTextField(),
                             //new JTextField(10),
                             //new JTextField("Hello"),
-                            //new JTextField("Goodbye", 20),
-                            new JTextField(info[i])};
-            JTextField b[] = new JTextField[]
+                            new JTextField("", 20)};
+                            //new JTextField("",20)};
+            JLabel b[] = new JLabel[]
                     {
-                            new JTextField(),
+                            new JLabel(),
                             //new JTextField(10),
                             //new JTextField("Hello"),
                             //new JTextField("Goodbye", 20),
-                            new JTextField(info[i])};
+                            new JLabel("  +/-0.10")
+                    };
+//            c[i] = new JTextField[]
+//                    {
+//                            new JTextField(),
+//                            //new JTextField(10),
+//                            //new JTextField("Hello"),
+//                            new JTextField("Goodbye" + i, 20)};
+            //cps.add(l5[1]);
+            //a[1].setText("Goodbye");
+            cps.add(a[1]);
+            //cps.add(b[1]);
+            //cps.add(b[1]);
+
             tablePanel2.add( l5[1],"span 1,");
             tablePanel2.add(a[1],"span 2");
             tablePanel2.add(b[1],"span 3,wrap");
+            //tablePanel2.add(c[1],"span 4,wrap");
+        }
+
+//        JTextField a[] = new JTextField[]
+//                {
+//                        new JTextField(),
+//                        //new JTextField(10),
+//                        //new JTextField("Hello"),
+//                        //new JTextField("Goodbye" + i, 20)};
+//                        new JTextField("",20)};
+
+        for (int i = 0; i <info.length ; i++) {
+
+            System.out.println(cps.get(i).getText());
+//            tablePanel2.add( cps.get(i),"span 1");
+//            tablePanel2.add( cps.get(i+1),"span 2");
+//            tablePanel2.add( cps.get(i+2),"span 3,wrap");
+
         }
 //        JTextField a[] = new JTextField[]
 //                {
