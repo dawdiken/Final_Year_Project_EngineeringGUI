@@ -1,10 +1,15 @@
 import java.awt.*;
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.table.*;
+import net.miginfocom.swing.MigLayout;
 
 public class OpperatorGui extends JFrame
 {
@@ -12,6 +17,9 @@ public class OpperatorGui extends JFrame
 
     public OpperatorGui()
     {
+
+
+
         Vector<Object> columnNames = new Vector<Object>();
         Vector<Object> data = new Vector<Object>();
 
@@ -72,14 +80,33 @@ public class OpperatorGui extends JFrame
             }
         };
 
+        DefaultTableModel model1 = new DefaultTableModel(data, columnNames)
+        {
+            @Override
+            public Class getColumnClass(int column)
+            {
+                for (int row = 0; row < getRowCount(); row++)
+                {
+                    Object o = getValueAt(row, column);
+
+                    if (o != null)
+                    {
+                        return o.getClass();
+                    }
+                }
+
+                return Object.class;
+            }
+        };
+
 
 
         JFrame frame = new JFrame("Login Form");
-        JLabel l1 = new JLabel("Login Form");
-        l1.setForeground(Color.blue);
-        l1.setFont(new Font("Serif", Font.BOLD, 100));
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        //JLabel l1 = new JLabel("Login Form");
+        //l1.setForeground(Color.blue);
+        //l1.setFont(new Font("Serif", Font.BOLD, 100));
+        JPanel mainPanel = new JPanel(new MigLayout("","[grow][grow]","[][grow][][][]"));
+       // mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         JPanel paintPanel = new JPanel();
         JPanel textPanel = new JPanel();
@@ -148,7 +175,7 @@ public class OpperatorGui extends JFrame
 
         JPanel tablePanel = new JPanel();
         JTable table = new JTable( model );
-        table.setPreferredScrollableViewportSize(new Dimension(1900,200));
+        table.setPreferredScrollableViewportSize(new Dimension(1500,100));
         table.setFillsViewportHeight(true);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -158,10 +185,98 @@ public class OpperatorGui extends JFrame
         //getContentPane().add( scrollPane );
         tablePanel.add(scrollPane);
 
+//        JPanel tablePanel1 = new JPanel();
+//
+//        JTable table1 = new JTable( model );
+//        table1.setPreferredScrollableViewportSize(new Dimension(1500,200));
+//        //table.setFillsViewportHeight(true);
+//        DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+//        centerRenderer1.setHorizontalAlignment( JLabel.CENTER );
+//        table1.setDefaultRenderer(String.class, centerRenderer1);
+//        table1.setDefaultRenderer(Integer.class, centerRenderer1);
+//
+//        tablePanel1.add(table1);
+
+        JLabel l1,l2;
+        String[] info =  parseDimensions();
+        JPanel tablePanel2 = new JPanel(new MigLayout("","[100][100]","[][][][][]"));
+        for (int i = 0; i <10 ; i++) {
+            System.out.println("info = " +info[i]);
+        }
+
+        for (int i = 0; i <info.length ; i++) {
+            JLabel l5[] =new JLabel[]{
+                 new JLabel(),
+                 new JLabel("Dimension " +i + " = " +info[i])
+            };
+            JTextField a[] = new JTextField[]
+                    {
+                            new JTextField(),
+                            //new JTextField(10),
+                            //new JTextField("Hello"),
+                            //new JTextField("Goodbye", 20),
+                            new JTextField(info[i])};
+            tablePanel2.add( l5[1],"split 3");
+            tablePanel2.add(a[1],"split 2, gap 35,wrap");
+        }
+//        JTextField a[] = new JTextField[]
+//                {
+//                        new JTextField(),
+//                        //new JTextField(10),
+//                        //new JTextField("Hello"),
+//                        //new JTextField("Goodbye", 20),
+//                        new JTextField(info[1], 20),
+//                        new JTextField(info[2], 20),
+//                        new JTextField(info[3], 20),
+//                        new JTextField(info[4], 20)
+//
+//                };
 
 
-        mainPanel.add(titlePanel);
-        mainPanel.add(tablePanel);
+//        for (int i = 0; i <4 ; i++) {
+//            tablePanel2.add(a[i]);
+////            tablePanel2.add(a[i]);
+////            tablePanel2.add(a[i],2,2);
+//        }
+
+//        tablePanel2.add(a[1]);
+//        tablePanel2.add(a[2]);
+//        tablePanel2.add(a[3],2,2);
+        //tablePanel2.add(a[4]);
+        //tablePanel2.setPreferredSize(new Dimension(800,500));
+
+        tablePanel2.setBorder(border);
+        tablePanel2.add(label4);
+        JScrollPane scrollPane1 = new JScrollPane( tablePanel2 );
+        scrollPane1.setPreferredSize(new Dimension(1000,500));
+        //getContentPane().add( scrollPane );
+        //tablePanel.add(scrollPane);
+
+
+
+
+//        try {
+//            if (! table1.print()) {
+//                System.err.println("User cancelled printing");
+//            }
+//        } catch (java.awt.print.PrinterException e) {
+//            System.err.format("Cannot print %s%n", e.getMessage());
+//        }
+//        MessageFormat header = new MessageFormat("Page {0,number,String}");
+//        try {
+//            table.print(JTable.PrintMode.FIT_WIDTH, header, null);
+//        } catch (java.awt.print.PrinterException e) {
+//            System.err.format("Cannot print %s%n", e.getMessage());
+//        }
+//        JOptionPane.showMessageDialog(frame, colValues.toString());
+
+
+
+        mainPanel.add(titlePanel,"wrap");
+        mainPanel.add(tablePanel,"wrap");
+        //mainPanel.add(tablePanel1,"wrap");
+        mainPanel.add(scrollPane1,"wrap");
+//        mainPanel.add(tablePanel,LEFT_ALIGNMENT,2);
 
         //frame.add(l1);
         frame.add(mainPanel);
@@ -171,7 +286,7 @@ public class OpperatorGui extends JFrame
        // this.setVisible(true);
         frame.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 
-        frame.setSize(1000  , 800);
+        frame.setSize(1550  , 800);
         frame.setLayout(null);
         frame.setVisible(true);
     }
@@ -180,5 +295,30 @@ public class OpperatorGui extends JFrame
         OpperatorGui asd = new OpperatorGui();
        // asd.
 
+    }
+
+    public String[] parseDimensions (){
+        String splitdime[] = {""};
+        try {
+
+
+            DataBaseAccess thisconn = new DataBaseAccess();
+
+            String finalDimensions = thisconn.sqlFindDimensions(22);
+
+            System.out.println("dimensions = " + finalDimensions);
+            splitdime = finalDimensions.split(",");
+
+
+            for (int i = 0; i < splitdime.length; i++) {
+                System.out.println(splitdime[i]);
+            }
+            //return splitdime;
+        }
+        catch (Exception ee){
+                System.out.println(ee);
+            }
+
+        return splitdime;
     }
 }
