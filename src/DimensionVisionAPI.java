@@ -66,19 +66,21 @@ public class DimensionVisionAPI {
             }
 
             String[] strParts = textFromResponse.split("\\\\n");
-            //String[] strParts2 = new String[1];
             ArrayList<String> strParts2 = new ArrayList<String>();
             httpResponseScanner.close();
-            Gson gson=new GsonBuilder().create();
-            String jsonArray=gson.toJson(strParts);
-            job.setDimension(jsonArray);
 
-            
+
+
             for (int i = 0; i <strParts.length ; i++) {
                 if (strParts[i].contains("Dim")){
                     strParts2.add(strParts[i]);
                 }
             }
+
+            Gson gson=new GsonBuilder().create();
+            String jsonArray=gson.toJson(strParts2);
+            job.setDimension(jsonArray);
+            
 
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
