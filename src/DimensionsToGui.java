@@ -2,20 +2,25 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.util.ArrayList;
 
 public class DimensionsToGui extends JFrame
 {
-    public DimensionsToGui(String [] dimensionsValues)
+    public DimensionsToGui(ArrayList<String>  dimensionsValues)
     {
         //headers for the table
         String[] columns = new String[] {
                 "Dimension Number", "Dimension", "Tolerance"
         };
+        for (int i = 0; i <dimensionsValues.size() ; i++) {
+            System.out.println("dimensions= " + dimensionsValues.get(i));
+        }
 
-        Object [][] dataNew = new Object [dimensionsValues.length][dimensionsValues.length];
-        for(int i = 0; i < dimensionsValues.length; i++) {
+
+        Object [][] dataNew = new Object [dimensionsValues.size()][dimensionsValues.size()];
+        for(int i = 0; i < dimensionsValues.size(); i++) {
             dataNew[i][0] = i+1;
-            dataNew[i][1] = dimensionsValues[i];
+            dataNew[i][1] = dimensionsValues.get(i);
             dataNew[i][2] = "+/- 0.10";
         }
 

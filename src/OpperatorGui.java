@@ -186,7 +186,7 @@ public class OpperatorGui extends JFrame
         tablePanel2.add(new JLabel("Dimension"),"span 1,");
         tablePanel2.add(new JLabel("Measurement"),"span 2");
         tablePanel2.add(new JLabel("Tolerance"),"span 3,wrap");
-        ArrayList<JTextField> cps = new ArrayList<JTextField>();//List to store JtextFields so i can access them to get text to write to the Database
+        ArrayList<JTextField> cps = new ArrayList<>();//List to store JtextFields so i can access them to get text to write to the Database
         for (int i = 0; i <info.length ; i++) {
             JLabel l5[] =new JLabel[]{
                  new JLabel(),

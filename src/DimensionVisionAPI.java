@@ -3,9 +3,11 @@ import com.google.gson.GsonBuilder;
 import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DimensionVisionAPI {
@@ -14,6 +16,8 @@ public class DimensionVisionAPI {
     private static final String API_KEY =
             "key=AIzaSyBpUPfVsfVn2SIgYL4xwfYfLUe0wHzsEbM";
     public void dimensionVisionAPI(String FileName, NewJobEntry job) {
+
+        System.out.println("file name = " + FileName);
 
         try{
             URL serverUrl = new URL(TARGET_URL + API_KEY);
@@ -54,21 +58,32 @@ public class DimensionVisionAPI {
             String textFromResponse = "";
             while (httpResponseScanner.hasNext()) {
                 String line = httpResponseScanner.nextLine();
-                if(line.contains("text") && line.length()> 100 ) {
+                //if line in response conntains Dim then parse it out
+                if(line.contains("Dim")) {
+                    System.out.println("line" + line);
                     textFromResponse = line;
                 }
             }
 
             String[] strParts = textFromResponse.split("\\\\n");
+            //String[] strParts2 = new String[1];
+            ArrayList<String> strParts2 = new ArrayList<String>();
             httpResponseScanner.close();
             Gson gson=new GsonBuilder().create();
             String jsonArray=gson.toJson(strParts);
             job.setDimension(jsonArray);
 
+            
+            for (int i = 0; i <strParts.length ; i++) {
+                if (strParts[i].contains("Dim")){
+                    strParts2.add(strParts[i]);
+                }
+            }
+
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    new DimensionsToGui(strParts);
+                    new DimensionsToGui(strParts2);
                 }
             });
         }
