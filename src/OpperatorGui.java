@@ -27,9 +27,6 @@ public class OpperatorGui extends JFrame
 
     public OpperatorGui()
     {
-
-
-
         Vector<Object> columnNames = new Vector<Object>();
         Vector<Object> data = new Vector<Object>();
 
@@ -228,11 +225,56 @@ public class OpperatorGui extends JFrame
         scrollPane1.setPreferredSize(new Dimension(600,200));
 
         JButton saveMeasurments = new JButton("Save Measurments");
+        saveMeasurments.setPreferredSize(new Dimension(150,20));
         saveMeasurments.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int count =0;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+                for (int i = 0; i <cps.size() ; i++) {
+                    System.out.println("in here action");
+                    if (cps.get(i).getText().equals("")){
+                        System.out.println(cps.get(i).getText());
+                        cps.get(i).setBackground(Color.red);
+                        JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
+                    }
+                    else{
+                        count ++;
+                        System.out.println(cps.get(i).getText());
+                        //cps.get(i).setText("");
+                    }
+                    if (count==cps.size()){
+                        try {
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                            FileWriter writer = new FileWriter("output.txt",true);
+                            int num = 1;
+                            for (JTextField str : cps) {
+                                System.out.println(str.getText());
+                                writer.write("Dim " + num + ": "+  str.getText()+",\n");
+                                str.setBackground(Color.WHITE);
+                                str.setText("");
+                                num++;
+                            }
+                            writer.write("Opperator name Here: Date:" +  sdf.format(timestamp)+ "\n");
+                            writer.close();
+                        }
+                        catch (IOException ee){
+                            ee.printStackTrace();
+                            JOptionPane.showMessageDialog(frame,"Mesurments save failed","Alert",JOptionPane.WARNING_MESSAGE);
+                        }
+                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        JButton closeJob = new JButton("Close Job");
+        closeJob.setPreferredSize(new Dimension(150,20));
+        closeJob.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int count =0;
                 for (int i = 0; i <cps.size() ; i++) {
                     System.out.println("in here action");
                     if (cps.get(i).getText().equals("")){
@@ -247,17 +289,14 @@ public class OpperatorGui extends JFrame
                     if (count==cps.size()){
                         JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
                         try {
-                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                             FileWriter writer = new FileWriter("output.txt",true);
                             int num = 1;
                             for (JTextField str : cps) {
                                 System.out.println(str.getText());
 
-                                System.out.println("timeStamp" + timestamp);
-                                writer.write("Dim " + num + ": "+  str.getText()+",\n");
+                                writer.write("Dim " + num + ": "+  str.getText()+ ",\n");
                                 num++;
                             }
-                            writer.write("Opperator name Here: Date:" +  sdf.format(timestamp)+ "\n");
                             writer.close();
                         }
                         catch (IOException ee){
@@ -268,8 +307,9 @@ public class OpperatorGui extends JFrame
             }
         });
 
-        JButton closeJob = new JButton("Close Job");
-        closeJob.addActionListener(new ActionListener() {
+        JButton recordScrap = new JButton("Record Scrap Part");
+        recordScrap.setPreferredSize(new Dimension(150,20));
+        recordScrap.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -310,6 +350,7 @@ public class OpperatorGui extends JFrame
         mainPanel.add(tablePanel,"wrap");
         mainPanel.add(scrollPane1,"wrap");
         mainPanel.add(saveMeasurments,"wrap");
+        mainPanel.add(recordScrap,"wrap");
         mainPanel.add(closeJob,"wrap");
 
         frame.add(mainPanel);
