@@ -105,7 +105,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindDepartmentByName = connection.prepareStatement("SELECT department_id FROM department WHERE department_name = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
         sqlFindAllJobs = connection.prepareStatement("SELECT * FROM workon_copy");
-        sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM DIMENSIONS WHERE dimension_id = ?");
+        sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM technical_drawing WHERE drawingID = ?");
 
 
 //        sqlFind = connection.prepareStatement(

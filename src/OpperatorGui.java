@@ -1,6 +1,15 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -190,7 +199,8 @@ public class OpperatorGui extends JFrame
         for (int i = 0; i <info.length ; i++) {
             JLabel l5[] =new JLabel[]{
                  new JLabel(),
-                 new JLabel("Dimension " +i + " = " +info[i])
+                 //new JLabel("Dimension " +i + " = " +info[i])
+                    new JLabel(info[i])
             };
             JTextField a[] = new JTextField[]
                     {
@@ -215,12 +225,92 @@ public class OpperatorGui extends JFrame
 
         tablePanel2.setBorder(border);
         JScrollPane scrollPane1 = new JScrollPane( tablePanel2 );
-        scrollPane1.setPreferredSize(new Dimension(1000,500));
+        scrollPane1.setPreferredSize(new Dimension(600,200));
+
+        JButton saveMeasurments = new JButton("Save Measurments");
+        saveMeasurments.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int count =0;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+                for (int i = 0; i <cps.size() ; i++) {
+                    System.out.println("in here action");
+                    if (cps.get(i).getText().equals("")){
+                        System.out.println(cps.get(i).getText());
+                        JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
+                    }
+                    else{
+                        count ++;
+                        System.out.println(cps.get(i).getText());
+                        //cps.get(i).setText("");
+                    }
+                    if (count==cps.size()){
+                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
+                        try {
+                            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                            FileWriter writer = new FileWriter("output.txt",true);
+                            int num = 1;
+                            for (JTextField str : cps) {
+                                System.out.println(str.getText());
+
+                                System.out.println("timeStamp" + timestamp);
+                                writer.write("Dim " + num + ": "+  str.getText()+",\n");
+                                num++;
+                            }
+                            writer.write("Opperator name Here: Date:" +  sdf.format(timestamp)+ "\n");
+                            writer.close();
+                        }
+                        catch (IOException ee){
+                            ee.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        JButton closeJob = new JButton("Close Job");
+        closeJob.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int count =0;
+                for (int i = 0; i <cps.size() ; i++) {
+                    System.out.println("in here action");
+                    if (cps.get(i).getText().equals("")){
+                        System.out.println(cps.get(i).getText());
+                        JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
+                    }
+                    else{
+                        count ++;
+                        System.out.println(cps.get(i).getText());
+                        //cps.get(i).setText("");
+                    }
+                    if (count==cps.size()){
+                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
+                        try {
+                            FileWriter writer = new FileWriter("output.txt",true);
+                            int num = 1;
+                            for (JTextField str : cps) {
+                                System.out.println(str.getText());
+
+                                writer.write("Dim " + num + ": "+  str.getText()+ ",\n");
+                                num++;
+                            }
+                            writer.close();
+                        }
+                        catch (IOException ee){
+                            ee.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         mainPanel.add(titlePanel,"wrap");
         mainPanel.add(tablePanel,"wrap");
         mainPanel.add(scrollPane1,"wrap");
-
+        mainPanel.add(saveMeasurments,"wrap");
+        mainPanel.add(closeJob,"wrap");
 
         frame.add(mainPanel);
         frame.pack();
@@ -231,21 +321,14 @@ public class OpperatorGui extends JFrame
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        OpperatorGui asd = new OpperatorGui();
-    }
-
     public String[] parseDimensions (){
         String splitdime[] = {""};
         try {
-
             DataBaseAccess thisconn = new DataBaseAccess();
 
-            String finalDimensions = thisconn.sqlFindDimensions(22);
-
-            System.out.println("dimensions = " + finalDimensions);
+            //get the string from the database and format it for the gui removing andy characters i do not want to display
+            String finalDimensions = thisconn.sqlFindDimensions(164).replaceAll("Dim", "Dimension ").replaceAll("\"", "").replace("[","").replace("]","");
             splitdime = finalDimensions.split(",");
-
 
             for (int i = 0; i < splitdime.length; i++) {
                 System.out.println(splitdime[i]);
@@ -254,7 +337,10 @@ public class OpperatorGui extends JFrame
         catch (Exception ee){
                 System.out.println(ee);
             }
-
         return splitdime;
+    }
+
+    public static void main(String[] args) {
+        OpperatorGui asd = new OpperatorGui();
     }
 }

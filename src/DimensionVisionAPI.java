@@ -69,9 +69,8 @@ public class DimensionVisionAPI {
             ArrayList<String> strParts2 = new ArrayList<String>();
             httpResponseScanner.close();
 
-
-
             for (int i = 0; i <strParts.length ; i++) {
+                //parse the response for the drawing dimensions and save to list
                 if (strParts[i].contains("Dim")){
                     strParts2.add(strParts[i]);
                 }
@@ -80,7 +79,7 @@ public class DimensionVisionAPI {
             Gson gson=new GsonBuilder().create();
             String jsonArray=gson.toJson(strParts2);
             job.setDimension(jsonArray);
-            
+
 
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
