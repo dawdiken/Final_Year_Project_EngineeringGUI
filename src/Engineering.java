@@ -21,7 +21,7 @@ public class Engineering extends JFrame {
 
     // references to Actions
     private Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
-            searchAction, exitAction, addAddressAction, addPhonesAction, savePhone, newDocumentAction, viewAllJobsInDB, storeFinishedJobsInBucket;
+            newDocumentAction, viewAllJobsInDB, storeFinishedJobsInBucket, newWorkOrder;
 
     // set up database connection and GUI
     public Engineering() {
@@ -46,7 +46,6 @@ public class Engineering extends JFrame {
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
-
         // Set up actions for common operations. Private inner
         // classes encapsulate the processing of each action.
         newAction = new NewAction();
@@ -67,31 +66,20 @@ public class Engineering extends JFrame {
         viewAllJobsInDB.setEnabled( true );  // disabled by default
         storeFinishedJobsInBucket = new storeFinishedJobsInBucket();
         storeFinishedJobsInBucket.setEnabled( true );  // disabled by default
-//        searchAction = new SearchAction();
-//        exitAction = new ExitAction();
-//        savePhone = new SavePhoneNum();
-//
-        addAddressAction = new AddAddressAction();
-        addAddressAction.setEnabled( false );  // disabled by default
-//        addPhonesAction = new AddPhonesAction();
-        // addEmail = new addEmail();
+        newWorkOrder = new newJobGui();
+        newWorkOrder.setEnabled( true );  // disabled by default
 
         // add actions to tool bar
+        toolBar.add( newWorkOrder );
+        toolBar.add( new JToolBar.Separator() );
         toolBar.add( newAction);
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( saveAction );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( deleteAction );
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( searchAction );
-        toolBar.add( new JToolBar.Separator() );
         toolBar.add( newDocumentAction);
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( addAddressAction );
-        toolBar.add( new JToolBar.Separator() );
-        toolBar.add( addPhonesAction );
-        toolBar.add( new JToolBar.Separator() );
-        toolBar.add( savePhone );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LoginAction );
         toolBar.add( new JToolBar.Separator() );
@@ -102,17 +90,14 @@ public class Engineering extends JFrame {
         toolBar.add( viewAllJobsInDB );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( storeFinishedJobsInBucket );
+        toolBar.add( new JToolBar.Separator() );
+
 
         // add actions to File menu
         fileMenu.add( newAction );
         fileMenu.add( saveAction );
         fileMenu.add( deleteAction );
         fileMenu.addSeparator();
-        fileMenu.add( searchAction );
-        fileMenu.addSeparator();
-        fileMenu.add( exitAction );
-        //fileMenu.addSeparator();
-        //fileMenu.add( addAddressAction );
 
         // set up menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -164,7 +149,7 @@ public class Engineering extends JFrame {
         System.exit( 0 );   // terminate program
     }
 
-    // create a new NewJobEntryFrame and register listener
+    // create a new NewJobFrame and register listener
     private NewJobFrame createNewJobFrame(int id, String custName) {
         NewJobFrame frame = new NewJobFrame(id, custName);
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
@@ -190,7 +175,7 @@ public class Engineering extends JFrame {
         ); // end call to addInternalFrameListener
 
         return frame;
-    }  // end method createAddressBookEntryFrame
+    }  // end method NewJobFrame
 
 
     // create a new NewJobEntryFrame and register listener
@@ -644,61 +629,30 @@ public class Engineering extends JFrame {
             }
             String userName = xField.getText().toString();
             String password = yField.getText().toString();
-            System.out.println(password);
-
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop, myPanel,
-//                            "Enter last name" );
 
 
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop,
-//                            "Enter last name" );
-//            loggedIn =   new LoginFrame();
-
-            // if last name was input, search for it; otherwise,
-            // do nothing
-
-
-                // Execute search. If found, AddressBookEntry
-                // is returned containing data.
+            //swing here
                 ArrayList<NewJobEntry> person = database.findPerson( userName,
                         password );
-
-                 System.out.printf("Person" + person);
                 if ( person != null ) {
-                    // create window to display AddressBookEntry
                     System.out.printf("Person" + person);
                     JOptionPane.showMessageDialog( desktop,
                             "Log in succesfull.  Hello " + userName);
                     LoginAction.setEnabled(false);  // disabled by default
                     newAction.setEnabled(true);
-//                    saveAction.setEnabled( true );
-//                    deleteAction.setEnabled( true );
-                    addAddressAction.setEnabled(true);
+                    saveAction.setEnabled( true );
+                    deleteAction.setEnabled( true );
                     LogOutAction.setEnabled(true);  // disabled by default
 
-
-                    // set AddressBookEntry to display
-//                    for (int i = 0; i < person.size(); i++) {
-//                        AddressBookEntryFrame entryFrame =
-//                                createAddressBookEntryFrame();
-//                        entryFrame.setAddressBookEntry(person.get(i));
-//                        desktop.add(entryFrame);
-//                        entryFrame.setVisible(true);
-//                    }
-                    // display window
                 }
                 else
                     JOptionPane.showMessageDialog( desktop,
                             "User:\n" + userName +
                                     "\" not found!" );
 
-             // end "if ( lastName == null )"
-
         }  // end method actionPerformed
 
-    }  // end inner class SearchAction
+    }
 
     private class LogOutAction extends AbstractAction {
 
@@ -722,13 +676,12 @@ public class Engineering extends JFrame {
             newAction.setEnabled(false);
             saveAction.setEnabled( false );
             deleteAction.setEnabled( false );
-            addAddressAction.setEnabled(false);
             LogOutAction.setEnabled(false);  // disabled by default
             LoginAction.setEnabled(true);  // disabled by default
 
         }  // end method actionPerformed
 
-    }  // end inner class SearchAction
+    }  // end inner class
 
     private class AddUserAction extends AbstractAction {
 
@@ -766,42 +719,23 @@ public class Engineering extends JFrame {
             String password = yField.getText().toString();
             System.out.println(password);
 
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop, myPanel,
-//                            "Enter last name" );
-
-
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop,
-//                            "Enter last name" );
-//            loggedIn =   new LoginFrame();
-
-            // if last name was input, search for it; otherwise,
-            // do nothing
-
-
-            // Execute search. If found, AddressBookEntry
-            // is returned containing data.
             ArrayList<NewJobEntry> person = database.findPerson( userName,
                     password );
 
             System.out.printf("Person" + person);
             if ( person != null ) {
-                // create window to display AddressBookEntry
                 System.out.printf("Person" + person);
                 JOptionPane.showMessageDialog( desktop,
                         "Log in succesfull.  Hello " + userName);
-//                LoginAction.setEnabled(false);  // disabled by default
-//                newAction.setEnabled(true);
-////                    saveAction.setEnabled( true );
-////                    deleteAction.setEnabled( true );
-//                addAddressAction.setEnabled(true);
-//                LogOutAction.setEnabled(true);  // disabled by default
+                LoginAction.setEnabled(false);  // disabled by default
+                newAction.setEnabled(true);
+                saveAction.setEnabled( true );
+                deleteAction.setEnabled( true );
+                LogOutAction.setEnabled(true);  // disabled by default
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         UserEntryFrame entryFrame =  new UserEntryFrame();
-                        // set new AddressBookEntry in window
                         entryFrame.setAddressBookEntry(
                                 new NewJobEntry() );
                         // display window
@@ -840,13 +774,10 @@ public class Engineering extends JFrame {
                     new TableFromDatabase();
                 }
             });
-//            TableFromDatabase entryFrame =
-//                    createAllJobframe();
-            
         }
 
-    }  // end inner class AddNewUserAction
-//
+    }  // end
+
 //     inner class defines action that closes connection to
 //     database and terminates program
     private class ExitAction extends AbstractAction {
@@ -867,36 +798,6 @@ public class Engineering extends JFrame {
         }
 
     }  // end inner class ExitAction
-//
-//    private class AddAddressAction extends AbstractAction {
-//
-//        // set up action's name, icon, descriptions and mnemonic
-//        public AddAddressAction()
-//        {
-//            putValue( NAME, "AddAddress" );
-//            putValue( SHORT_DESCRIPTION, "Add Address" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Add another address" );
-//            putValue( MNEMONIC_KEY, new Integer( 'A' ) );
-//        }
-//
-//        public void actionPerformed(ActionEvent e) {
-//            SwingUtilities.invokeLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    // get currently active window
-//                    AddressBookEntryFrame currentFrame =
-//                            ( AddressBookEntryFrame ) desktop.getSelectedFrame();
-//
-//                    // obtain AddressBookEntry from window
-//                    AddressBookEntry person =
-//                            currentFrame.getAddressBookEntry();
-//
-////                    currentFrame.addAddresses();
-//                }
-//            });
-//        }
-//    }
 
     private class storeFinishedJobsInBucket extends AbstractAction {
 
@@ -919,50 +820,45 @@ public class Engineering extends JFrame {
                 }
             });
         }
-    }  // end inner class AddNewUserAction
+    }  // end inner class
 
-    private class AddAddressAction extends AbstractAction {
+    private class newJobGui extends AbstractAction {
 
         // set up action's name, icon, descriptions and mnemonic
-        public AddAddressAction()
+        private newJobGui()
         {
-            putValue( NAME, "AddAddress" );
-            putValue( SHORT_DESCRIPTION, "Add Address" );
+            putValue( NAME, "New work order" );
+            putValue( SHORT_DESCRIPTION, "New work order" );
             putValue( LONG_DESCRIPTION,
-                    "Add another address" );
-            putValue( MNEMONIC_KEY, new Integer( 'A' ) );
+                    "New work order" );
+            putValue( MNEMONIC_KEY, new Integer( 'N' ) );
         }
+        // save new entry or update existing entry
+        public void actionPerformed( ActionEvent e )
+        {
+            ArrayList<String> customerNames = database.findCustomer();
+            String[] result = {};
+            for (int i = 0; i < customerNames.size() ; i++) {
+                result = customerNames.toArray(new String[]{});
+            }
+            final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
+            JFrame frame1 = new JFrame("Pick Customer");
+            String customerName = (String) JOptionPane.showInputDialog(frame1,
+                    "Please select a customer?",
+                    "Customer",
+                    JOptionPane.QUESTION_MESSAGE,
+                    icon,
+                    result,
+                    result[0]);
 
-        public void actionPerformed(ActionEvent e) {
+            NewJobEntry job = new NewJobEntry();
+            job.setCustomerName(customerName);
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    // get currently active window
-                    NewJobFrame currentFrame =
-                            ( NewJobFrame ) desktop.getSelectedFrame();
-
-                    // obtain AddressBookEntry from window
-                    NewJobEntry job =
-                            currentFrame.getAddressBookEntry();
-
-//                    System.out.println(job.getBatchQty());
-
-//                    currentFrame.addAddresses();
-                    // create new internal window
-//                    NewJobFrame entryFrame =
-//                            createNewJobFrame();
-
-//            // set new AddressBookEntry in window
-//            entryFrame.setAddressBookEntry(
-//                    new AddressBookEntry() );
-
-                    // display window
-//                    desktop.add( entryFrame );
-//                    entryFrame.setVisible( true );
+                        new NewWorkGui(job).createAndShowGUI(job);
                 }
             });
         }
-    }
-
-
+    }  // end inner class
 }

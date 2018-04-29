@@ -41,6 +41,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlInsertJob;
     private PreparedStatement sqlFindCustomer;
     private PreparedStatement sqlFindSopByCustomer;
+    private PreparedStatement sqlFindDepartmentByCustomer;
     private PreparedStatement sqlFindTechDrawingByCustomer;
     private PreparedStatement sqlFindSopByName;
     private PreparedStatement sqlFindTechDrawingByName;
@@ -99,6 +100,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
         sqlFindCustomerID = connection.prepareStatement("SELECT customer_ID FROM customer WHERE cust_name = ?");
         sqlFindSopByCustomer = connection.prepareStatement("SELECT sopName FROM sop_document WHERE customer_ID = ?");
+        sqlFindDepartmentByCustomer = connection.prepareStatement("SELECT department_name FROM department");
         sqlFindTechDrawingByCustomer = connection.prepareStatement("SELECT drawingName FROM technical_drawing WHERE customer_ID = ?");
         sqlFindSopByName = connection.prepareStatement("SELECT sopID FROM sop_document WHERE sopName = ?");
         sqlFindTechDrawingByName = connection.prepareStatement("SELECT drawingID FROM technical_drawing WHERE drawingName = ?");
@@ -565,7 +567,45 @@ public class DataBaseAccess implements EngineeringDataAccess {
         catch ( SQLException sqlException ) {
             return null;
         }
-    }  // end method findSop
+    }  // end method findSop findDepartment
+
+    // Locate specified Sop's for the correct customer only.
+    public ArrayList<String> findDepartment( )
+    {
+        try {
+//            sqlFindCustomerID.setString(1,custName);
+//            ResultSet resultSet2 = sqlFindCustomerID.executeQuery();
+//
+//            // if no customer matching the ID is found, return immediately
+//            if ( !resultSet2.isBeforeFirst()){
+//                return null;
+//            }
+//            Integer cust_ID = 0;
+//            while(resultSet2.next()) {
+//                cust_ID = resultSet2.getInt("customer_ID");
+//            }
+
+//            sqlFindSopByCustomer.setInt(1,cust_ID);
+            ResultSet resultSet = sqlFindDepartmentByCustomer.executeQuery();
+
+            // if no Sop's found, return immediately
+            if ( !resultSet.isBeforeFirst()){
+                return null;
+            }
+            ArrayList<String> departmenList = new ArrayList<>();
+            String names;
+            while(resultSet.next()){
+                names =resultSet.getString("department_name");
+                departmenList.add(names);
+                System.out.println(names);
+            }
+            return departmenList;
+        }
+        // catch SQLException
+        catch ( SQLException sqlException ) {
+            return null;
+        }
+    }  // end method findDepartment
 
     // Locate specified Sop's for the correct customer only.
     public ArrayList<String> findTechDrawing(String custName )

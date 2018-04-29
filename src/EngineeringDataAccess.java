@@ -10,6 +10,7 @@ public interface EngineeringDataAccess {
     public ArrayList<String> findCustomer();
     public ArrayList<String> findSop(String custName);
     public ArrayList<String> findTechDrawing(String custName);
+    public ArrayList<String> findDepartment();
     public Integer findMaxJobId();
     public ResultSet findAllJobs();
 
