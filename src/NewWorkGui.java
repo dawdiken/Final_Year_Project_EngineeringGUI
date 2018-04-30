@@ -10,114 +10,68 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewWorkGui extends JPanel
-        implements ActionListener,
-        PropertyChangeListener {
+public class NewWorkGui extends JPanel {
     private EngineeringDataAccess database;
     private ProgressMonitor progressMonitor;
-    private JButton selectWorksOrder, saveNewJob;
+    private JButton saveNewJob, viewTechDrawing, viewSop;
     private JTextArea taskOutput;
     private JTextField JobNumField, batchQtyField;
-    private JLabel jobNumLabel, customerLabel, batchQtyLabel,departmentLabel, sopLabel,partNameLabel,custLabel;
+    private JLabel jobNumLabel, customerLabel, batchQtyLabel,departmentLabel, sopLabel,partNameLabel,custLabel,progressLabel;
     private JPanel dataPanel;
     private Worker worker;
+    private Worker2 worker1;
+    private Worker3 worker3;
+    private Worker4 worker4;
+    private Worker5 worker5;
     private JComboBox<String> partNames, sopNames, depNames;
     private JFrame frame;
 
 
     public NewWorkGui(NewJobEntry job) {
        // super();
+        JProgressBar jpb = new JProgressBar();
+        jpb.setBackground(Color.red);
+        progressLabel = new JLabel("Loading Bar: ");
+        progressLabel.setBorder(
+                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 
-//        JFrame frame = new JFrame("Login Form");
         dataPanel = new JPanel(new MigLayout("wrap 4","[grow][grow]","[][grow][][][]"));
+        dataPanel.setPreferredSize(new Dimension(600,250));
         //dataPanel = new JPanel(new net.miginfocom.swing.MigLayout("wrap 4","[grow][grow]","[][grow][][][]"));
         //dataPanel = new JPanel();
-
+        worker = new Worker();
+        worker.execute();
+        worker1 = new Worker2();
+        worker1.execute();
+        worker3 = new Worker3(job);
+        worker3.execute();
+        worker4 = new Worker4(job,jpb);
+        worker4.execute();
         custLabel=new JLabel("Customer Name: ");
         customerLabel=new JLabel(job.getCustomerName());
 
         jobNumLabel = new JLabel("Job Number: ");
         jobNumLabel.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-//        jobNumLabel.setBackground(Color.white);
-
         JobNumField = new JTextField( );
         JobNumField.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         JobNumField.setBackground(Color.white);
 
-        ////////////////////////////////////////////////////////////////////
-        //worker stuff here
-        Integer jobNum = 0;
-            try {
-                database = new DataBaseAccess();
-            }
-            // detect problems with database connection
-            catch ( Exception exception ) {
-                exception.printStackTrace();
-                System.exit( 1 );
-            }
-            System.out.println("job numeber search");
-            try{
-                jobNum = database.findMaxJobId();
-            }
-            catch (Exception ee) {
-                ee.printStackTrace();
-            }
-            jobNum++;
-        JobNumField.setText(jobNum.toString());
-        JobNumField.setEditable(false);
-        /////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////
-        //Get the part name
         partNameLabel = new JLabel("Part Name: ");
         partNameLabel.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        ArrayList<String> PartNames = new ArrayList<>();
-        String[] result = {};
-        PartNames = database.findTechDrawing(job.getCustomerName());
-        for (int i = 0; i < PartNames.size() ; i++) {
-            result = PartNames.toArray(new String[]{});
-        }
-        //result.toString().replace("[", "").replace("]", "");
-        partNames = new JComboBox<String>(result);
+        partNames = new JComboBox<String>();
 
-        //////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////
-        //Get sop
         sopLabel = new JLabel("Select SOP: ");
         sopLabel.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        ArrayList<String> SopNames = new ArrayList<>();
-        String[] result2 = {};
-        SopNames = database.findSop(job.getCustomerName());
+        sopNames = new JComboBox<String>();
 
-        for (int i = 0; i < SopNames.size() ; i++) {
-            result2 = SopNames.toArray(new String[]{});
-        }
-        //result.toString().replace("[", "").replace("]", "");
-        sopNames = new JComboBox<String>(result2);
-
-        //////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////
-        //Get dept
         departmentLabel = new JLabel("Select Department: ");
         departmentLabel.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        ArrayList<String> DeptNames = new ArrayList<>();
-        String[] result3 = {};
-        DeptNames = database.findDepartment();
-
-        for (int i = 0; i < DeptNames.size() ; i++) {
-            result3 = DeptNames.toArray(new String[]{});
-        }
-        //result.toString().replace("[", "").replace("]", "");
-        depNames = new JComboBox<String>(result3);
-
-        //////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////
-        //Get dept
-
+        depNames = new JComboBox<String>();
         batchQtyLabel = new JLabel("Set Bacth Quantity: ");
         batchQtyLabel.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
@@ -126,99 +80,54 @@ public class NewWorkGui extends JPanel
         batchQtyField.setBorder(
                 BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         batchQtyField.setBackground(Color.white);
-
-
-        //////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////
-        //Button
         saveNewJob = new JButton("Save New Work Order");
         saveNewJob.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getJobInfo(job);
+                getJobInfo(job,jpb);
             }
         });
 
+        viewTechDrawing = new JButton("View Drawing");
+        viewTechDrawing.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                worker5 = new Worker5(1, jpb);
+                worker5.execute();
+                //database.sqlGetTechDrawing(partNames.getSelectedItem().toString(),1);
+            }
+        });
 
+        viewSop = new JButton("View document");
+        viewSop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                worker5 = new Worker5(2, jpb);
+                worker5.execute();
+                //database.sqlGetTechDrawing(sopNames.getSelectedItem().toString(),2);
+            }
+        });
 
-
-
-
-//        worker = new Worker(job);
-//        worker.addPropertyChangeListener(this);
-//        worker.execute();
-
-
-
-
-        dataPanel.add(custLabel, "" );
-        dataPanel.add(customerLabel, "growx , gap 35,growx,wrap" );
-        dataPanel.add(jobNumLabel, "" );
-        dataPanel.add(JobNumField, "growx , gap 35,growx,wrap");
+        dataPanel.add(custLabel);
+        dataPanel.add(customerLabel, "growx,growx,wrap" );
+        dataPanel.add(jobNumLabel);
+        dataPanel.add(JobNumField, "growx,growx,wrap");
         dataPanel.add(partNameLabel);
-        dataPanel.add(partNames, "growx , gap 35,growx,wrap");
+        dataPanel.add(partNames, "growx,growx");
+        dataPanel.add(viewTechDrawing,"growx,growx,wrap");
         dataPanel.add(sopLabel);
-        dataPanel.add(sopNames, "growx , gap 35,growx,wrap");
+        dataPanel.add(sopNames, "growx,growx");
+        dataPanel.add(viewSop, "growx,growx,wrap");
         dataPanel.add(departmentLabel);
-        dataPanel.add(depNames, "growx , gap 35,growx,wrap");
+        dataPanel.add(depNames, "growx,growx,wrap");
         dataPanel.add(batchQtyLabel);
-        dataPanel.add(batchQtyField, "growx , gap 35,growx,wrap");
-        dataPanel.add(saveNewJob, "growx , gap 35,growx,wrap");
-
-
+        dataPanel.add(batchQtyField, "growx,growx,wrap");
+        dataPanel.add(saveNewJob, "wrap");
+        dataPanel.add(progressLabel);
+        dataPanel.add(jpb, "growx , gap 35,growx,wrap" );
 
 
         add(dataPanel);
-
-       // setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-//        List<String> list = new ArrayList<String>();
-//        list = CloudContents();
-//        taskOutput.append("Archive Contents = \n");
-//        for (String number : list) {
-//            taskOutput.append(number+ "\n");
-//        }
-    }
-
-    public void actionPerformed(ActionEvent evt) {
-        progressMonitor = new ProgressMonitor(NewWorkGui.this,
-                "Encrypting and pushing files to the cloud",
-                "", 0, 100);
-        progressMonitor.setProgress(0);
-        SendToCloud();
-    }
-
-    /**
-     * Invoked when worker's progress property changes.
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress".equals(evt.getPropertyName())) {
-            int progress = (Integer) evt.getNewValue();
-            if (progress<35){
-                taskOutput.append("Folder selected\n");
-            }
-            else if (progress<65){
-                taskOutput.append("Encrypting Data\n");
-            }
-            else if (progress<100){
-                taskOutput.append("Pushing to cloud\n");
-            }
-            progressMonitor.setProgress(progress);
-            String message =
-                    String.format("Completed %d%%.\n", progress);
-            progressMonitor.setNote(message);
-            taskOutput.append(message);
-            if (progressMonitor.isCanceled() || worker.isDone()) {
-                Toolkit.getDefaultToolkit().beep();
-                if (progressMonitor.isCanceled()) {
-                    worker.cancel(true);
-                    taskOutput.append("Worker canceled.\n");
-                } else {
-                    taskOutput.append("Files Stored To Cloud.\n");
-                }
-                selectWorksOrder.setEnabled(true);
-            }
-        }
     }
 
     public void createAndShowGUI(NewJobEntry job) {
@@ -231,64 +140,6 @@ public class NewWorkGui extends JPanel
         frame.pack();
         frame.setVisible(true);
     }
-
-    private void SendToCloud() {
-        JFileChooser jfc = new JFileChooser("C:\\EDHRHOME\\FinishedWorksOrders");
-        jfc.setDialogTitle("Choose Works Order to Archive: ");
-        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-        int returnValue = jfc.showDialog(null, "Select Folder");
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            if (jfc.getSelectedFile().isDirectory()) {
-                String pathToFolder = jfc.getSelectedFile().toString();
-                String saveAs = jfc.getSelectedFile().getName();
-                System.out.println("pathtofolder2" + saveAs);
-                //check that you are only trying to zip and push finished works orders to the cloud
-                if (pathToFolder.contains("C:\\EDHRHOME\\FinishedWorksOrders\\")){
-//                    worker = new Worker(pathToFolder,saveAs);
-//                    worker.addPropertyChangeListener(this);
-//                    worker.execute();
-//                    selectWorksOrder.setEnabled(false);
-                }
-            }
-        }
-    }
-
-//    private void ZippFolder(String pathToFolder, String saveAs){
-//        ZipUtils appZip = new ZipUtils();
-//        appZip.generateFileList(new File(pathToFolder),pathToFolder);
-//        appZip.zipIt("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs,pathToFolder );//default location where zippe file will always be
-//    }
-
-//    private void EncryptFolder(String saveAs){
-//        String key = "This is a secret";
-//        File encryptedFile = new File("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs+".encrypted");
-//        File inputFile = new File("C:\\EDHRHOME\\ArchivedFiles\\"+saveAs);
-//        EncryptFiles encryptMyFolder = new EncryptFiles();
-//        encryptMyFolder.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
-//    }
-
-//    private void StoreInCloud(String saveAs){
-//        List<String> list = new ArrayList<String>();
-//        try{
-//            CloudStorageHelper.uploadFile("longtermstorageedhr", "C:\\EDHRHOME\\ArchivedFiles\\"+saveAs+".encrypted");
-//        }
-//        catch(Exception ee){
-//            ee.printStackTrace();
-//        }
-//    }
-
-//    private List<String> CloudContents(){
-//        List<String> list = new ArrayList<String>();
-//        try{
-//            list = CloudStorageHelper.listBucket("longtermstorageedhr");
-//        }
-//        catch(Exception ee){
-//            ee.printStackTrace();
-//        }
-//        return list;
-//    }
-
 
     private void saveNewJobToDB (NewJobEntry job){
         //boolean success;
@@ -311,13 +162,19 @@ public class NewWorkGui extends JPanel
         }
     }
 
-    private void getJobInfo(NewJobEntry job)
+    private void getJobInfo(NewJobEntry job, JProgressBar jpb)
     {
+        int val = 0;
+        jpb.setValue(val);
         job.setCustomerName( job.getCustomerName());
         job.setJobNumber( JobNumField.getText() );
         job.setPartName( partNames.getSelectedItem().toString().replace(".pdf", "").replace(".jpg", "").replace(".jpeg", "").replace(".png", ""));
+        val = 10;
+        jpb.setValue(val);
         job.setTechniaclDrawing( partNames.getSelectedItem().toString() );
         job.setPartSop( sopNames.getSelectedItem().toString() );
+        val = 30;
+        jpb.setValue(val);
         job.setDepartment(depNames.getSelectedItem().toString() );
         job.setBatchQty( batchQtyField.getText() );
         job.setActive("false");
@@ -325,33 +182,31 @@ public class NewWorkGui extends JPanel
         job.setQtyScrap(0);
         job.setBatchNumber(1234);
         job.setMachineID( 1 );
+        val = 55;
+        jpb.setValue(val);
         saveNewJobToDB(job);
+        val = 85;
+        jpb.setValue(val);
+        val = 100;
+        jpb.setValue(val);
     }
 
-    private class Worker extends SwingWorker< List<String>, String> {
+    private class Worker extends SwingWorker <Integer,Integer> {
         //get paths and filename to save as sent into the string worker
-        private Worker(NewJobEntry job) {
-            this.job = job;
-        }
+        private Worker() {
+                    }
 
         @Override
-        public  List<String> doInBackground() {
-            setProgress(0);
+        public  Integer doInBackground() {
             Integer jobNum = 0;
-            List<String> list = new ArrayList<String>();
             try {
-                //setProgress(5);
-                int i = 5;
-                process(i);
                 try {
                     database = new DataBaseAccess();
                 }
                 // detect problems with database connection
                 catch ( Exception exception ) {
                     exception.printStackTrace();
-                    System.exit( 1 );
                 }
-                System.out.println("job numeber search");
                 try{
                     jobNum = database.findMaxJobId();
                 }
@@ -359,78 +214,142 @@ public class NewWorkGui extends JPanel
                     ee.printStackTrace();
                 }
                 jobNum++;
-
-                //setProgress(25);
-                i = 25;
-                process(i);
-//                EncryptFolder(saveAs);
-                i = 45;
-                process(i);
-                //setProgress(45);
-                i = 70;
-                process(i);
-                //setProgress(70);
-//                StoreInCloud(saveAs);
-                i = 80;
-                process(i);
-                //setProgress(85);
-                i = 100;
-                process(i);
-                //setProgress(100);
-//                list = CloudContents();
-
             }
             catch (Exception ee) {
                 ee.printStackTrace();
             }
-            return list;
-        }
-
-        //        @Override
-        public void process(Integer chunks)
-        {
-            // define what the event dispatch thread
-            // will do with the intermediate results received
-            // while the thread is executing
-            int val = chunks;
-            setProgress(val);
-            System.out.println("val"+val);
+            return jobNum;
         }
 
         @Override
         public void done() {
             try{
-                List<String> list = get();
-                taskOutput.append("\nArchive Contents = \n");
-                for (String number : list) {
-                    taskOutput.append(number+ "\n");
+                Integer jobNum = get();
+                JobNumField.setText(jobNum.toString());
+                JobNumField.setEditable(false);
+            }
+            catch (Exception ee){
+                ee.printStackTrace();
+            }
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }
+
+    private class Worker2 extends SwingWorker< String[], Integer> {
+        private Worker2() {
+        }
+
+        @Override
+        public  String[] doInBackground() {
+            ArrayList<String> list = new ArrayList<String>();
+            String[] result3 = {};
+            try {
+                try {
+                    database = new DataBaseAccess();
+                }
+                // detect problems with database connection
+                catch ( Exception exception ) {
+                    exception.printStackTrace();
+                }
+                try{
+                    list = database.findDepartment();
+                    for (int ii = 0; ii < list.size() ; ii++) {
+                        result3 = list.toArray(new String[]{});
+                    }
+                }
+                catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+            catch (Exception ee) {
+                ee.printStackTrace();
+            }
+            return result3;
+        }
+
+        @Override
+        public void done() {
+            try{
+                String[] list = get();
+                for (int i = 0; i <list.length ; i++) {
+                    depNames.addItem(list[i]);
                 }
             }
             catch (Exception ee){
                 ee.printStackTrace();
             }
             Toolkit.getDefaultToolkit().beep();
-            selectWorksOrder.setEnabled(true);
         }
-        private String pathToFolder;
-        private String saveAs;
-        private NewJobEntry job;
     }
 
-    private class Worker2 extends SwingWorker< List<String>, String> {
-        //get paths and filename to save as sent into the string worker
-        private Worker2(NewJobEntry job) {
+    private class Worker3 extends SwingWorker< String[], Integer> {
+        private Worker3(NewJobEntry job) {
             this.job = job;
         }
 
         @Override
-        public  List<String> doInBackground() {
-            setProgress(0);
-            Integer jobNum = 0;
-            List<String> list = new ArrayList<String>();
+        public  String[] doInBackground() {
+            ArrayList<String> list = new ArrayList<String>();
+            String[] result3 = {};
             try {
-                //setProgress(5);
-                int i = 5;
+                try {
+                    database = new DataBaseAccess();
+                }
+                // detect problems with database connection
+                catch ( Exception exception ) {
+                    exception.printStackTrace();
+                }
+                try{
+                    list = database.findTechDrawing(job.getCustomerName());
+                    for (int ii = 0; ii < list.size() ; ii++) {
+                        result3 = list.toArray(new String[]{});
+                    }
+                }
+                catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+            catch (Exception ee) {
+                ee.printStackTrace();
+            }
+            return result3;
+        }
+
+        public void process(Integer chunks)
+        {
+            int val = chunks;
+            setProgress(val);
+        }
+
+        @Override
+        public void done() {
+            try{
+                String[] list2 = get();
+                for (int i = 0; i <list2.length ; i++) {
+                    partNames.addItem(list2[i]);
+                }
+            }
+            catch (Exception ee){
+                ee.printStackTrace();
+            }
+        }
+        private NewJobEntry job;
+    }
+
+    private class Worker4 extends SwingWorker< String[], Integer> {
+        private Worker4(NewJobEntry job,JProgressBar jpb) {
+            this.job = job;
+            this.jpb = jpb;
+        }
+
+        @Override
+        public  String[] doInBackground() {
+            ArrayList<String> list = new ArrayList<String>();
+            String[] result3 = {};
+            int i = 0;
+            process(i);
+            try {
+                i=5;
                 process(i);
                 try {
                     database = new DataBaseAccess();
@@ -438,71 +357,117 @@ public class NewWorkGui extends JPanel
                 // detect problems with database connection
                 catch ( Exception exception ) {
                     exception.printStackTrace();
-                    System.exit( 1 );
                 }
-                System.out.println("job numeber search");
+                i=25;
+                process(i);
                 try{
-                    jobNum = database.findMaxJobId();
+                    list = database.findSop(job.getCustomerName());
+                    for (int ii = 0; ii < list.size() ; ii++) {
+                        result3 = list.toArray(new String[]{});
+                        i++;
+                        process(i);
+                    }
                 }
                 catch (Exception ee) {
                     ee.printStackTrace();
                 }
-                jobNum++;
-
-                //setProgress(25);
-                i = 25;
-                process(i);
-//                EncryptFolder(saveAs);
-                i = 45;
-                process(i);
-                //setProgress(45);
-                i = 70;
-                process(i);
-                //setProgress(70);
-//                StoreInCloud(saveAs);
-                i = 80;
-                process(i);
-                //setProgress(85);
-                i = 100;
-                process(i);
-                //setProgress(100);
-//                list = CloudContents();
 
             }
             catch (Exception ee) {
                 ee.printStackTrace();
             }
-            return list;
+            i=70;
+            process(i);
+            i=80;
+            process(i);
+            i=100;
+            process(i);
+            return result3;
         }
 
         //        @Override
         public void process(Integer chunks)
         {
-            // define what the event dispatch thread
-            // will do with the intermediate results received
-            // while the thread is executing
             int val = chunks;
-            setProgress(val);
-            System.out.println("val"+val);
+            jpb.setValue(val); // The last value in this array is all we care about.
         }
 
         @Override
         public void done() {
             try{
-                List<String> list = get();
-                taskOutput.append("\nArchive Contents = \n");
-                for (String number : list) {
-                    taskOutput.append(number+ "\n");
+                String[] list = get();
+                for (int i = 0; i <list.length ; i++) {
+                    sopNames.addItem(list[i]);
                 }
             }
             catch (Exception ee){
                 ee.printStackTrace();
             }
             Toolkit.getDefaultToolkit().beep();
-            selectWorksOrder.setEnabled(true);
         }
-        private String pathToFolder;
-        private String saveAs;
         private NewJobEntry job;
+        private  JProgressBar jpb;
+    }
+
+    private class Worker5 extends SwingWorker< String[], Integer> {
+        private Worker5(Integer choice,JProgressBar jpb) {
+            this.choice = choice;
+            this.jpb = jpb;
+        }
+
+        @Override
+        public  String[] doInBackground() {
+            String[] result3 = {};
+            int i = 0;
+            process(i);
+            try {
+                i=5;
+                process(i);
+                try {
+                    database = new DataBaseAccess();
+                    i=20;
+                    process(i);
+                }
+                // detect problems with database connection
+                catch ( Exception exception ) {
+                    exception.printStackTrace();
+                }
+                try{
+                    i=30;
+                    process(i);
+                    if (choice == 2){
+                        database.sqlGetTechDrawing(sopNames.getSelectedItem().toString(),2);
+                    }
+                    else{
+                        i=40;
+                        process(i);
+                        database.sqlGetTechDrawing(partNames.getSelectedItem().toString(),1);
+                    }
+                }
+                catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+
+            }
+            catch (Exception ee) {
+                ee.printStackTrace();
+            }
+            i=100;
+            process(i);
+            return result3;
+        }
+
+        public void process(Integer chunks)
+        {
+            int val = chunks;
+            jpb.setValue(val);
+        }
+
+        @Override
+        public void done() {
+            Toolkit.getDefaultToolkit().beep();
+        }
+        private Integer choice;
+        private  JProgressBar jpb;
     }
 }
