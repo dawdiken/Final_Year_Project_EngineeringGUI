@@ -126,7 +126,7 @@ public class UserEntryFrame extends JInternalFrame {
 
     }
 
-    private void addButton() { 
+    private void addButton() {
                 job = getUserEntry();
                 System.out.println(job.getUserName());
                 String username = job.getUserName();

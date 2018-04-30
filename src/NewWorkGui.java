@@ -134,6 +134,7 @@ public class NewWorkGui extends JPanel {
         //Create and set up the window.
         frame = new JFrame("New Work Order Menu:");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocation(200,200);
         JComponent newContentPane = new NewWorkGui(job);
         newContentPane.setOpaque(true);
         frame.setContentPane(newContentPane);
