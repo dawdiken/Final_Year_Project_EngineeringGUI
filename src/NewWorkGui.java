@@ -193,7 +193,6 @@ public class NewWorkGui extends JPanel {
     }
 
     private class Worker extends SwingWorker <Integer,Integer> {
-        //get paths and filename to save as sent into the string worker
         private Worker() {
                     }
 

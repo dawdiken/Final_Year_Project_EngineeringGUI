@@ -1,8 +1,3 @@
-import com.google.api.client.json.Json;
-import com.google.gson.JsonArray;
-import netscape.javascript.JSObject;
-import org.json.JSONArray;
-
 public class NewJobEntry {
 
     private Integer jobId;
@@ -18,9 +13,7 @@ public class NewJobEntry {
     private Integer qtyScrap;
     private String dropPath = "";
     private String techniaclDrawing = "";
-
     private String dimension;
-
     private String partSop = "";
     private String userName = "";
     private String Password = "";
@@ -39,7 +32,6 @@ public class NewJobEntry {
     // set customer name
     public void setCustomerName(String first )
     {
-        System.out.println("setCustName first = "+ first);
         customerName = first;
     }
 
