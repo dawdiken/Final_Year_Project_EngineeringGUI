@@ -20,7 +20,7 @@ public class Engineering extends JFrame {
     private EngineeringDataAccess database;
 
     // references to Actions
-    private Action newAction, saveAction, deleteAction, LoginAction, LogOutAction, AddUserAction,
+    private Action saveAction, LoginAction, LogOutAction, AddUserAction,
             newDocumentAction, viewAllJobsInDB, storeFinishedJobsInBucket, newWorkOrder;
 
     // set up database connection and GUI
@@ -34,7 +34,6 @@ public class Engineering extends JFrame {
         // detect problems with database connection
         catch ( Exception exception ) {
             exception.printStackTrace();
-            System.out.println("datbase connection failed");
             System.exit( 1 );
         }
 
@@ -46,40 +45,29 @@ public class Engineering extends JFrame {
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
-        // Set up actions for common operations. Private inner
-        // classes encapsulate the processing of each action.
-        newAction = new NewAction();
-        newAction.setEnabled( true );    // disabled by default
         saveAction = new SaveAction();
         saveAction.setEnabled( false );    // disabled by default
-        deleteAction = new DeleteAction();
-        deleteAction.setEnabled( false );  // disabled by default
         LoginAction = new LoginAction();
         LoginAction.setEnabled( true );  // disabled by default
         LogOutAction = new LogOutAction();
         LogOutAction.setEnabled( false );  // disabled by default
         newDocumentAction = new newDocumentAction();
-        newDocumentAction.setEnabled( true );    // disabled by default
+        newDocumentAction.setEnabled( false );    // disabled by default
         AddUserAction = new AddUserAction();
-        AddUserAction.setEnabled( true );  // disabled by default
+        AddUserAction.setEnabled( false );  // disabled by default
         viewAllJobsInDB = new viewAllJobsInDB();
-        viewAllJobsInDB.setEnabled( true );  // disabled by default
+        viewAllJobsInDB.setEnabled( false );  // disabled by default
         storeFinishedJobsInBucket = new storeFinishedJobsInBucket();
-        storeFinishedJobsInBucket.setEnabled( true );  // disabled by default
+        storeFinishedJobsInBucket.setEnabled( false );  // disabled by default
         newWorkOrder = new newJobGui();
-        newWorkOrder.setEnabled( true );  // disabled by default
+        newWorkOrder.setEnabled( false );  // disabled by default
 
         // add actions to tool bar
         toolBar.add( newWorkOrder );
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( newAction);
-        toolBar.add( new JToolBar.Separator() );
         toolBar.add( saveAction );
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( deleteAction );
-        toolBar.add( new JToolBar.Separator() );
         toolBar.add( newDocumentAction);
-        toolBar.add( new JToolBar.Separator() );
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LoginAction );
         toolBar.add( new JToolBar.Separator() );
@@ -92,11 +80,7 @@ public class Engineering extends JFrame {
         toolBar.add( storeFinishedJobsInBucket );
         toolBar.add( new JToolBar.Separator() );
 
-
-        // add actions to File menu
-        fileMenu.add( newAction );
         fileMenu.add( saveAction );
-        fileMenu.add( deleteAction );
         fileMenu.addSeparator();
 
         // set up menu bar
@@ -161,7 +145,6 @@ public class Engineering extends JFrame {
                             InternalFrameEvent event )
                     {
                         saveAction.setEnabled( true );
-                        deleteAction.setEnabled( true );
                     }
 
                     // internal frame becomes inactive frame on desktop
@@ -169,7 +152,6 @@ public class Engineering extends JFrame {
                             InternalFrameEvent event )
                     {
                         saveAction.setEnabled( false );
-                        deleteAction.setEnabled( false );
                     }
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
@@ -178,7 +160,7 @@ public class Engineering extends JFrame {
     }  // end method NewJobFrame
 
 
-    // create a new NewJobEntryFrame and register listener
+    // create a new createAddDocFrame and register listener
     private addDocForm createAddDocFrame() {
         addDocForm frame = new addDocForm();
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
@@ -200,47 +182,7 @@ public class Engineering extends JFrame {
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
         return frame;
-    }  // end method createAddressBookEntryFrame
-
-//    // create a new NewJobEntryFrame and register listener
-//    private TableFromDatabase createAllJobframe() {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new TableFromDatabase();
-//            }
-//        });
-//        return null;
-//    }  // end method createAddressBookEntryFrame
-
-
-    // create a new AddressBookEntryFrame and register listener
-//    private PhoneNumEntryFrame createPhoneNumEntryFrame() {
-//        PhoneNumEntryFrame frame = new PhoneNumEntryFrame();
-//        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-//        frame.addInternalFrameListener(
-//                new InternalFrameAdapter() {
-//
-//                    // internal frame becomes active frame on desktop
-//                    public void internalFrameActivated(
-//                            InternalFrameEvent event )
-//                    {
-//                        saveAction.setEnabled( true );
-//                        deleteAction.setEnabled( true );
-//                    }
-//
-//                    // internal frame becomes inactive frame on desktop
-//                    public void internalFrameDeactivated(
-//                            InternalFrameEvent event )
-//                    {
-//                        saveAction.setEnabled( false );
-//                        deleteAction.setEnabled( false );
-//                    }
-//                }  // end InternalFrameAdapter anonymous inner class
-//        ); // end call to addInternalFrameListener
-//
-//        return frame;
-//    }  // end method createAddressBookEntryFrame
+    }  // end method createAddDocFrame
 
     // method to launch program execution
     public static void main( String args[] )
@@ -252,86 +194,15 @@ public class Engineering extends JFrame {
             // start application
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-//                    new LoginFrame();
                     new Engineering();
                 }
             });
-//            new Engineering();
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
-
-    // Private inner class defines action that enables
-    // user to input new entry. User must "Save" entry
-    // after inputting data.
-    private class NewAction extends AbstractAction {
-
-        // set up action's name, icon, descriptions and mnemonic
-        public NewAction()
-        {
-            putValue( NAME, "New Job" );
-            putValue( SHORT_DESCRIPTION, "New Job" );
-            putValue( LONG_DESCRIPTION,
-                    "Add a new address book entry" );
-            putValue( MNEMONIC_KEY, new Integer( 'N' ) );
-        }
-
-        // display window in which user can input entry
-        public void actionPerformed( ActionEvent e )
-        {
-            ArrayList<String> customerNames = database.findCustomer();
-            String[] result = {};
-            for (int i = 0; i < customerNames.size() ; i++) {
-                result = customerNames.toArray(new String[]{});
-            }
-            final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
-
-            JFrame frame = new JFrame("Input Dialog Example 3");
-            String customerName = (String) JOptionPane.showInputDialog(frame,
-                    "Please select a customer?",
-                    "Customer",
-                    JOptionPane.QUESTION_MESSAGE,
-                    icon,
-                    result,
-                    result[0]);
-
-            System.out.printf("customerName is %s.\n", customerName);            // create new internal window
-
-            //if (customerName.equalsIgnoreCase("Boston Scientific")) {
-                int id = 1;
-                NewJobFrame entryFrame =
-                        createNewJobFrame(id, customerName);
-
-            // set new AddressBookEntry in window
-            entryFrame.setAddressBookEntry(
-                    new NewJobEntry(id) );
-
-                // display window
-                desktop.add( entryFrame );
-                entryFrame.setVisible( true );
-           // }
-//            else if (customerName.equalsIgnoreCase("Medtronic")){
-//                int id = 2;
-//                NewJobFrame entryFrame =
-//                        createNewJobFrame(id, customerName);
-//
-//                // set new AddressBookEntry in window
-//                entryFrame.setAddressBookEntry(
-//                        new NewJobEntry(id) );
-//
-//                // display window
-//                desktop.add( entryFrame );
-//                entryFrame.setVisible( true );
-//            }
-//            else{
-//                System.out.println("no customer here");
-//            }
-        }
-
-    }  // end inner class NewAction
 
 //     inner class defines an action that can save new or
 //     updated entry
@@ -343,7 +214,7 @@ public class Engineering extends JFrame {
             putValue( NAME, "Save" );
             putValue( SHORT_DESCRIPTION, "Save" );
             putValue( LONG_DESCRIPTION,
-                    "Save an address book entry" );
+                    "Save new user" );
             putValue( MNEMONIC_KEY, new Integer( 'S' ) );
         }
 
@@ -354,7 +225,6 @@ public class Engineering extends JFrame {
             NewJobFrame currentFrame =
                     ( NewJobFrame ) desktop.getSelectedFrame();
 
-            // obtain AddressBookEntry from window
             NewJobEntry newWorksOrder =
                     currentFrame.getAddressBookEntry();
             //boolean success;
@@ -397,203 +267,10 @@ public class Engineering extends JFrame {
             //addDocForm newDocEntry = new addDocForm();
             addDocForm entryFrame =
                     createAddDocFrame();
-//            JTextField xField = new JTextField(10);
-//            xField.setText("Administrator");
-//            JPasswordField yField = new JPasswordField(10);
-//            JPanel myPanel = new JPanel();
-//            myPanel.add(new JLabel("Admin Accounnt Name:"));
-//            myPanel.add(xField);
-//            myPanel.add(xField);
-//
-//            myPanel.add(Box.createHorizontalStrut(10)); // a spacer
-//            myPanel.add(new JLabel("Password:"));
-//            myPanel.add(yField);
-//            int lastName = JOptionPane.showConfirmDialog(null, myPanel,
-//                    "Please Log In", JOptionPane.OK_CANCEL_OPTION);
-//            if (lastName == JOptionPane.OK_OPTION) {
-//                System.out.println("x value: " + xField.getText());
-//                System.out.println("y value: " + yField.getText());
-//            }
-//            String userName = xField.getText().toString();
-//            String password = yField.getText().toString();
-//            System.out.println(password);
-//
-////            String lastName =
-////                    JOptionPane.showInputDialog( desktop, myPanel,
-////                            "Enter last name" );
-//
-//
-////            String lastName =
-////                    JOptionPane.showInputDialog( desktop,
-////                            "Enter last name" );
-////            loggedIn =   new LoginFrame();
-//
-//            // if last name was input, search for it; otherwise,
-//            // do nothing
-//
-//
-//            // Execute search. If found, AddressBookEntry
-//            // is returned containing data.
-//            ArrayList<NewJobEntry> person = database.findPerson( userName,
-//                    password );
-//
-//            System.out.printf("Person" + person);
-//            if ( person != null ) {
-//                // create window to display AddressBookEntry
-//                System.out.printf("Person" + person);
-//                JOptionPane.showMessageDialog( desktop,
-//                        "Log in succesfull.  Hello " + userName);
-////                LoginAction.setEnabled(false);  // disabled by default
-////                newAction.setEnabled(true);
-//////                    saveAction.setEnabled( true );
-//////                    deleteAction.setEnabled( true );
-////                addAddressAction.setEnabled(true);
-////                LogOutAction.setEnabled(true);  // disabled by default
-//                UserEntryFrame entryFrame =
-//                        createUserEntryFrame();
-//                entryFrame.setAddressBookEntry(
-//                        new NewJobEntry() );
-//
-//
-//                // set new AddressBookEntry in window
-//                entryFrame.setAddressBookEntry(
-//                        new NewJobEntry() );
-//
-//                // display window
-//                desktop.add( entryFrame );
-//                entryFrame.setVisible( true );
-//            }
-//            else
-//                JOptionPane.showMessageDialog( desktop,
-//                        "User:\n" + userName +
-//                                "\" not found!" );
-
         }
 
     }  // end inner class AddNewUserAction
 
-
-
-//    // inner class defines action that deletes entry
-    private class DeleteAction extends AbstractAction {
-
-        // set up action's name, icon, descriptions and mnemonic
-        public DeleteAction()
-        {
-            putValue( NAME, "Delete" );
-            putValue( SHORT_DESCRIPTION, "Delete" );
-            putValue( LONG_DESCRIPTION,
-                    "Delete an address book entry" );
-            putValue( MNEMONIC_KEY, new Integer( 'D' ) );
-        }
-
-        // delete entry
-        public void actionPerformed( ActionEvent e )
-        {
-            // get currently active window
-            NewJobFrame currentFrame =
-                    ( NewJobFrame ) desktop.getSelectedFrame();
-
-//            // get AddressBookEntry from window
-//            AddressBookEntry person =
-//                    currentFrame.getAddressBookEntry();
-
-            // If personID is 0, this is new entry that has not
-            // been inserted. Therefore, delete is not necessary.
-            // Display message and return.
-//            if ( person.getPersonID() == 0 ) {
-//                JOptionPane.showMessageDialog( desktop,
-//                        "New entries must be saved before they can be " +
-//                                "deleted. \nTo cancel a new entry, simply " +
-//                                "close the window containing the entry" );
-//                return;
-//            }
-//
-//            // delete person
-//            try {
-//                database.deletePerson( person );
-//
-//                // display message indicating success
-//                JOptionPane.showMessageDialog( desktop,
-//                        "Deletion successful" );
-//            }
-//
-//            // detect problems deleting person
-//            catch ( DataAccessException exception ) {
-//                JOptionPane.showMessageDialog( desktop, exception,
-//                        "Deletion failed", JOptionPane.ERROR_MESSAGE );
-//                exception.printStackTrace();
-//            }
-
-            // close current window and dispose of resources
-            currentFrame.dispose();
-
-        }  // end method actionPerformed
-
-    }  // end inner class DeleteAction
-//
-//    // inner class defines action that locates entry
-//    private class SearchAction extends AbstractAction {
-//
-//        // set up action's name, icon, descriptions and mnemonic
-//        public SearchAction()
-//        {
-//            putValue( NAME, "Search" );
-//            //          putValue( SMALL_ICON, new ImageIcon(
-////                    getClass().getResource( "images/Find24.png" ) ) );
-//            putValue( SHORT_DESCRIPTION, "Search" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Search for an address book entry" );
-//            putValue( MNEMONIC_KEY, new Integer( 'r' ) );
-//        }
-//
-//        // locate existing entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            String lastName =
-//                    JOptionPane.showInputDialog( desktop,
-//                            "Enter last name" );
-//
-//            // if last name was input, search for it; otherwise,
-//            // do nothing
-//            if ( lastName != null ) {
-//
-//                // Execute search. If found, AddressBookEntry
-//                // is returned containing data.
-//                ArrayList<AddressBookEntry> person = database.findPerson(
-//                        lastName );
-//
-//
-//                if ( person != null ) {
-//
-//                    // create window to display AddressBookEntry
-//
-//                    System.out.printf("Person" + person);
-//
-//
-//                    // set AddressBookEntry to display
-//                    for (int i = 0; i <person.size() ; i++) {
-//                        AddressBookEntryFrame entryFrame =
-//                                createAddressBookEntryFrame();
-//                        entryFrame.setAddressBookEntry( person.get(i) );
-//                        desktop.add( entryFrame );
-//                        entryFrame.setVisible( true );
-//                    }
-//
-//
-//                    // display window
-//
-//                }
-//                else
-//                    JOptionPane.showMessageDialog( desktop,
-//                            "Entry with last name \"" + lastName +
-//                                    "\" not found in address book" );
-//
-//            }  // end "if ( lastName == null )"
-//
-//        }  // end method actionPerformed
-//
-//    }  // end inner class SearchAction
 
     // inner class defines action that locates entry
     private class LoginAction extends AbstractAction {
@@ -623,36 +300,33 @@ public class Engineering extends JFrame {
             myPanel.add(yField);
             int lastName = JOptionPane.showConfirmDialog(null, myPanel,
                     "Please Log In", JOptionPane.OK_CANCEL_OPTION);
-            if (lastName == JOptionPane.OK_OPTION) {
-                System.out.println("x value: " + xField.getText());
-                System.out.println("y value: " + yField.getText());
-            }
             String userName = xField.getText().toString();
             String password = yField.getText().toString();
 
+            ArrayList<NewJobEntry> person = database.findPerson( userName,
+                    password );
+            if ( person != null ) {
+                JOptionPane.showMessageDialog( desktop,
+                        "Log in succesfull.  Hello " + userName);
+                LoginAction.setEnabled(false);  // disabled by default
+                newWorkOrder.setEnabled(true);
+                saveAction.setEnabled( true );
+                LogOutAction.setEnabled(true);  // disabled by defaultsaveAction, AddUserAction,
+                newDocumentAction.setEnabled(true);
+                viewAllJobsInDB.setEnabled(true);
+                storeFinishedJobsInBucket.setEnabled(true);
+                AddUserAction.setEnabled(true);
 
-            //swing here
-                ArrayList<NewJobEntry> person = database.findPerson( userName,
-                        password );
-                if ( person != null ) {
-                    System.out.printf("Person" + person);
-                    JOptionPane.showMessageDialog( desktop,
-                            "Log in succesfull.  Hello " + userName);
-                    LoginAction.setEnabled(false);  // disabled by default
-                    newAction.setEnabled(true);
-                    saveAction.setEnabled( true );
-                    deleteAction.setEnabled( true );
-                    LogOutAction.setEnabled(true);  // disabled by default
+            }
+            else
+                JOptionPane.showMessageDialog( desktop,
+                        "User:\n" + userName +
+                                "\" not found!" );
 
-                }
-                else
-                    JOptionPane.showMessageDialog( desktop,
-                            "User:\n" + userName +
-                                    "\" not found!" );
-
-        }  // end method actionPerformed
+            }  // end method actionPerformed
 
     }
+
 
     private class LogOutAction extends AbstractAction {
 
@@ -673,12 +347,14 @@ public class Engineering extends JFrame {
         {
             JOptionPane.showMessageDialog( desktop,
                         "User: Logged out!" );
-            newAction.setEnabled(false);
             saveAction.setEnabled( false );
-            deleteAction.setEnabled( false );
+            newWorkOrder.setEnabled( false );
             LogOutAction.setEnabled(false);  // disabled by default
             LoginAction.setEnabled(true);  // disabled by default
-
+            newDocumentAction.setEnabled(false);
+            viewAllJobsInDB.setEnabled(false);
+            storeFinishedJobsInBucket.setEnabled(false);
+            AddUserAction.setEnabled(false);
         }  // end method actionPerformed
 
     }  // end inner class
@@ -705,38 +381,27 @@ public class Engineering extends JFrame {
             myPanel.add(new JLabel("Admin Accounnt Name:"));
             myPanel.add(xField);
             myPanel.add(xField);
-
             myPanel.add(Box.createHorizontalStrut(10)); // a spacer
             myPanel.add(new JLabel("Password:"));
             myPanel.add(yField);
             int lastName = JOptionPane.showConfirmDialog(null, myPanel,
                     "Please Log In", JOptionPane.OK_CANCEL_OPTION);
-            if (lastName == JOptionPane.OK_OPTION) {
-                System.out.println("x value: " + xField.getText());
-                System.out.println("y value: " + yField.getText());
-            }
             String userName = xField.getText().toString();
             String password = yField.getText().toString();
-            System.out.println(password);
 
             ArrayList<NewJobEntry> person = database.findPerson( userName,
                     password );
 
-            System.out.printf("Person" + person);
             if ( person != null ) {
-                System.out.printf("Person" + person);
                 JOptionPane.showMessageDialog( desktop,
                         "Log in succesfull.  Hello " + userName);
                 LoginAction.setEnabled(false);  // disabled by default
-                newAction.setEnabled(true);
-                saveAction.setEnabled( true );
-                deleteAction.setEnabled( true );
                 LogOutAction.setEnabled(true);  // disabled by default
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         UserEntryFrame entryFrame =  new UserEntryFrame();
-                        entryFrame.setAddressBookEntry(
+                        entryFrame.setUserInfo(
                                 new NewJobEntry() );
                         // display window
                         desktop.add( entryFrame );
@@ -754,7 +419,6 @@ public class Engineering extends JFrame {
     }  // end inner class AddNewUserAction
 
     private class viewAllJobsInDB extends AbstractAction {
-
         // set up action's name, icon, descriptions and mnemonic
         private viewAllJobsInDB()
         {
@@ -764,7 +428,6 @@ public class Engineering extends JFrame {
                     "View works orders in data base" );
             putValue( MNEMONIC_KEY, new Integer( 'w' ) );
         }
-
         // save new entry or update existing entry
         public void actionPerformed( ActionEvent e )
         {
