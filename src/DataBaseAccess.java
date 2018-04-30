@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -54,6 +51,9 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindAllJobs;
     private PreparedStatement sqlInsertDimensions;
     private PreparedStatement sqlFindDimensions;
+
+    private PreparedStatement sqlReturnTechDrawing;
+    private PreparedStatement sqlReturnSOP;
 
 
     // set up PreparedStatements to access database
@@ -109,17 +109,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindAllJobs = connection.prepareStatement("SELECT * FROM workon_copy");
         sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM technical_drawing WHERE drawingID = ?");
 
+        sqlReturnSOP = connection.prepareStatement("SELECT document_blob FROM sop_document WHERE sopName = ?");
 
-//        sqlFind = connection.prepareStatement(
-//                "SELECT users.userID, userName, pass" +
-//                        "FROM users" +
-//                        "WHERE pass = ?");
+        sqlReturnTechDrawing = connection.prepareStatement("SELECT document_blob FROM technical_drawing WHERE drawingName = ?");
 
-        // Obtain personID for last person inserted in database.
-        // [This is a Cloudscape-specific database operation.]
-        //sqlPersonID = connection.prepareStatement(
-        //      "VALUES ConnectionInfo.lastAutoincrementValue( " +
-        //            "'APP', 'NAMES', 'PERSONID')" );
         sqlPersonID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
 
         // Insert first and last names in table names.
@@ -771,15 +764,73 @@ public class DataBaseAccess implements EngineeringDataAccess {
         }
     }  // end method newUser
 
+
+    public void sqlGetTechDrawing(String name, int choice) {
+        // insert person in database
+        System.out.println("trying here");
+        System.out.println(name);
+        String pathto="";
+        try {
+            if (choice == 1) {
+                sqlReturnTechDrawing.setString(1, name);
+                ResultSet resultSet = sqlReturnTechDrawing.executeQuery();
+
+                int i = 0;
+                while (resultSet.next()) {
+                    InputStream in = resultSet.getBinaryStream(1);
+                    pathto = "C:\\EDHRHOME\\documents\\" + name;
+                    System.out.println(pathto + "path to");
+                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    i++;
+                    int c = 0;
+                    while ((c = in.read()) > -1) {
+                        f.write(c);
+                    }
+                    f.close();
+                    in.close();
+                }
+            }
+            else{
+                sqlReturnSOP.setString(1, name);
+                ResultSet resultSet = sqlReturnSOP.executeQuery();
+                int i = 0;
+                while (resultSet.next()) {
+                    InputStream in = resultSet.getBinaryStream(1);
+                    pathto = "C:\\EDHRHOME\\documents\\" + name;
+                    System.out.println(pathto + "path to");
+                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    i++;
+                    int c = 0;
+                    while ((c = in.read()) > -1) {
+                        f.write(c);
+                    }
+                    f.close();
+                    in.close();
+                }
+            }
+        }
+        catch (Exception ee){
+            ee.printStackTrace();
+        }
+        ViewFileDropped vf = new ViewFileDropped();
+        vf.viewFileDropped(pathto);
+
+    }
+
+
+
+
+
+
     // Update an entry. Method returns boolean indicating
     // success or failure.
-    public boolean saveJob(NewJobEntry person )
+    public boolean saveJob(NewJobEntry newJob )
             throws DataAccessException
     {
         // update person in database
         try {
-            sqlFindSopByName.setString(1,person.getPartSop().trim());
-            System.out.println("getPartSop ===============" + person.getPartSop());
+            sqlFindSopByName.setString(1,newJob.getPartSop().trim());
+            System.out.println("getPartSop ===============" + newJob.getPartSop());
             ResultSet resultSet2 = sqlFindSopByName.executeQuery();
 
             // if no customer matching the ID is found, return immediately
@@ -793,8 +844,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 sop_ID = resultSet2.getInt("sopID");
             }
             System.out.println("failed 3");
-            sqlFindTechDrawingByName.setString(1,person.getTechniaclDrawing().trim());
-            System.out.println("getTechniaclDrawing ===============" + person.getTechniaclDrawing());
+            sqlFindTechDrawingByName.setString(1,newJob.getTechniaclDrawing().trim());
+            System.out.println("getTechniaclDrawing ===============" + newJob.getTechniaclDrawing());
             ResultSet resultSet3 = sqlFindTechDrawingByName.executeQuery();
 
             // if no customer matching the ID is found, return immediately
@@ -809,13 +860,13 @@ public class DataBaseAccess implements EngineeringDataAccess {
             }
 
             System.out.println("failed 3");
-            sqlFindDepartmentByName.setString(1,person.getDepartment().trim());
-            System.out.println("getTechniaclDrawing ===============" + person.getDepartment());
+            sqlFindDepartmentByName.setString(1,newJob.getDepartment().trim());
+            System.out.println("getTechniaclDrawing ===============" + newJob.getDepartment());
             ResultSet resultSet4 = sqlFindDepartmentByName.executeQuery();
 
             // if no customer matching the ID is found, return immediately
             if ( !resultSet4.isBeforeFirst()){
-                System.out.println("failed 4");
+                System.out.println("failed 7");
                 return false;
             }
             Integer dept_ID = 0;
@@ -837,16 +888,16 @@ public class DataBaseAccess implements EngineeringDataAccess {
             //InputStream inputStream = new FileInputStream(new File(filePath));
 
             // update work table with new job
-            sqlInsertJob.setString( 1, person.getJobNumber() );
-            sqlInsertJob.setString( 2, person.getActive() );
-            sqlInsertJob.setString( 3, person.getCustomerName() );
+            sqlInsertJob.setString( 1, newJob.getJobNumber() );
+            sqlInsertJob.setString( 2, newJob.getActive() );
+            sqlInsertJob.setString( 3, newJob.getCustomerName() );
             sqlInsertJob.setInt( 4, dept_ID );
-            sqlInsertJob.setString( 5, person.getPartName() );
-            sqlInsertJob.setInt( 6, person.getBatchNumber() );
-            sqlInsertJob.setString( 7, person.getBatchQty() );
-            sqlInsertJob.setInt( 8, person.getMachineID() );
-            sqlInsertJob.setInt( 9, person.getQtyMade() );
-            sqlInsertJob.setInt( 10, person.getQtyScrap() );
+            sqlInsertJob.setString( 5, newJob.getPartName() );
+            sqlInsertJob.setInt( 6, newJob.getBatchNumber() );
+            sqlInsertJob.setString( 7, newJob.getBatchQty() );
+            sqlInsertJob.setInt( 8, newJob.getMachineID() );
+            sqlInsertJob.setInt( 9, newJob.getQtyMade() );
+            sqlInsertJob.setInt( 10, newJob.getQtyScrap() );
             sqlInsertJob.setInt( 11, sop_ID );
             sqlInsertJob.setInt( 12, drawing_ID );
             //sqlInsertJob.setBlob( 11, inputStream );

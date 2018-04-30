@@ -76,9 +76,7 @@ public class UserEntryFrame extends JInternalFrame {
         yOffset = ( yOffset + 30 ) % 300;
     }
 
-    // set AddressBookEntry then use its properties to
-    // place data in each JTextField
-    public void setAddressBookEntry( NewJobEntry entry )
+    public void setUserInfo(NewJobEntry entry )
     {
         job = entry;
 
@@ -87,9 +85,7 @@ public class UserEntryFrame extends JInternalFrame {
 
     }
 
-    // store AddressBookEntry data from GUI and return
-    // AddressBookEntry
-    private NewJobEntry getAddressBookEntry()
+    private NewJobEntry getUserEntry()
     {
         job.setUserName( getField( USER_NAME ) );
         job.setPassword( getField( PASSWORD ) );
@@ -97,8 +93,6 @@ public class UserEntryFrame extends JInternalFrame {
         return job;
     }
 
-    // set text in JTextField by specifying field's
-    // name and value
     private void setField( String fieldName, String value )
     {
         JTextField field =
@@ -132,9 +126,8 @@ public class UserEntryFrame extends JInternalFrame {
 
     }
 
-    private void addButton() {
-
-                job = getAddressBookEntry();
+    private void addButton() { 
+                job = getUserEntry();
                 System.out.println(job.getUserName());
                 String username = job.getUserName();
                 String passw = job.getPassword();
@@ -150,7 +143,6 @@ public class UserEntryFrame extends JInternalFrame {
                 else {
                     try{
                         database.newUser(job);
-//                        System.out.println(database.newUser(job));
                         JOptionPane.showMessageDialog( container,
                                 "New user added.");
                     }

@@ -19,6 +19,7 @@ import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.StorageScopes;
 import com.google.api.services.storage.model.Bucket;
 import com.google.api.services.storage.model.StorageObject;
+import com.google.pubsub.v1.PublishRequest;
 
 /**
  * Simple wrapper around the Google Cloud Storage API

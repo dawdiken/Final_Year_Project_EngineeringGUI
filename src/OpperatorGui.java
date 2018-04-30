@@ -255,7 +255,7 @@ public class OpperatorGui extends JFrame
                                 str.setText("");
                                 num++;
                             }
-                            writer.write("Opperator name Here: Date:" +  sdf.format(timestamp)+ "\n");
+                            writer.write("Opperator USER name Here: Date:" +  sdf.format(timestamp)+ "\n");
                             writer.close();
                         }
                         catch (IOException ee){
@@ -349,9 +349,9 @@ public class OpperatorGui extends JFrame
         mainPanel.add(titlePanel,"wrap");
         mainPanel.add(tablePanel,"wrap");
         mainPanel.add(scrollPane1,"wrap");
-        mainPanel.add(saveMeasurments,"wrap");
-        mainPanel.add(recordScrap,"wrap");
-        mainPanel.add(closeJob,"wrap");
+        mainPanel.add(saveMeasurments,"split 3");
+        mainPanel.add(recordScrap,"split 3, gap 35");
+        mainPanel.add(closeJob," split 3, gap 35");
 
         frame.add(mainPanel);
         frame.pack();

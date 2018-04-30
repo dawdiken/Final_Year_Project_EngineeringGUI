@@ -20,7 +20,7 @@ public class Engineering extends JFrame {
     private EngineeringDataAccess database;
 
     // references to Actions
-    private Action saveAction, LoginAction, LogOutAction, AddUserAction,
+    private Action LoginAction, LogOutAction, AddUserAction,
             newDocumentAction, viewAllJobsInDB, storeFinishedJobsInBucket, newWorkOrder;
 
     // set up database connection and GUI
@@ -45,8 +45,8 @@ public class Engineering extends JFrame {
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
-        saveAction = new SaveAction();
-        saveAction.setEnabled( false );    // disabled by default
+//        saveAction = new SaveAction();
+//        saveAction.setEnabled( false );    // disabled by default
         LoginAction = new LoginAction();
         LoginAction.setEnabled( true );  // disabled by default
         LogOutAction = new LogOutAction();
@@ -65,8 +65,8 @@ public class Engineering extends JFrame {
         // add actions to tool bar
         toolBar.add( newWorkOrder );
         toolBar.add( new JToolBar.Separator() );
-        toolBar.add( saveAction );
-        toolBar.add( new JToolBar.Separator() );
+//        toolBar.add( saveAction );
+//        toolBar.add( new JToolBar.Separator() );
         toolBar.add( newDocumentAction);
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LoginAction );
@@ -80,7 +80,7 @@ public class Engineering extends JFrame {
         toolBar.add( storeFinishedJobsInBucket );
         toolBar.add( new JToolBar.Separator() );
 
-        fileMenu.add( saveAction );
+//        fileMenu.add( saveAction );
         fileMenu.addSeparator();
 
         // set up menu bar
@@ -133,32 +133,6 @@ public class Engineering extends JFrame {
         System.exit( 0 );   // terminate program
     }
 
-    // create a new NewJobFrame and register listener
-    private NewJobFrame createNewJobFrame(int id, String custName) {
-        NewJobFrame frame = new NewJobFrame(id, custName);
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        frame.addInternalFrameListener(
-                new InternalFrameAdapter() {
-
-                    // internal frame becomes active frame on desktop
-                    public void internalFrameActivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( true );
-                    }
-
-                    // internal frame becomes inactive frame on desktop
-                    public void internalFrameDeactivated(
-                            InternalFrameEvent event )
-                    {
-                        saveAction.setEnabled( false );
-                    }
-                }  // end InternalFrameAdapter anonymous inner class
-        ); // end call to addInternalFrameListener
-
-        return frame;
-    }  // end method NewJobFrame
-
 
     // create a new createAddDocFrame and register listener
     private addDocForm createAddDocFrame() {
@@ -170,14 +144,14 @@ public class Engineering extends JFrame {
                     public void internalFrameActivated(
                             InternalFrameEvent event )
                     {
-                        saveAction.setEnabled( true );
+//                        saveAction.setEnabled( true );
                     }
 
                     // internal frame becomes inactive frame on desktop
                     public void internalFrameDeactivated(
                             InternalFrameEvent event )
                     {
-                        saveAction.setEnabled( false );
+//                        saveAction.setEnabled( false );
                     }
                 }  // end InternalFrameAdapter anonymous inner class
         ); // end call to addInternalFrameListener
@@ -206,45 +180,45 @@ public class Engineering extends JFrame {
 
 //     inner class defines an action that can save new or
 //     updated entry
-    private class SaveAction extends AbstractAction {
-
-        // set up action's name, icon, descriptions and mnemonic
-        public SaveAction()
-        {
-            putValue( NAME, "Save" );
-            putValue( SHORT_DESCRIPTION, "Save" );
-            putValue( LONG_DESCRIPTION,
-                    "Save new user" );
-            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
-        }
-
-        // save new entry or update existing entry
-        public void actionPerformed( ActionEvent e )
-        {
-            // get currently active window
-            NewJobFrame currentFrame =
-                    ( NewJobFrame ) desktop.getSelectedFrame();
-
-            NewJobEntry newWorksOrder =
-                    currentFrame.getAddressBookEntry();
-            //boolean success;
-            try {
-                boolean success = database.saveJob(newWorksOrder);
-                if(success){
-                    JOptionPane.showMessageDialog( desktop, "Success!\nNew works order saved to the database",
-                            "Save successful", JOptionPane.PLAIN_MESSAGE );
-                }
-            }
-            // detect problems saving job
-            catch ( DataAccessException exception ) {
-                JOptionPane.showMessageDialog( desktop, exception,
-                        "Save failed", JOptionPane.ERROR_MESSAGE );
-                exception.printStackTrace();
-            }
-                // close current window and dispose of resources
-                currentFrame.dispose();
-        }  // end method actionPerformed
-    }  // end inner class SaveAction
+//    private class SaveAction extends AbstractAction {
+//
+//        // set up action's name, icon, descriptions and mnemonic
+//        public SaveAction()
+//        {
+//            putValue( NAME, "Save" );
+//            putValue( SHORT_DESCRIPTION, "Save" );
+//            putValue( LONG_DESCRIPTION,
+//                    "Save new user" );
+//            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
+//        }
+//
+//        // save new entry or update existing entry
+//        public void actionPerformed( ActionEvent e )
+//        {
+//            // get currently active window
+//            NewJobFrame currentFrame =
+//                    ( NewJobFrame ) desktop.getSelectedFrame();
+//
+//            NewJobEntry newWorksOrder =
+//                    currentFrame.getAddressBookEntry();
+//            //boolean success;
+//            try {
+//                boolean success = database.saveJob(newWorksOrder);
+//                if(success){
+//                    JOptionPane.showMessageDialog( desktop, "Success!\nNew works order saved to the database",
+//                            "Save successful", JOptionPane.PLAIN_MESSAGE );
+//                }
+//            }
+//            // detect problems saving job
+//            catch ( DataAccessException exception ) {
+//                JOptionPane.showMessageDialog( desktop, exception,
+//                        "Save failed", JOptionPane.ERROR_MESSAGE );
+//                exception.printStackTrace();
+//            }
+//                // close current window and dispose of resources
+//                currentFrame.dispose();
+//        }  // end method actionPerformed
+//    }  // end inner class SaveAction
 
 
     // Private inner class defines action that enables
@@ -265,8 +239,13 @@ public class Engineering extends JFrame {
         public void actionPerformed( ActionEvent e )
         {
             //addDocForm newDocEntry = new addDocForm();
-            addDocForm entryFrame =
-                    createAddDocFrame();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    addDocForm entryFrame =
+                            createAddDocFrame();
+                }
+            });
         }
 
     }  // end inner class AddNewUserAction
@@ -310,8 +289,8 @@ public class Engineering extends JFrame {
                         "Log in succesfull.  Hello " + userName);
                 LoginAction.setEnabled(false);  // disabled by default
                 newWorkOrder.setEnabled(true);
-                saveAction.setEnabled( true );
-                LogOutAction.setEnabled(true);  // disabled by defaultsaveAction, AddUserAction,
+//                saveAction.setEnabled( true );
+                LogOutAction.setEnabled(true);
                 newDocumentAction.setEnabled(true);
                 viewAllJobsInDB.setEnabled(true);
                 storeFinishedJobsInBucket.setEnabled(true);
@@ -347,7 +326,7 @@ public class Engineering extends JFrame {
         {
             JOptionPane.showMessageDialog( desktop,
                         "User: Logged out!" );
-            saveAction.setEnabled( false );
+//            saveAction.setEnabled( false );
             newWorkOrder.setEnabled( false );
             LogOutAction.setEnabled(false);  // disabled by default
             LoginAction.setEnabled(true);  // disabled by default

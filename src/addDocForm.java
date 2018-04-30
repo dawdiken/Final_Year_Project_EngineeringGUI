@@ -1,6 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -9,7 +6,6 @@ import java.util.ArrayList;
 
 public class addDocForm  extends JInternalFrame {
     private EngineeringDataAccess database;
-    //private NewJobEntry job;
 
     public addDocForm(){
         Loader l = new Loader();
@@ -22,9 +18,7 @@ public class addDocForm  extends JInternalFrame {
         final JComboBox<String> cb2 = new JComboBox<String>(choices);
         JLabel label1 = new JLabel("Document type:");
 
-        cb2.setMaximumSize(cb2.getPreferredSize()); // added code
-        //cb2.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
-        //cb.setVisible(true); // Not needed
+        cb2.setMaximumSize(cb2.getPreferredSize());
         JPanel myPanel = new JPanel();
         myPanel.add(label1);
         myPanel.add(cb2);
@@ -34,29 +28,12 @@ public class addDocForm  extends JInternalFrame {
         // detect problems with database connection
         catch ( Exception exception ) {
             exception.printStackTrace();
-            System.exit( 1 );
         }
-//        Loader l = new Loader();
-//        int choice = 1;
-//        SwingWorker work = l.createWorker(choice, null);
-//        work.execute();
-//        try{
-//            ArrayList<String> customerNames2;
-//
-//
-//            System.out.println("this is work "+ work.get().toString());
-//        }
-//        catch( Exception ee){
-//            System.out.println(ee);
-//
-//
-//        }
 
         ArrayList<String> customerNames = database.findCustomer();
         String[] result = {};
         String result2 = "";
         String[] result3 = {};
-        //System.out.println("where is the customers" + customerNames.get(2).getCustomerName().toString());
         for (int i = 0; i < customerNames.size() ; i++) {
             result = customerNames.toArray(new String[]{});
         }
@@ -69,33 +46,12 @@ public class addDocForm  extends JInternalFrame {
 
         String[] ary = result2.split(",");
 
-        System.out.println("result 2" + result2);
-        System.out.println("result " + result.toString());
-        System.out.printf("ary = "+ ary);
-
-        //String[] choices = {"SOP", "Technical Drawing"};
         JComboBox<String> cb3 = new JComboBox<String>(ary);
         JLabel label2 = new JLabel("Customer Name:");
 
         cb3.setMaximumSize(cb3.getPreferredSize()); // added code
-        //cb2.setAlignmentX(Component.CENTER_ALIGNMENT);// added code
-        //cb.setVisible(true); // Not needed
         myPanel.add(label2);
         myPanel.add(cb3);
-
-//        JTextField xField = new JTextField(10);
-//        xField.setText("Administrator");
-//        JPasswordField yField = new JPasswordField(10);
-//        //JPanel myPanel = new JPanel();
-//        myPanel.add(new JLabel("Doument Type:"));
-//        myPanel.add(xField);
-//        myPanel.add(xField);
-//
-//        myPanel.add(Box.createHorizontalStrut(10)); // a spacer
-//        myPanel.add(new JLabel("Password:"));
-//        myPanel.add(yField);
-        //final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\workIcon.png");
-
 
         JLabel label = new JLabel( "Drag and Drop:" );
         label.setBorder(
@@ -139,8 +95,6 @@ public class addDocForm  extends JInternalFrame {
             String cust_name = cb3.getSelectedItem().toString().trim();
             String document_type = cb2.getSelectedItem().toString().trim();
 
-            System.out.println("documetnt TYPE!!!!"+ document_type);
-
             //Quick easy way to get the file name and type from the file path
             File f = new File(field.getText().trim());
             String fileName = f.getName();
@@ -161,7 +115,7 @@ public class addDocForm  extends JInternalFrame {
                         getDim.dimensionVisionAPI(fileName, job);
                     }
                     catch (Exception ee){
-                        System.out.println("this did not work\n" + ee);
+                        ee.printStackTrace();
                     }
                     database.newDocument(job ,table);
                 }

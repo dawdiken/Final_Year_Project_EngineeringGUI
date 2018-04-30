@@ -1,37 +1,20 @@
-// Java core packages
 import java.sql.*;
 import java.util.ArrayList;
 
 public interface EngineeringDataAccess {
+    ArrayList<NewJobEntry>  findPerson(String userName , String password );
+    ArrayList<String> findCustomer();
+    ArrayList<String> findSop(String custName);
+    ArrayList<String> findTechDrawing(String custName);
+    ArrayList<String> findDepartment();
+    Integer findMaxJobId();
+    ResultSet findAllJobs();
+    void sqlGetTechDrawing(String name, int choice);
 
-    // Locate specified person by last name. Return
-    // AddressBookEntry containing information.
-    public ArrayList<NewJobEntry>  findPerson(String userName , String password );
-    public ArrayList<String> findCustomer();
-    public ArrayList<String> findSop(String custName);
-    public ArrayList<String> findTechDrawing(String custName);
-    public ArrayList<String> findDepartment();
-    public Integer findMaxJobId();
-    public ResultSet findAllJobs();
+    boolean newUser( NewJobEntry person ) throws DataAccessException;
+    boolean saveJob(NewJobEntry person ) throws DataAccessException;
 
-    public boolean newUser( NewJobEntry person ) throws DataAccessException;
-
-    // Update information for specified person.
-    // Return boolean indicating success or failure.
-    public boolean saveJob(NewJobEntry person ) throws DataAccessException;
-
-    public boolean newDocument(NewJobEntry job, int table )throws DataAccessException;
-//
-//    // Insert a new person. Return boolean indicating
-//    // success or failure.
-//    public boolean newPerson( AddressBookEntry person )
-//            throws DataAccessException;
-//
-//    // Delete specified person. Return boolean indicating if
-//    // success or failure.
-//    public boolean deletePerson(
-//            AddressBookEntry person ) throws DataAccessException;
-
+    boolean newDocument(NewJobEntry job, int table )throws DataAccessException;
     // close data source connection
-    public void close();
+    void close();
 }  // end interface EngineeringDataAccess
