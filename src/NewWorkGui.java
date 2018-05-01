@@ -409,7 +409,7 @@ public class NewWorkGui extends JPanel {
         private  JProgressBar jpb;
     }
 
-    private class Worker5 extends SwingWorker< String[], Integer> {
+    public class Worker5 extends SwingWorker< String[], Integer> {
         private Worker5(Integer choice,JProgressBar jpb) {
             this.choice = choice;
             this.jpb = jpb;

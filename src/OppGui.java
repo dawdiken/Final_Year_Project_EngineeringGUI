@@ -2,20 +2,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.BorderUIResource;
 import javax.swing.table.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -24,6 +16,10 @@ public class OppGui extends JFrame
     private EngineeringDataAccess database;
     JTextField c[] = new JTextField[10];
     JTable table = new JTable( );
+    private JButton viewTechDrawing, viewSop;
+    private Worker5 worker5;
+    int finalvalue = 0;
+    int scrapvalue = 0;
 
     public OppGui(String jobNum, String userName)
     {
@@ -139,7 +135,7 @@ public class OppGui extends JFrame
 
         JPanel tablePanel = new JPanel();
         JTable table = new JTable( populateTable(0, newJob) );
-        table.setPreferredScrollableViewportSize(new Dimension(1500,100));
+        table.setPreferredScrollableViewportSize(new Dimension(1500,200));
         table.setFillsViewportHeight(true);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -166,6 +162,9 @@ public class OppGui extends JFrame
                     }
                     if (count==cps.size()){
                         try {
+                            String inputValue = JOptionPane.showInputDialog("Enter Value Made");
+                            finalvalue = finalvalue + Integer.parseInt(inputValue);
+                            writeFinishedToDb(finalvalue,newJob.getJobNumber());
                             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                             FileWriter writer = new FileWriter("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+".txt",true);
                             int num = 1;
@@ -178,15 +177,14 @@ public class OppGui extends JFrame
                             }
                             writer.write(newJob.getUserName() + ","+ sdf.format(timestamp)+ "\n");
                             writer.close();
+                            populateTable(1,newJob);
                         }
                         catch (IOException ee){
                             ee.printStackTrace();
                             JOptionPane.showMessageDialog(frame,"Mesurments save failed","Alert",JOptionPane.WARNING_MESSAGE);
                         }
-                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
                     }
                 }
-                populateTable(1,newJob);
             }
         });
 
@@ -231,35 +229,39 @@ public class OppGui extends JFrame
         recordScrap.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int count =0;
-                for (int i = 0; i <cps.size() ; i++) {
-                    if (cps.get(i).getText().equals("")){
-                        System.out.println(cps.get(i).getText());
-                        JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
-                    }
-                    else{
-                        count ++;
-                        System.out.println(cps.get(i).getText());
-                        //cps.get(i).setText("");
-                    }
-                    if (count==cps.size()){
-                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
-                        try {
-                            FileWriter writer = new FileWriter("output.txt",true);
-                            int num = 1;
-                            for (JTextField str : cps) {
-                                System.out.println(str.getText());
+                String inputValue = JOptionPane.showInputDialog("Please input scrap quantity");
+                System.out.println(inputValue);
+                scrapvalue = scrapvalue + Integer.parseInt(inputValue);
+                String jobnum = newJob.getJobNumber();
+                writeScrapToDb(scrapvalue,jobnum);
+            }
+        });
+        JProgressBar jpb = new JProgressBar();
+        jpb.setBackground(Color.red);
+        JLabel progressLabel = new JLabel("Loading Bar: ");
+        progressLabel.setBorder(
+                BorderFactory.createEmptyBorder( 5, 5, 5, 5 ));
 
-                                writer.write("Dim " + num + ": "+  str.getText()+ ",\n");
-                                num++;
-                            }
-                            writer.close();
-                        }
-                        catch (IOException ee){
-                            ee.printStackTrace();
-                        }
-                    }
-                }
+        viewSop = new JButton("View document");
+        viewSop.setPreferredSize(new Dimension(150,20));
+        viewSop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(newJob.getPartSop()+"part sop");
+                worker5 = new Worker5(2,jpb, newJob);
+                worker5.execute();
+                //database.sqlGetTechDrawing(sopNames.getSelectedItem().toString(),2);
+            }
+        });
+
+        viewTechDrawing = new JButton("View Drawing");
+        viewTechDrawing.setPreferredSize(new Dimension(150,20));
+        viewTechDrawing.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                worker5 = new Worker5(1, jpb,newJob);
+                worker5.execute();
+                //database.sqlGetTechDrawing(partNames.getSelectedItem().toString(),1);
             }
         });
 
@@ -268,26 +270,23 @@ public class OppGui extends JFrame
         mainPanel.add(scrollPane1,"wrap");
         mainPanel.add(saveMeasurments,"split 3");
         mainPanel.add(recordScrap,"split 3, gap 35");
-        mainPanel.add(closeJob," split 3, gap 35");
+        mainPanel.add(closeJob," split 3, gap 35,wrap");
+        mainPanel.add(viewSop,"split 3");
+        mainPanel.add(viewTechDrawing,"split 3,gap 35,wrap");
+        mainPanel.add(progressLabel,"split 3");
+        mainPanel.add(jpb," split 3, gap 35");
 
         frame.add(mainPanel);
         frame.pack();
         frame.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 
-        frame.setSize(1550  , 800);
+        frame.setSize(1550  , 650);
         frame.setLayout(null);
         frame.setVisible(true);
     }
 
     private void createFileForDim(ArrayList<JTextField> cps, NewJobEntry newJob){
         try{
-//            File file2 = new File("C:\\EDHRHOME\\NewJob\\"+ newJob.getJobNumber());
-//            file2.mkdir();
-//            if (!file2.exists()) {
-//                if (file2.mkdir()) {
-//                    System.out.println("Directory is created!");
-//                }
-//            }
             File logFile = new File("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+".txt");
             if (!logFile.exists()) {
                 BufferedWriter writer = null;
@@ -312,11 +311,45 @@ public class OppGui extends JFrame
             //get the string from the database and format it for the gui removing andy characters i do not want to display
             String finalDimensions = thisconn.sqlFindDimensions(Integer.parseInt(newJob.getTechniaclDrawing())).replaceAll("Dim", "Dimension ").replaceAll("\"", "").replace("[","").replace("]","");
             splitdime = finalDimensions.split(",");
+            thisconn.close();
         }
         catch (Exception ee){
                 ee.printStackTrace();
             }
         return splitdime;
+    }
+
+    public void writeScrapToDb(int val, String jobNum) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false", "root", "test12");
+            Statement st = con.createStatement();
+            Integer rs = st.executeUpdate("UPDATE workon_copy SET qty_scrap ="+ val +" WHERE jobNum="+ jobNum);
+            con.close();
+            System.out.println(rs);
+            if (rs==1){
+                JOptionPane.showMessageDialog (null, "Scrap value saved", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        catch (Exception eee){
+            eee.printStackTrace();
+        }
+    }
+
+    public void writeFinishedToDb(int val, String jobNum) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false", "root", "test12");
+            Statement st = con.createStatement();
+            Integer rs = st.executeUpdate("UPDATE workon_copy SET qty_finished ="+ val +" WHERE jobNum="+ jobNum);
+            con.close();
+            System.out.println(rs);
+            if (rs==1){
+                JOptionPane.showMessageDialog (null, "Finished value saved", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        catch (Exception eee){
+            eee.printStackTrace();
+        }
+
     }
 
     public DefaultTableModel populateTable(int choice,NewJobEntry newJob){
@@ -335,8 +368,6 @@ public class OppGui extends JFrame
 
             // get lines from txt file
             Object[] tableLines = br.lines().toArray();
-
-
 
             // extratct data from lines
             // set data to jtable model
@@ -370,6 +401,69 @@ public class OppGui extends JFrame
 //        table.setDefaultRenderer(Integer.class, centerRenderer);
 //        JScrollPane scrollPane = new JScrollPane( table );
 //        tablePanel.add(scrollPane);
+    }
+
+    public class Worker5 extends SwingWorker< String[], Integer> {
+        private Worker5(Integer choice,JProgressBar jpb, NewJobEntry newJob) {
+            this.choice = choice;
+            this.jpb = jpb;
+            this.newJob = newJob;
+        }
+
+        @Override
+        public  String[] doInBackground() {
+            String[] result3 = {};
+            int i = 0;
+            process(i);
+            try {
+                i=5;
+                process(i);
+                try {
+                    database = new DataBaseAccess();
+                    i=20;
+                    process(i);
+                }
+                // detect problems with database connection
+                catch ( Exception exception ) {
+                    exception.printStackTrace();
+                }
+                try{
+                    i=30;
+                    process(i);
+                    if (choice == 2){
+                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getPartSop()),2);
+                    }
+                    else{
+                        i=40;
+                        process(i);
+                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getTechniaclDrawing()),1);
+                    }
+                }
+                catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+
+            }
+            catch (Exception ee) {
+                ee.printStackTrace();
+            }
+            i=100;
+            process(i);
+            return result3;
+        }
+        public void process(Integer chunks)
+        {
+            int val = chunks;
+            jpb.setValue(val);
+        }
+
+        @Override
+        public void done() {
+            Toolkit.getDefaultToolkit().beep();
+        }
+        private Integer choice;
+        private  JProgressBar jpb;
+        private NewJobEntry newJob;
     }
 
 

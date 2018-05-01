@@ -38,6 +38,9 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindDimensions;
     private PreparedStatement sqlReturnTechDrawing;
     private PreparedStatement sqlReturnSOP;
+    private PreparedStatement sqlReturnSOPByID;
+    private PreparedStatement sqlUpdateScrap;
+    private PreparedStatement sqlUpdateFinished,sqlReturnTechDrawingByID;
 
     // set up PreparedStatements to access database
     public DataBaseAccess() throws Exception
@@ -89,8 +92,13 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlfindJobsByDept = connection.prepareStatement("SELECT * FROM workon_copy WHERE department_ID = ?");
         sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM technical_drawing WHERE drawingID = ?");
         sqlReturnSOP = connection.prepareStatement("SELECT document_blob FROM sop_document WHERE sopName = ?");
+        sqlReturnSOPByID = connection.prepareStatement("SELECT document_blob FROM sop_document WHERE sopID = ?");
         sqlReturnTechDrawing = connection.prepareStatement("SELECT document_blob FROM technical_drawing WHERE drawingName = ?");
+        sqlReturnTechDrawingByID = connection.prepareStatement("SELECT document_blob FROM technical_drawing WHERE drawingID = ?");
         sqlPersonID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
+       // sqlUpdateScrap = connection.prepareStatement("UPDATE workon_copy SET qty_scrap = 2 WHERE jobNum = 95" );
+        sqlUpdateFinished = connection.prepareStatement("UPDATE workon_copy SET qty_finished = ? WHERE jobNum = ?" );
+
         sqlInsertName = connection.prepareStatement(
                 "INSERT INTO names ( firstName, lastName ) " +
                         "VALUES ( ? , ? )" );
@@ -102,6 +110,13 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlUpdateName = connection.prepareStatement(
                 "UPDATE names SET firstName = ?, lastName = ? " +
                         "WHERE personID = ?" );
+
+//        sqlUpdateScrap = connection.prepareStatement(
+//                "UPDATE workon_copy SET qty_scrap = 2" +
+//                        "WHERE jobID = 95" );
+
+                sqlUpdateScrap = connection.prepareStatement(
+                "UPDATE person SET first_name = 'John' WHERE person_id= 10" );
 
     }  // end DataBaseAccess constructor
 
@@ -623,13 +638,47 @@ public class DataBaseAccess implements EngineeringDataAccess {
             // if insert fails, rollback and discontinue
             if (!resultSet.next()) {
                 connection.rollback(); // rollback insert
-                System.out.println("result for job id here 3");
                 return null;          // insert unsuccessful
             }
-
             String dimesions = resultSet.getString(1);
-
             return dimesions;           // insert successful
+        }
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                System.out.println("result for job id 1111");
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return null;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
+                exception.printStackTrace();
+                return null;
+            }
+        }
+    }  // end method newUser
+
+    public Integer updateWorkQty(int qty, int choice, String jobNumber)
+    {
+        // insert person in database
+        try {
+//            sqlFindDimensions.setInt( 1, id );
+            Integer resultSet = sqlUpdateScrap.executeUpdate();
+            connection.close();
+            //connect();
+
+
+            // if insert fails, rollback and discontinue
+//            if (!resultSet.next()) {
+//                connection.rollback(); // rollback insert
+//                return null;          // insert unsuccessful
+//            }
+            //String dimesions = resultSet.getString(1);
+            return 0;           // insert successful
         }
 
         // detect problems updating database
@@ -675,6 +724,53 @@ public class DataBaseAccess implements EngineeringDataAccess {
             else{
                 sqlReturnSOP.setString(1, name);
                 ResultSet resultSet = sqlReturnSOP.executeQuery();
+                int i = 0;
+                while (resultSet.next()) {
+                    InputStream in = resultSet.getBinaryStream(1);
+                    pathto = "C:\\EDHRHOME\\documents\\" + name;
+                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    i++;
+                    int c = 0;
+                    while ((c = in.read()) > -1) {
+                        f.write(c);
+                    }
+                    f.close();
+                    in.close();
+                }
+            }
+        }
+        catch (Exception ee){
+            ee.printStackTrace();
+        }
+        ViewFileDropped vf = new ViewFileDropped();
+        vf.viewFileDropped(pathto);
+
+    }
+
+    public void sqlGetTechDrawingByID(int name, int choice) {
+        String pathto="";
+        try {
+            if (choice == 1) {
+                sqlReturnTechDrawingByID.setInt(1, name);
+                ResultSet resultSet = sqlReturnTechDrawingByID.executeQuery();
+
+                int i = 0;
+                while (resultSet.next()) {
+                    InputStream in = resultSet.getBinaryStream(1);
+                    pathto = "C:\\EDHRHOME\\documents\\" + name;
+                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    i++;
+                    int c = 0;
+                    while ((c = in.read()) > -1) {
+                        f.write(c);
+                    }
+                    f.close();
+                    in.close();
+                }
+            }
+            else{
+                sqlReturnSOPByID.setInt(1, name);
+                ResultSet resultSet = sqlReturnSOPByID.executeQuery();
                 int i = 0;
                 while (resultSet.next()) {
                     InputStream in = resultSet.getBinaryStream(1);

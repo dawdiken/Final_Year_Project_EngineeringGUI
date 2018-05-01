@@ -12,6 +12,9 @@ public interface EngineeringDataAccess {
     ArrayList<NewJobEntry> findJobsByNumber(String jobNumber);
     ArrayList<String> findJobsByDept(String department);
     void sqlGetTechDrawing(String name, int choice);
+    void sqlGetTechDrawingByID(int name, int choice);
+    Integer updateWorkQty( int qty, int choice, String jobNumber );
+    //boolean updatefinished( String qty );
 
     boolean newUser( NewJobEntry person ) throws DataAccessException;
     boolean saveJob(NewJobEntry person ) throws DataAccessException;
