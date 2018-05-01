@@ -12,7 +12,7 @@ public interface EngineeringDataAccess {
     ArrayList<NewJobEntry> findJobsByNumber(String jobNumber);
     ArrayList<String> findJobsByDept(String department);
     void sqlGetTechDrawing(String name, int choice);
-    void sqlGetTechDrawingByID(int name, int choice);
+    void sqlGetTechDrawingByID(int name, int choice,NewJobEntry newJob);
     Integer updateWorkQty( int qty, int choice, String jobNumber );
     //boolean updatefinished( String qty );
 

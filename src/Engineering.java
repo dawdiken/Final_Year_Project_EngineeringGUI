@@ -218,40 +218,6 @@ public class Engineering extends JFrame {
             String password = yField.getText().toString();
             HandleLogIn(userName,password);
 
-//            ArrayList<NewJobEntry> person = database.findPerson( userName,
-//                    password );
-//            if ( person != null ) {
-//                JOptionPane.showMessageDialog( desktop,
-//                        "Log in succesfull.  Hello " + userName);
-//
-//                if (person.get(0).getRole().equals("ENGINEERING")){
-//                    LoginAction.setEnabled(false);
-//                    newWorkOrder.setEnabled(true);
-//                    LogOutAction.setEnabled(true);
-//                    newDocumentAction.setEnabled(true);
-//                    viewAllJobsInDB.setEnabled(true);
-//                    storeFinishedJobsInBucket.setEnabled(true);
-//                    AddUserAction.setEnabled(true);
-//                }
-//                else {
-//                    LoginAction.setEnabled(false);
-//                    LogOutAction.setEnabled(true);
-//                    System.out.println("in here ");
-//                    ArrayList<String> jobList = database.findJobsByDept(person.get(0).getRole());
-//
-//                    SwingUtilities.invokeLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            OpperatorGui asd = new OpperatorGui();
-//                        }
-//                    });
-//                }
-//            }
-//            else
-//                JOptionPane.showMessageDialog( desktop,
-//                        "User:\n" + userName +
-//                                "\" not found!" );
-
             }  // end method actionPerformed
 
     }

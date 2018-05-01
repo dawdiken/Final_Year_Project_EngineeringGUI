@@ -166,7 +166,7 @@ public class OppGui extends JFrame
                             finalvalue = finalvalue + Integer.parseInt(inputValue);
                             writeFinishedToDb(finalvalue,newJob.getJobNumber());
                             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                            FileWriter writer = new FileWriter("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+".txt",true);
+                            FileWriter writer = new FileWriter("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\"+newJob.getJobNumber()+".txt",true);
                             int num = 1;
                             for (JTextField str : cps) {
                                 System.out.println(str.getText());
@@ -193,34 +193,9 @@ public class OppGui extends JFrame
         closeJob.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int count =0;
-                for (int i = 0; i <cps.size() ; i++) {
-                    System.out.println("in here action");
-                    if (cps.get(i).getText().equals("")){
-                        System.out.println(cps.get(i).getText());
-                        JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
-                    }
-                    else{
-                        count ++;
-                    }
-                    if (count==cps.size()){
-                        JOptionPane.showMessageDialog(frame,"Mesurments saved succesfully","Success",JOptionPane.PLAIN_MESSAGE);
-                        try {
-                            FileWriter writer = new FileWriter("output.txt",true);
-                            int num = 1;
-                            for (JTextField str : cps) {
-                                System.out.println(str.getText());
-
-                                writer.write("Dim " + num + ": "+  str.getText()+ ",\n");
-                                num++;
-                            }
-                            writer.close();
-                        }
-                        catch (IOException ee){
-                            ee.printStackTrace();
-                        }
-                    }
-                }
+                closeJob(newJob);
+                JOptionPane.showMessageDialog (null, "All information save to the cloud", "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
             }
         });
 
@@ -250,7 +225,6 @@ public class OppGui extends JFrame
                 System.out.println(newJob.getPartSop()+"part sop");
                 worker5 = new Worker5(2,jpb, newJob);
                 worker5.execute();
-                //database.sqlGetTechDrawing(sopNames.getSelectedItem().toString(),2);
             }
         });
 
@@ -261,7 +235,6 @@ public class OppGui extends JFrame
             public void actionPerformed(ActionEvent e) {
                 worker5 = new Worker5(1, jpb,newJob);
                 worker5.execute();
-                //database.sqlGetTechDrawing(partNames.getSelectedItem().toString(),1);
             }
         });
 
@@ -287,8 +260,12 @@ public class OppGui extends JFrame
 
     private void createFileForDim(ArrayList<JTextField> cps, NewJobEntry newJob){
         try{
-            File logFile = new File("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+".txt");
-            if (!logFile.exists()) {
+            File logFile = new File("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\"+ newJob.getJobNumber()+".txt");
+            File logFile2 = new File("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber());
+            if (!logFile2.exists()) {
+                if (logFile2.mkdir()) {
+                    System.out.println("Directory is created!");
+                }
                 BufferedWriter writer = null;
                 writer = new BufferedWriter(new FileWriter(logFile));
                 for (int i = 0; i < cps.size(); i++) {
@@ -339,7 +316,7 @@ public class OppGui extends JFrame
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false", "root", "test12");
             Statement st = con.createStatement();
-            Integer rs = st.executeUpdate("UPDATE workon_copy SET qty_finished ="+ val +" WHERE jobNum="+ jobNum);
+            Integer rs = st.executeUpdate("UPDATE workon_copy SET qty_finished ="+ val +", active='true' WHERE jobNum="+ jobNum);
             con.close();
             System.out.println(rs);
             if (rs==1){
@@ -352,8 +329,28 @@ public class OppGui extends JFrame
 
     }
 
+    private Integer closeJob(NewJobEntry newJob){
+        String filePath = "C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\"+newJob.getJobNumber()+".txt";
+        try{
+            InputStream inputStream = new FileInputStream(new File(filePath));
+            Connection con = DriverManager.getConnection("jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false", "root", "test12");
+
+            String sql = "UPDATE `workon_copy` SET `active`= ?, `job_doc`= ? WHERE jobNum ='"+newJob.getJobNumber()+"'";
+            PreparedStatement prest = con.prepareStatement(sql);
+            prest.setString(1, "false");
+            prest.setBlob(2, inputStream);
+            prest.executeUpdate();
+            con.close();
+        }
+        catch (Exception ee){
+            ee.printStackTrace();
+        }
+
+        return 0;
+    }
+
     public DefaultTableModel populateTable(int choice,NewJobEntry newJob){
-        String filePath = "C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+".txt";
+        String filePath = "C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\"+newJob.getJobNumber()+".txt";
         File file = new File(filePath);
         DefaultTableModel model = (DefaultTableModel)table.getModel();
         try {
@@ -384,23 +381,10 @@ public class OppGui extends JFrame
                     model.addRow(dataRow);
                 }
             }
-
-
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
-
         return model;
-//        JPanel tablePanel = new JPanel();
-//        JTable table = new JTable(  );
-//        table.setPreferredScrollableViewportSize(new Dimension(1500,100));
-//        table.setFillsViewportHeight(true);
-//        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-//        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-//        table.setDefaultRenderer(String.class, centerRenderer);
-//        table.setDefaultRenderer(Integer.class, centerRenderer);
-//        JScrollPane scrollPane = new JScrollPane( table );
-//        tablePanel.add(scrollPane);
     }
 
     public class Worker5 extends SwingWorker< String[], Integer> {
@@ -431,12 +415,12 @@ public class OppGui extends JFrame
                     i=30;
                     process(i);
                     if (choice == 2){
-                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getPartSop()),2);
+                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getPartSop()),2,newJob);
                     }
                     else{
                         i=40;
                         process(i);
-                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getTechniaclDrawing()),1);
+                        database.sqlGetTechDrawingByID(Integer.parseInt(newJob.getTechniaclDrawing()),1,newJob);
                     }
                 }
                 catch (Exception ee) {
@@ -468,6 +452,6 @@ public class OppGui extends JFrame
 
 
     public static void main(String[] args) {
-        OppGui asd = new OppGui("95", "David");
+        OppGui asd = new OppGui("96", "David");
     }
 }

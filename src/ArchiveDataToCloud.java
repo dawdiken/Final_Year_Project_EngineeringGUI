@@ -94,7 +94,7 @@ public class ArchiveDataToCloud extends JPanel
     }
 
     private void SendToCloud() {
-        JFileChooser jfc = new JFileChooser("C:\\EDHRHOME\\FinishedWorksOrders");
+        JFileChooser jfc = new JFileChooser("C:\\EDHRHOME");
         jfc.setDialogTitle("Choose Works Order to Archive: ");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
@@ -105,7 +105,7 @@ public class ArchiveDataToCloud extends JPanel
                 String saveAs = jfc.getSelectedFile().getName();
                 System.out.println("pathtofolder2" + saveAs);
                 //check that you are only trying to zip and push finished works orders to the cloud
-                if (pathToFolder.contains("C:\\EDHRHOME\\FinishedWorksOrders\\")){
+                if (pathToFolder.contains("C:\\EDHRHOME")){
                     worker = new Worker(pathToFolder,saveAs);
                     worker.addPropertyChangeListener(this);
                     worker.execute();

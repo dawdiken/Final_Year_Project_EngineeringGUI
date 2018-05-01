@@ -747,8 +747,9 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     }
 
-    public void sqlGetTechDrawingByID(int name, int choice) {
+    public void sqlGetTechDrawingByID(int name, int choice, NewJobEntry newJob) {
         String pathto="";
+        String filePath = "C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\documents";
         try {
             if (choice == 1) {
                 sqlReturnTechDrawingByID.setInt(1, name);
@@ -757,8 +758,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 int i = 0;
                 while (resultSet.next()) {
                     InputStream in = resultSet.getBinaryStream(1);
-                    pathto = "C:\\EDHRHOME\\documents\\" + name;
-                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    pathto = filePath + name;
+                    OutputStream f = new FileOutputStream(new File(filePath + name));
                     i++;
                     int c = 0;
                     while ((c = in.read()) > -1) {
@@ -774,8 +775,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 int i = 0;
                 while (resultSet.next()) {
                     InputStream in = resultSet.getBinaryStream(1);
-                    pathto = "C:\\EDHRHOME\\documents\\" + name;
-                    OutputStream f = new FileOutputStream(new File("C:\\EDHRHOME\\documents\\" + name));
+                    pathto = filePath + name;
+                    OutputStream f = new FileOutputStream(new File(filePath + name));
                     i++;
                     int c = 0;
                     while ((c = in.read()) > -1) {
