@@ -17,6 +17,8 @@ public class NewJobEntry {
     private String partSop = "";
     private String userName = "";
     private String Password = "";
+    private String Role = "";
+    private String qtyOrdered = "";
 
     // empty constructor
     public NewJobEntry()
@@ -186,4 +188,15 @@ public class NewJobEntry {
         this.dimension = dimension;
     }
 
+    public String getRole() {
+        return Role;
+    }
+
+    public void setRole(String role) {
+        Role = role;
+    }
+
+    public String getQtyOrdered() { return qtyOrdered; }
+
+    public void setQtyOrdered(String qtyOrdered) { this.qtyOrdered = qtyOrdered; }
 }  // end class NewJobEntry

@@ -6,28 +6,11 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     // reference to database connection
     private Connection connection;
-
-    // reference to prepared statement for locating entry
     private PreparedStatement sqlFind;
-
-    // reference to prepared statement for determining personID
     private PreparedStatement sqlPersonID;
-
-    // references to prepared statements for inserting entry
     private PreparedStatement sqlInsertName;
-    private PreparedStatement sqlInsertAddress;
-    private PreparedStatement sqlInsertPhone;
-    private PreparedStatement sqlInsertEmail;
-
     private PreparedStatement sqlInsertUser;
-
-    // references to prepared statements for updating entry
     private PreparedStatement sqlUpdateName;
-    private PreparedStatement sqlUpdateAddress;
-    private PreparedStatement sqlUpdatePhone;
-    private PreparedStatement sqlUpdateEmail;
-
-    // references to prepared statements for updating entry
     private PreparedStatement sqlDeleteName;
     private PreparedStatement sqlDeleteAddress;
     private PreparedStatement sqlDeletePhone;
@@ -49,17 +32,16 @@ public class DataBaseAccess implements EngineeringDataAccess {
     private PreparedStatement sqlFindCustomerID;
     private PreparedStatement sqlFindMaxJobID;
     private PreparedStatement sqlFindAllJobs;
+    private PreparedStatement sqlFindJobsByNumber;
+    private PreparedStatement sqlfindJobsByDept;
     private PreparedStatement sqlInsertDimensions;
     private PreparedStatement sqlFindDimensions;
-
     private PreparedStatement sqlReturnTechDrawing;
     private PreparedStatement sqlReturnSOP;
-
 
     // set up PreparedStatements to access database
     public DataBaseAccess() throws Exception
     {
-        // connect to addressbook database
         connect();
 
         // Insert userName and password in table user of Engineering Database.
@@ -89,12 +71,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 "INSERT INTO DIMENSIONS ( dimension_json ) " +
                         "VALUES (? )" );
 
-        // locate person
-//        sqlFind = connection.prepareStatement(
-//            "SELECT Password" +
-//                    "FROM users" +
-//                    "WHERE Password = ?");
-        sqlSingleFindPersonID = connection.prepareStatement("SELECT userName, pass FROM users WHERE userName = ? AND pass = ?");
+
+        sqlSingleFindPersonID = connection.prepareStatement("SELECT * FROM users WHERE userName = ? AND pass = ?");
         sqlFindPersonID = connection.prepareStatement("SELECT personID FROM users WHERE pass LIKE ?");
         sqlFindName = connection.prepareStatement("SELECT userName, pass FROM users WHERE pass = ?");
         sqlFindCustomer = connection.prepareStatement("SELECT cust_name, customer_ID FROM customer");
@@ -107,18 +85,12 @@ public class DataBaseAccess implements EngineeringDataAccess {
         sqlFindDepartmentByName = connection.prepareStatement("SELECT department_id FROM department WHERE department_name = ?");
         sqlFindMaxJobID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
         sqlFindAllJobs = connection.prepareStatement("SELECT * FROM workon_copy");
+        sqlFindJobsByNumber = connection.prepareStatement("SELECT * FROM workon_copy WHERE jobNum = ?");
+        sqlfindJobsByDept = connection.prepareStatement("SELECT * FROM workon_copy WHERE department_ID = ?");
         sqlFindDimensions = connection.prepareStatement("SELECT dimension_json FROM technical_drawing WHERE drawingID = ?");
-
         sqlReturnSOP = connection.prepareStatement("SELECT document_blob FROM sop_document WHERE sopName = ?");
-
         sqlReturnTechDrawing = connection.prepareStatement("SELECT document_blob FROM technical_drawing WHERE drawingName = ?");
-
         sqlPersonID = connection.prepareStatement("SELECT MAX(jobID) FROM workon_copy");
-
-        // Insert first and last names in table names.
-        // For referential integrity, this must be performed
-        // before sqlInsertAddress, sqlInsertPhone and
-        // sqlInsertEmail.
         sqlInsertName = connection.prepareStatement(
                 "INSERT INTO names ( firstName, lastName ) " +
                         "VALUES ( ? , ? )" );
@@ -127,83 +99,25 @@ public class DataBaseAccess implements EngineeringDataAccess {
                 "INSERT INTO users ( userName, pass ) " +
                         "VALUES ( ? , ? )" );
 
-        // insert address in table addresses
-        sqlInsertAddress = connection.prepareStatement(
-                "INSERT INTO addresses ( personID, address1, " +
-                        "address2, city, state, zipcode ) " +
-                        "VALUES ( ? , ? , ? , ? , ? , ? )" );
-
-        // insert phone number in table phoneNumbers
-        sqlInsertPhone = connection.prepareStatement(
-                "INSERT INTO phoneNumbers " +
-                        "( personID, phoneNumber) " +
-                        "VALUES ( ? , ? )" );
-
-        // insert email in table emailAddresses
-        sqlInsertEmail = connection.prepareStatement(
-                "INSERT INTO emailAddresses " +
-                        "( personID, emailAddress ) " +
-                        "VALUES ( ? , ? )" );
-
-        // update first and last names in table names
         sqlUpdateName = connection.prepareStatement(
                 "UPDATE names SET firstName = ?, lastName = ? " +
                         "WHERE personID = ?" );
 
-        // update address in table addresses
-        sqlUpdateAddress = connection.prepareStatement(
-                "UPDATE addresses SET address1 = ?, address2 = ?, " +
-                        "city = ?, state = ?, zipcode = ? " +
-                        "WHERE addressID = ?" );
-
-        // update phone number in table phoneNumbers
-        sqlUpdatePhone = connection.prepareStatement(
-                "UPDATE phoneNumbers SET phoneNumber = ? " +
-                        "WHERE phoneID = ?" );
-
-        // update email in table emailAddresses
-        sqlUpdateEmail = connection.prepareStatement(
-                "UPDATE emailAddresses SET emailAddress = ? " +
-                        "WHERE emailID = ?" );
-
-        // Delete row from table names. This must be executed
-        // after sqlDeleteAddress, sqlDeletePhone and
-        // sqlDeleteEmail, because of referential integrity.
-        sqlDeleteName = connection.prepareStatement(
-                "DELETE FROM names WHERE personID = ?" );
-
-        // delete address from table addresses
-        sqlDeleteAddress = connection.prepareStatement(
-                "DELETE FROM addresses WHERE personID = ?" );
-
-        // delete phone number from table phoneNumbers
-        sqlDeletePhone = connection.prepareStatement(
-                "DELETE FROM phoneNumbers WHERE personID = ?" );
-
-        // delete email address from table emailAddresses
-        sqlDeleteEmail = connection.prepareStatement(
-                "DELETE FROM emailAddresses WHERE personID = ?" );
     }  // end DataBaseAccess constructor
 
-    // Obtain a connection to addressbook database. Method may
-    // may throw ClassNotFoundException or SQLException. If so,
-    // exception is passed via this class's constructor back to
-    // the AddressBook application so the application can display
-    // an error message and terminate.
+
     private void connect() throws Exception
     {
         // Cloudscape database driver class name
         String driver = "com.mysql.jdbc.Driver";
 
         // URL to connect to books database
-//        String url = "jdbc:mysql://localhost:3306/addressbook?autoReconnect=true&useSSL=false";
         String url = "jdbc:mysql://35.184.175.243:3306/engineering?autoReconnect=true&useSSL=false";
 
         // load database driver class
         Class.forName( driver );
 
         // connect to database
-//        connection = DriverManager.getConnection( url, "root", "root" );
         connection = DriverManager.getConnection( url, "root", "test12" );
 
         // Require manual commit for transactions. This enables
@@ -221,10 +135,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
         // insert person in database
         try {
             int result;
-
-            // insert first and last name in names table
-//            sqlInsertUser.setString( 1, person.getFirstName() );
-//            sqlInsertUser.setString( 2, person.getLastName() );
             result = sqlInsertUser.executeUpdate();
 
             // if insert fails, rollback and discontinue
@@ -294,7 +204,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
     public ResultSet findAllJobs()
     {
-        // insert person in database
         try {
             ResultSet resultSet = sqlFindAllJobs.executeQuery();
 
@@ -317,7 +226,86 @@ public class DataBaseAccess implements EngineeringDataAccess {
 
             // handle exception rolling back transaction
             catch ( SQLException exception ) {
-                System.out.println("result for job ");
+                exception.printStackTrace();
+                return null;
+            }
+        }
+    }  // end method newUser
+
+    public  ArrayList<NewJobEntry> findJobsByNumber(String jobNumber)
+    {
+        try {
+            System.out.println(jobNumber+"jobnumber hereree");
+            sqlFindJobsByNumber.setString(1,jobNumber.trim());
+            ResultSet resultSet = sqlFindJobsByNumber.executeQuery();
+
+            // if insert fails, rollback and discontinue
+            if (!resultSet.next()) {
+                connection.rollback(); // rollback insert
+                return null;          // insert unsuccessful
+            }
+            ArrayList<NewJobEntry> arraylist = new ArrayList<>();
+            NewJobEntry jobInfo = new NewJobEntry();
+            jobInfo.setJobNumber(resultSet.getString("jobNum"));
+            jobInfo.setCustomerName(resultSet.getString("customer_ID"));
+            jobInfo.setPartName(resultSet.getString("partID"));
+            jobInfo.setQtyOrdered(resultSet.getString("qty_ordered"));
+            jobInfo.setQtyMade(resultSet.getInt("qty_finished"));
+            jobInfo.setQtyScrap(resultSet.getInt("qty_scrap"));
+            jobInfo.setPartSop(resultSet.getString("sop_ID"));
+            jobInfo.setTechniaclDrawing(resultSet.getString("drawing_ID"));
+            arraylist.add(jobInfo);
+            return arraylist;           // insert successful
+        }
+        // detect problems updating database
+        catch ( Exception ee ) {
+            ee.printStackTrace();
+            return null;
+        }
+    }  // end method newUser
+
+    public ArrayList<String> findJobsByDept(String department)
+    {
+        // insert person in database
+        try {
+            sqlFindDepartmentByName.setString(1,department);
+            ResultSet resultSet4 = sqlFindDepartmentByName.executeQuery();
+
+            // if no customer matching the ID is found, return immediately
+            Integer dept_ID = 0;
+            while(resultSet4.next()) {
+                dept_ID = resultSet4.getInt("department_id");
+                System.out.println(dept_ID);
+            }
+
+            sqlfindJobsByDept.setInt(1, dept_ID);
+            ResultSet resultSet = sqlfindJobsByDept.executeQuery();
+
+            ArrayList<String> jobList = new ArrayList<>();
+            String names;
+            int i = 0;
+            while(resultSet.next()){
+                names =resultSet.getString("jobNum");
+                jobList.add(names);
+                System.out.println(names+ "names in db");
+                System.out.println(jobList.get(i));
+                i++;
+            }
+            // if insert fails, rollback and discontinue
+            return jobList;           // insert successful
+        }
+
+        // detect problems updating database
+        catch ( SQLException sqlException ) {
+            // rollback transaction
+            try {
+                sqlException.printStackTrace();
+                connection.rollback(); // rollback update
+                return null;          // update unsuccessful
+            }
+
+            // handle exception rolling back transaction
+            catch ( SQLException exception ) {
                 exception.printStackTrace();
                 return null;
             }
@@ -338,9 +326,10 @@ public class DataBaseAccess implements EngineeringDataAccess {
             }
 
             ArrayList<NewJobEntry> arraylist = new ArrayList<>();
-                NewJobEntry person = new NewJobEntry();
-                person.setUserName(resultSet.getString("userName"));
-                arraylist.add(person);
+            NewJobEntry person = new NewJobEntry();
+            person.setUserName(resultSet.getString("userName"));
+            person.setRole(resultSet.getString("role"));
+            arraylist.add(person);
             return arraylist;
         }
 
@@ -799,17 +788,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
         try {
             sqlPersonID.close();
             sqlInsertName.close();
-            sqlInsertAddress.close();
-            sqlInsertPhone.close();
-            sqlInsertEmail.close();
             sqlUpdateName.close();
-            sqlUpdateAddress.close();
-            sqlUpdatePhone.close();
-            sqlUpdateEmail.close();
-            sqlDeleteName.close();
-            sqlDeleteAddress.close();
-            sqlDeletePhone.close();
-            sqlDeleteEmail.close();
             sqlInsertJob.close();
             connection.close();
             sqlInsertUser.close();

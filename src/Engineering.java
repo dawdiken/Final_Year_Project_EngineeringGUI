@@ -4,6 +4,7 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 // Java extension packages
@@ -45,8 +46,6 @@ public class Engineering extends JFrame {
         JMenu fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
-//        saveAction = new SaveAction();
-//        saveAction.setEnabled( false );    // disabled by default
         LoginAction = new LoginAction();
         LoginAction.setEnabled( true );  // disabled by default
         LogOutAction = new LogOutAction();
@@ -65,8 +64,6 @@ public class Engineering extends JFrame {
         // add actions to tool bar
         toolBar.add( newWorkOrder );
         toolBar.add( new JToolBar.Separator() );
-//        toolBar.add( saveAction );
-//        toolBar.add( new JToolBar.Separator() );
         toolBar.add( newDocumentAction);
         toolBar.add( new JToolBar.Separator() );
         toolBar.add( LoginAction );
@@ -138,23 +135,6 @@ public class Engineering extends JFrame {
     private addDocForm createAddDocFrame() {
         addDocForm frame = new addDocForm();
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        frame.addInternalFrameListener(
-                new InternalFrameAdapter() {
-                    // internal frame becomes active frame on desktop
-                    public void internalFrameActivated(
-                            InternalFrameEvent event )
-                    {
-//                        saveAction.setEnabled( true );
-                    }
-
-                    // internal frame becomes inactive frame on desktop
-                    public void internalFrameDeactivated(
-                            InternalFrameEvent event )
-                    {
-//                        saveAction.setEnabled( false );
-                    }
-                }  // end InternalFrameAdapter anonymous inner class
-        ); // end call to addInternalFrameListener
         return frame;
     }  // end method createAddDocFrame
 
@@ -178,52 +158,7 @@ public class Engineering extends JFrame {
 
     }
 
-//     inner class defines an action that can save new or
-//     updated entry
-//    private class SaveAction extends AbstractAction {
-//
-//        // set up action's name, icon, descriptions and mnemonic
-//        public SaveAction()
-//        {
-//            putValue( NAME, "Save" );
-//            putValue( SHORT_DESCRIPTION, "Save" );
-//            putValue( LONG_DESCRIPTION,
-//                    "Save new user" );
-//            putValue( MNEMONIC_KEY, new Integer( 'S' ) );
-//        }
-//
-//        // save new entry or update existing entry
-//        public void actionPerformed( ActionEvent e )
-//        {
-//            // get currently active window
-//            NewJobFrame currentFrame =
-//                    ( NewJobFrame ) desktop.getSelectedFrame();
-//
-//            NewJobEntry newWorksOrder =
-//                    currentFrame.getAddressBookEntry();
-//            //boolean success;
-//            try {
-//                boolean success = database.saveJob(newWorksOrder);
-//                if(success){
-//                    JOptionPane.showMessageDialog( desktop, "Success!\nNew works order saved to the database",
-//                            "Save successful", JOptionPane.PLAIN_MESSAGE );
-//                }
-//            }
-//            // detect problems saving job
-//            catch ( DataAccessException exception ) {
-//                JOptionPane.showMessageDialog( desktop, exception,
-//                        "Save failed", JOptionPane.ERROR_MESSAGE );
-//                exception.printStackTrace();
-//            }
-//                // close current window and dispose of resources
-//                currentFrame.dispose();
-//        }  // end method actionPerformed
-//    }  // end inner class SaveAction
 
-
-    // Private inner class defines action that enables
-    // user to input new entry. User must "Save" entry
-    // after inputting data.
     private class newDocumentAction extends AbstractAction {
 
         // set up action's name, icon, descriptions and mnemonic
@@ -281,29 +216,100 @@ public class Engineering extends JFrame {
                     "Please Log In", JOptionPane.OK_CANCEL_OPTION);
             String userName = xField.getText().toString();
             String password = yField.getText().toString();
+            HandleLogIn(userName,password);
 
-            ArrayList<NewJobEntry> person = database.findPerson( userName,
-                    password );
-            if ( person != null ) {
-                JOptionPane.showMessageDialog( desktop,
-                        "Log in succesfull.  Hello " + userName);
-                LoginAction.setEnabled(false);  // disabled by default
+//            ArrayList<NewJobEntry> person = database.findPerson( userName,
+//                    password );
+//            if ( person != null ) {
+//                JOptionPane.showMessageDialog( desktop,
+//                        "Log in succesfull.  Hello " + userName);
+//
+//                if (person.get(0).getRole().equals("ENGINEERING")){
+//                    LoginAction.setEnabled(false);
+//                    newWorkOrder.setEnabled(true);
+//                    LogOutAction.setEnabled(true);
+//                    newDocumentAction.setEnabled(true);
+//                    viewAllJobsInDB.setEnabled(true);
+//                    storeFinishedJobsInBucket.setEnabled(true);
+//                    AddUserAction.setEnabled(true);
+//                }
+//                else {
+//                    LoginAction.setEnabled(false);
+//                    LogOutAction.setEnabled(true);
+//                    System.out.println("in here ");
+//                    ArrayList<String> jobList = database.findJobsByDept(person.get(0).getRole());
+//
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            OpperatorGui asd = new OpperatorGui();
+//                        }
+//                    });
+//                }
+//            }
+//            else
+//                JOptionPane.showMessageDialog( desktop,
+//                        "User:\n" + userName +
+//                                "\" not found!" );
+
+            }  // end method actionPerformed
+
+    }
+
+    private void HandleLogIn(String userName, String password){
+
+        ArrayList<NewJobEntry> person = database.findPerson( userName,
+                password );
+        if ( person != null ) {
+            JOptionPane.showMessageDialog( desktop,
+                    "Log in succesfull.  Hello " + userName);
+
+            if (person.get(0).getRole().equals("ENGINEERING")){
+                LoginAction.setEnabled(false);
                 newWorkOrder.setEnabled(true);
-//                saveAction.setEnabled( true );
                 LogOutAction.setEnabled(true);
                 newDocumentAction.setEnabled(true);
                 viewAllJobsInDB.setEnabled(true);
                 storeFinishedJobsInBucket.setEnabled(true);
                 AddUserAction.setEnabled(true);
-
             }
-            else
-                JOptionPane.showMessageDialog( desktop,
-                        "User:\n" + userName +
-                                "\" not found!" );
+            else {
+                LoginAction.setEnabled(false);
+                LogOutAction.setEnabled(true);
+                System.out.println("in here ");
+                ArrayList<String> jobList = database.findJobsByDept(person.get(0).getRole());
 
-            }  // end method actionPerformed
 
+                //ArrayList<String> customerNames = database.findCustomer();
+                String[] result = {};
+                for (int i = 0; i < jobList.size() ; i++) {
+                    result = jobList.toArray(new String[]{});
+                }
+                final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
+                JFrame frame1 = new JFrame("Pick Customer");
+                String jobNumber = (String) JOptionPane.showInputDialog(frame1,
+                        "Please select a job?",
+                        "Work Order",
+                        JOptionPane.QUESTION_MESSAGE,
+                        icon,
+                        result,
+                        result[0]);
+
+
+
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+//                        OpperatorGui asd = new OpperatorGui(jobNumber,userName);
+                    }
+                });
+            }
+        }
+        else
+            JOptionPane.showMessageDialog( desktop,
+                    "User:\n" + userName +
+                            "\" not found!" );
     }
 
 
