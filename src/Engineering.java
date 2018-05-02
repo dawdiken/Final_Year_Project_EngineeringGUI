@@ -242,34 +242,35 @@ public class Engineering extends JFrame {
             else {
                 LoginAction.setEnabled(false);
                 LogOutAction.setEnabled(true);
-                System.out.println("in here ");
-                ArrayList<String> jobList = database.findJobsByDept(person.get(0).getRole());
-
-
-                //ArrayList<String> customerNames = database.findCustomer();
-                String[] result = {};
-                for (int i = 0; i < jobList.size() ; i++) {
-                    result = jobList.toArray(new String[]{});
-                }
-                final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
-                JFrame frame1 = new JFrame("Pick Customer");
-                String jobNumber = (String) JOptionPane.showInputDialog(frame1,
-                        "Please select a job?",
-                        "Work Order",
-                        JOptionPane.QUESTION_MESSAGE,
-                        icon,
-                        result,
-                        result[0]);
-
-
-
-
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-//                        OpperatorGui asd = new OpperatorGui(jobNumber,userName);
+                try{
+                    DataBaseAccess newconn = new DataBaseAccess();
+                    ArrayList<String> jobList = newconn.findJobsByDept(person.get(0).getRole());
+                    //ArrayList<String> customerNames = database.findCustomer();
+                    String[] result = {};
+                    for (int i = 0; i < jobList.size() ; i++) {
+                        result = jobList.toArray(new String[]{});
                     }
-                });
+                    final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
+                    JFrame frame1 = new JFrame("Pick Customer");
+                    String jobNumber = (String) JOptionPane.showInputDialog(frame1,
+                            "Please select a job?",
+                            "Work Order",
+                            JOptionPane.QUESTION_MESSAGE,
+                            icon,
+                            result,
+                            result[0]);
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            OppGui asd = new OppGui(jobNumber,userName);
+                        }
+                    });
+                }
+                catch (Exception pp){
+                    pp.printStackTrace();
+                }
+
             }
         }
         else

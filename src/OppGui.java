@@ -205,7 +205,6 @@ public class OppGui extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 String inputValue = JOptionPane.showInputDialog("Please input scrap quantity");
-                System.out.println(inputValue);
                 scrapvalue = scrapvalue + Integer.parseInt(inputValue);
                 String jobnum = newJob.getJobNumber();
                 writeScrapToDb(scrapvalue,jobnum);
@@ -448,10 +447,5 @@ public class OppGui extends JFrame
         private Integer choice;
         private  JProgressBar jpb;
         private NewJobEntry newJob;
-    }
-
-
-    public static void main(String[] args) {
-        OppGui asd = new OppGui("96", "David");
     }
 }
