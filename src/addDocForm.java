@@ -122,6 +122,7 @@ public class addDocForm  extends JInternalFrame {
                else if (document_type.equals("SOP")){
                     table = 2;//flag to decide which table to write the document to (sop or technical drawing)
                     job.setPartSop(fileName);
+                    JOptionPane.showMessageDialog (null, "Document saved to database", "Success", JOptionPane.INFORMATION_MESSAGE);
                     database.newDocument(job ,table);
                 }
             }

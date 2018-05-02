@@ -79,8 +79,7 @@ public class DimensionVisionAPI {
             Gson gson=new GsonBuilder().create();
             String jsonArray=gson.toJson(strParts2);
             job.setDimension(jsonArray);
-
-
+            JOptionPane.showMessageDialog (null, "Document saved to database", "Success", JOptionPane.INFORMATION_MESSAGE);
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
