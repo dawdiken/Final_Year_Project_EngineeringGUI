@@ -223,60 +223,63 @@ public class Engineering extends JFrame {
     }
 
     private void HandleLogIn(String userName, String password){
+        try {
+            DataBaseAccess newcon = new DataBaseAccess();
+            ArrayList<NewJobEntry> person = newcon.findPerson(userName,
+                    password);
+            if (person != null) {
+                JOptionPane.showMessageDialog(desktop,
+                        "Log in succesfull.  Hello " + userName);
 
-        ArrayList<NewJobEntry> person = database.findPerson( userName,
-                password );
-        if ( person != null ) {
-            JOptionPane.showMessageDialog( desktop,
-                    "Log in succesfull.  Hello " + userName);
-
-            if (person.get(0).getRole().equals("ENGINEERING")){
-                LoginAction.setEnabled(false);
-                newWorkOrder.setEnabled(true);
-                LogOutAction.setEnabled(true);
-                newDocumentAction.setEnabled(true);
-                viewAllJobsInDB.setEnabled(true);
-                storeFinishedJobsInBucket.setEnabled(true);
-                AddUserAction.setEnabled(true);
-            }
-            else {
-                LoginAction.setEnabled(false);
-                LogOutAction.setEnabled(true);
-                try{
-                    DataBaseAccess newconn = new DataBaseAccess();
-                    ArrayList<String> jobList = newconn.findJobsByDept(person.get(0).getRole());
-                    //ArrayList<String> customerNames = database.findCustomer();
-                    String[] result = {};
-                    for (int i = 0; i < jobList.size() ; i++) {
-                        result = jobList.toArray(new String[]{});
-                    }
-                    final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
-                    JFrame frame1 = new JFrame("Pick Customer");
-                    String jobNumber = (String) JOptionPane.showInputDialog(frame1,
-                            "Please select a job?",
-                            "Work Order",
-                            JOptionPane.QUESTION_MESSAGE,
-                            icon,
-                            result,
-                            result[0]);
-
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            OppGui asd = new OppGui(jobNumber,userName);
+                if (person.get(0).getRole().equals("ENGINEERING")) {
+                    LoginAction.setEnabled(false);
+                    newWorkOrder.setEnabled(true);
+                    LogOutAction.setEnabled(true);
+                    newDocumentAction.setEnabled(true);
+                    viewAllJobsInDB.setEnabled(true);
+                    storeFinishedJobsInBucket.setEnabled(true);
+                    AddUserAction.setEnabled(true);
+                } else {
+                    LoginAction.setEnabled(false);
+                    LogOutAction.setEnabled(true);
+                    try {
+                        DataBaseAccess newconn = new DataBaseAccess();
+                        ArrayList<String> jobList = newconn.findJobsByDept(person.get(0).getRole());
+                        //ArrayList<String> customerNames = database.findCustomer();
+                        String[] result = {};
+                        for (int i = 0; i < jobList.size(); i++) {
+                            result = jobList.toArray(new String[]{});
                         }
-                    });
-                }
-                catch (Exception pp){
-                    pp.printStackTrace();
-                }
+                        final ImageIcon icon = new ImageIcon("C:\\Users\\G00070718\\Desktop\\project_gui\\Final_Year_Project_EngineeringGUI\\src\\wrench-128.png");
+                        JFrame frame1 = new JFrame("Pick Customer");
+                        String jobNumber = (String) JOptionPane.showInputDialog(frame1,
+                                "Please select a job?",
+                                "Work Order",
+                                JOptionPane.QUESTION_MESSAGE,
+                                icon,
+                                result,
+                                result[0]);
 
-            }
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                OppGui asd = new OppGui(jobNumber, userName);
+                            }
+                        });
+                    } catch (Exception pp) {
+                        pp.printStackTrace();
+                    }
+
+                }
+            } else
+                JOptionPane.showMessageDialog(desktop,
+                        "User:\n" + userName +
+                                "\" not found!");
+
         }
-        else
-            JOptionPane.showMessageDialog( desktop,
-                    "User:\n" + userName +
-                            "\" not found!" );
+        catch (Exception ee){
+            ee.printStackTrace();
+        }
     }
 
 

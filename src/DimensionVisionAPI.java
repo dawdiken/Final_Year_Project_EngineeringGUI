@@ -16,9 +16,6 @@ public class DimensionVisionAPI {
     private static final String API_KEY =
             "key=AIzaSyBpUPfVsfVn2SIgYL4xwfYfLUe0wHzsEbM";
     public void dimensionVisionAPI(String FileName, NewJobEntry job) {
-
-        System.out.println("file name = " + FileName);
-
         try{
             URL serverUrl = new URL(TARGET_URL + API_KEY);
             URLConnection urlConnection = serverUrl.openConnection();
@@ -60,7 +57,6 @@ public class DimensionVisionAPI {
                 String line = httpResponseScanner.nextLine();
                 //if line in response conntains Dim then parse it out
                 if(line.contains("Dim")) {
-                    System.out.println("line" + line);
                     textFromResponse = line;
                 }
             }

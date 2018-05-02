@@ -128,10 +128,8 @@ public class UserEntryFrame extends JInternalFrame {
 
     private void addButton() {
                 job = getUserEntry();
-                System.out.println(job.getUserName());
                 String username = job.getUserName();
                 String passw = job.getPassword();
-                System.out.println(passw);
 
                 ArrayList<NewJobEntry> person = database.findPerson(username,
                         passw );

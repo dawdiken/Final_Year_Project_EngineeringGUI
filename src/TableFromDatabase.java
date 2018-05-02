@@ -46,7 +46,7 @@ public class TableFromDatabase extends JFrame
         }
         catch(Exception e)
         {
-            System.out.println( e );
+            e.printStackTrace();
         }
 
         //  Create table with database data

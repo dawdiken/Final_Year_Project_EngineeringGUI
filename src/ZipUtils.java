@@ -24,11 +24,9 @@ public class ZipUtils {
             fos = new FileOutputStream(zipFile);
             zos = new ZipOutputStream(fos);
 
-            System.out.println("Output to Zip : " + zipFile);
             FileInputStream in = null;
 
             for (String file: this.fileList) {
-                System.out.println("File Added : " + file);
                 ZipEntry ze = new ZipEntry(source + File.separator + file);
                 zos.putNextEntry(ze);
                 try {
@@ -41,9 +39,7 @@ public class ZipUtils {
                     in.close();
                 }
             }
-
             zos.closeEntry();
-            System.out.println("Folder successfully compressed");
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -59,7 +55,6 @@ public class ZipUtils {
     public void generateFileList(File node, String source) {
         //zip file only
         if (node.isFile()) {
-            System.out.println(node.toString());
             fileList.add(generateZipEntry(node.toString(), source));
         }
         //zip directory and check for sub folders and directories

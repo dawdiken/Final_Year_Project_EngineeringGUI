@@ -15,7 +15,6 @@ public class Loader {
             @Override
             protected ArrayList<String> doInBackground() throws Exception {
                 String customerName = custName;
-                System.out.println("doInBackground" + customerName);
 
                 try {
                     database = new DataBaseAccess();
@@ -30,25 +29,13 @@ public class Loader {
                     customerNames = database.findCustomer();
                 }
                 else if (choice == 2){
-                    System.out.println("custName" + custName);
                     customerNames = database.findSop(custName);
-                    System.out.println("here not customers");
                 }
                 else if (choice == 3){
-                    System.out.println("tech drawing call" + custName);
                     customerNames = database.findTechDrawing(custName);
-                    System.out.println("tech ");
                 }
                 return customerNames;
             }
-
-//            @Override
-//            protected void process(List<Integer> chunks) {
-//                // Get Info
-//                for (int number : chunks) {
-//                    System.out.println("Found even number: " + number);
-//                }
-//            }
 
             @Override
             protected void done() {
@@ -58,7 +45,6 @@ public class Loader {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                //System.out.println("swing worker return = "+ chunks.get(0).toString());
             }
         };
     } // End of Method: createWorker()

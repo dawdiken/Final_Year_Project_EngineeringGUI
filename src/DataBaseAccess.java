@@ -50,8 +50,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
         // Insert userName and password in table user of Engineering Database.
         // For referential integrity, this must be performed
         sqlInsertUser = connection.prepareStatement(
-                "INSERT INTO users ( userName, pass ) " +
-                        "VALUES ( ? , ? )" );
+                "INSERT INTO users ( userName, pass, role ) " +
+                        "VALUES ( ? , ?, ? )" );
 
         sqlInsertJob = connection.prepareStatement(
                 "INSERT INTO workon_copy ( jobNum, active, customer_ID, department_ID, partID, batchNum, qty_ordered,  machineID, qty_finished, qty_scrap, sop_ID, drawing_ID) " +
@@ -104,8 +104,8 @@ public class DataBaseAccess implements EngineeringDataAccess {
                         "VALUES ( ? , ? )" );
 
         sqlInsertUser = connection.prepareStatement(
-                "INSERT INTO users ( userName, pass ) " +
-                        "VALUES ( ? , ? )" );
+                "INSERT INTO users ( userName, pass, role ) " +
+                        "VALUES ( ? , ?, ? )" );
 
         sqlUpdateName = connection.prepareStatement(
                 "UPDATE names SET firstName = ?, lastName = ? " +
@@ -250,7 +250,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
     public  ArrayList<NewJobEntry> findJobsByNumber(String jobNumber)
     {
         try {
-            System.out.println(jobNumber+"jobnumber hereree");
             sqlFindJobsByNumber.setString(1,jobNumber.trim());
             ResultSet resultSet = sqlFindJobsByNumber.executeQuery();
 
@@ -290,7 +289,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
             Integer dept_ID = 0;
             while(resultSet4.next()) {
                 dept_ID = resultSet4.getInt("department_id");
-                System.out.println(dept_ID);
             }
 
             sqlfindJobsByDept.setInt(1, dept_ID);
@@ -302,8 +300,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
             while(resultSet.next()){
                 names =resultSet.getString("jobNum");
                 jobList.add(names);
-                System.out.println(names+ "names in db");
-                System.out.println(jobList.get(i));
                 i++;
             }
             // if insert fails, rollback and discontinue
@@ -560,6 +556,7 @@ public class DataBaseAccess implements EngineeringDataAccess {
             // insert first and last name in names table
             sqlInsertUser.setString( 1, person.getUserName() );
             sqlInsertUser.setString( 2, person.getPassword() );
+            sqlInsertUser.setString( 3, "ENGINEERING" );
             result = sqlInsertUser.executeUpdate();
 
             // if insert fails, rollback and discontinue
@@ -648,7 +645,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
         catch ( SQLException sqlException ) {
             // rollback transaction
             try {
-                System.out.println("result for job id 1111");
                 sqlException.printStackTrace();
                 connection.rollback(); // rollback update
                 return null;          // update unsuccessful
@@ -685,7 +681,6 @@ public class DataBaseAccess implements EngineeringDataAccess {
         catch ( SQLException sqlException ) {
             // rollback transaction
             try {
-                System.out.println("result for job id 1111");
                 sqlException.printStackTrace();
                 connection.rollback(); // rollback update
                 return null;          // update unsuccessful

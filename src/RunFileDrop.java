@@ -28,7 +28,7 @@ public class RunFileDrop {
             text.append( files[i].getCanonicalPath() + "\n" );
         }   // end try
         catch( java.io.IOException e ) {
-            System.out.println("drag drop failed/n" + e);
+            e.printStackTrace();
         }
         }   // end for: through each dropped file
         }   // end filesDropped

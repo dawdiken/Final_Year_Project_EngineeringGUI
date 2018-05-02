@@ -123,12 +123,6 @@ public class OppGui extends JFrame
         }
         createFileForDim(cps,newJob);
 
-        for (int i = 0; i <info.length ; i++) {
-
-            System.out.println(cps.get(i).getText());
-
-        }
-
         tablePanel2.setBorder(border);
         JScrollPane scrollPane1 = new JScrollPane( tablePanel2 );
         scrollPane1.setPreferredSize(new Dimension(600,200));
@@ -152,7 +146,6 @@ public class OppGui extends JFrame
                 int count =0;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
                 for (int i = 0; i <cps.size() ; i++) {
-                    System.out.println("in here action");
                     if (cps.get(i).getText().equals("")){
                         cps.get(i).setBackground(Color.red);
                         JOptionPane.showMessageDialog(frame,"Dimension "+(i+1) + " must be filled in!!","Alert",JOptionPane.WARNING_MESSAGE);
@@ -169,7 +162,6 @@ public class OppGui extends JFrame
                             FileWriter writer = new FileWriter("C:\\EDHRHOME\\NewJob\\"+newJob.getJobNumber()+"\\"+newJob.getJobNumber()+".txt",true);
                             int num = 1;
                             for (JTextField str : cps) {
-                                System.out.println(str.getText());
                                 writer.write( str.getText()+",");
                                 str.setBackground(Color.WHITE);
                                 str.setText("");
@@ -221,7 +213,6 @@ public class OppGui extends JFrame
         viewSop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(newJob.getPartSop()+"part sop");
                 worker5 = new Worker5(2,jpb, newJob);
                 worker5.execute();
             }

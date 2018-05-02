@@ -12,10 +12,6 @@ public class DimensionsToGui extends JFrame
         String[] columns = new String[] {
                 "Dimension Number", "Dimension", "Tolerance"
         };
-        for (int i = 0; i <dimensionsValues.size() ; i++) {
-            System.out.println("dimensions= " + dimensionsValues.get(i));
-        }
-
 
         Object [][] dataNew = new Object [dimensionsValues.size()][dimensionsValues.size()];
         for(int i = 0; i < dimensionsValues.size(); i++) {

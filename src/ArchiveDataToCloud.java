@@ -103,7 +103,6 @@ public class ArchiveDataToCloud extends JPanel
             if (jfc.getSelectedFile().isDirectory()) {
                 String pathToFolder = jfc.getSelectedFile().toString();
                 String saveAs = jfc.getSelectedFile().getName();
-                System.out.println("pathtofolder2" + saveAs);
                 //check that you are only trying to zip and push finished works orders to the cloud
                 if (pathToFolder.contains("C:\\EDHRHOME")){
                     worker = new Worker(pathToFolder,saveAs);
@@ -200,7 +199,6 @@ public class ArchiveDataToCloud extends JPanel
             // while the thread is executing
             int val = chunks;
             setProgress(val);
-            System.out.println("val"+val);
         }
 
         @Override
