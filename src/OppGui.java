@@ -104,7 +104,6 @@ public class OppGui extends JFrame
         for (int i = 0; i <info.length ; i++) {
             JLabel l5[] =new JLabel[]{
                  new JLabel(),
-                 //new JLabel("Dimension " +i + " = " +info[i])
                     new JLabel(info[i])
             };
             JTextField a[] = new JTextField[]

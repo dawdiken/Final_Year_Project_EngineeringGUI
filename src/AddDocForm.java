@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class addDocForm  extends JInternalFrame {
+public class AddDocForm  extends JInternalFrame {
     private EngineeringDataAccess database;
 
-    public addDocForm(){
+    public AddDocForm(){
         Loader l = new Loader();
         int choice = 1;
         SwingWorker work = l.createWorker(choice, null);

@@ -20,73 +20,56 @@ public class NewJobEntry {
     private String Role = "";
     private String qtyOrdered = "";
 
+
     // empty constructor
-    public NewJobEntry()
-    {
+    public NewJobEntry() {
     }
 
-
-    public NewJobEntry( int id )
-    {
-
-    }
-
-    // set customer name
     public void setCustomerName(String first )
     {
         customerName = first;
     }
 
-    // get customer name
     public String getCustomerName()
     {
         return customerName;
     }
 
-    // set part name
     public void setPartName(String last )
     {
         partName = last;
     }
 
-    // get part name
     public String getPartName()
     {
         return partName;
     }
 
-    // set part SOP
     public void setPartSop(String firstLine )
     {
         partSop = firstLine;
     }
 
-    // get part SOP
     public String getPartSop()
     {
         return partSop;
     }
 
-    // set department
     public void setDepartment(String secondLine )
     {
         department = secondLine;
     }
 
-    // get department
     public String getDepartment()
     {
         return department;
     }
 
-
-    // set batchQty
     public void setBatchQty(String personCity )
     {
         batchQty = personCity;
     }
 
-    // get batchQty
     public String getBatchQty()
     {
         return batchQty;
@@ -199,4 +182,6 @@ public class NewJobEntry {
     public String getQtyOrdered() { return qtyOrdered; }
 
     public void setQtyOrdered(String qtyOrdered) { this.qtyOrdered = qtyOrdered; }
+
+
 }  // end class NewJobEntry

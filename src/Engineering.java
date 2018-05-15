@@ -130,10 +130,9 @@ public class Engineering extends JFrame {
         System.exit( 0 );   // terminate program
     }
 
-
     // create a new createAddDocFrame and register listener
-    private addDocForm createAddDocFrame() {
-        addDocForm frame = new addDocForm();
+    private AddDocForm createAddDocFrame() {
+        AddDocForm frame = new AddDocForm();
         setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         return frame;
     }  // end method createAddDocFrame
@@ -142,10 +141,6 @@ public class Engineering extends JFrame {
     public static void main( String args[] )
     {
         try {
-            // select Look and Feel
-//            UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-//            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-            // start application
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     new Engineering();
@@ -157,10 +152,8 @@ public class Engineering extends JFrame {
         }
 
     }
-
-
+    
     private class newDocumentAction extends AbstractAction {
-
         // set up action's name, icon, descriptions and mnemonic
         public newDocumentAction()
         {
@@ -177,13 +170,11 @@ public class Engineering extends JFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    addDocForm entryFrame =
-                            createAddDocFrame();
+                    AddDocForm entryFrame = createAddDocFrame();
                 }
             });
         }
-
-    }  // end inner class AddNewUserAction
+    }  // end inner class newDocument
 
 
     // inner class defines action that locates entry
